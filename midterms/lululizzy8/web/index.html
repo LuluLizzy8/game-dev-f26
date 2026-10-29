@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dou Dizhu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&text=%E5%9C%B0%E4%B8%BB%E5%86%9C%E6%B0%91%E5%A4%A7%E7%8E%8B%E5%B0%8F%E6%96%97&display=swap">
+<!-- Pyodide runs the same Python engine and heuristic as play.py; see web/session.py. -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<style>
+/* One card table: opponents up top, the play in the middle, your fan at the bottom; reflows by its own width. */
+:root {
+  --page: #0b1d1b; --felt: #18443e; --felt-deep: #0f2e2a; --rim: #2c5a52;
+  --brass: #d9a441; --ivory: #f8f2e4; --ink: #1e1a16; --seal: #b3261e;
+  --text: #e8eee9; --muted: #9db6af; --line: rgba(232,238,233,.14); --bad: #f1a39c;
+  --f-rank: "Young Serif", Georgia, "Times New Roman", serif;
+  --f-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-han: "Ma Shan Zheng", "KaiTi", "STKaiti", serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--page); color: var(--text); font-family: var(--f-ui); font-size: 15px; line-height: 1.5; }
+[hidden] { display: none !important; }
+.wrap { container-type: inline-size; max-width: 1120px; margin: 0 auto; padding-block: 16px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.table > * { min-width: 0; }  /* the unfanned hand must not widen the grid; fan() fits it */
+header { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; }
+h1 { font: 400 clamp(1.4rem, 3vw, 1.9rem)/1.1 var(--f-rank); margin: 0; }
+h1 .han { font-family: var(--f-han); color: var(--brass); margin-right: .3em; }
+.deal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.deal label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.deal input, .deal select { font: 600 14px var(--f-ui); color: var(--text); background: var(--felt-deep); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 36px; }
+.deal input { width: 6.5em; font-variant-numeric: tabular-nums; }
+button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.act { font: 700 14px var(--f-ui); border-radius: 999px; padding: 8px 18px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--text); cursor: pointer; min-height: 40px; }
+.act.primary { background: var(--brass); color: var(--ink); border-color: var(--brass); }
+.act:disabled { opacity: .45; cursor: default; }
+
+.table { position: relative; border: 6px solid var(--rim); border-radius: 22px;
+  background: radial-gradient(ellipse at 50% 40%, var(--felt) 0%, var(--felt-deep) 85%); padding: 16px; display: grid; gap: 14px;
+  grid-template-columns: minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr); grid-template-areas: "left center right" "hand hand hand";
+  --cw: 72px; --cs: 46px; --cb: 34px; min-height: 420px; }
+.seat { display: grid; gap: 8px; align-content: start; justify-items: start; padding: 10px 12px; border-radius: 14px; background: rgba(0,0,0,.18); border: 1px solid var(--line); transition: box-shadow .2s, border-color .2s; }
+.seat.left { grid-area: left; } .seat.right { grid-area: right; justify-items: end; text-align: right; }
+.seat.turn { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(217,164,65,.25); }
+.who { display: flex; align-items: center; gap: 8px; }
+.seat.right .who, .seat.right .stack { flex-direction: row-reverse; }
+.badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 20px/1 var(--f-han); background: var(--ivory); color: var(--ink); flex: none; }
+.badge.lord { background: var(--seal); color: var(--ivory); }
+.name { font-weight: 700; font-size: 14px; }
+.role { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.stack { display: flex; align-items: center; gap: 10px; }
+.count { font: 1.6rem/1 var(--f-rank); font-variant-numeric: tabular-nums; }
+.count small { display: block; font: 600 11px var(--f-ui); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.count.low { color: var(--bad); }
+.last { font-size: 13px; color: var(--muted); }
+.last b { color: var(--text); font-weight: 600; }
+
+.center { grid-area: center; display: grid; gap: 12px; justify-items: center; align-content: start; text-align: center; }
+.label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
+.row.tight { flex-wrap: nowrap; max-width: 100%; }
+.row.tight .card + .card { margin-left: calc(var(--cw) * -0.5); }
+.tobeat { display: grid; gap: 6px; justify-items: center; padding: 10px 16px 12px; border-radius: 14px; border: 1px dashed rgba(217,164,65,.5); min-width: 60%; min-height: calc(var(--cw) * 1.4 + 40px); max-width: 100%; }
+.status { font-weight: 600; }
+.status em { font-style: normal; color: var(--brass); }
+
+.handzone { grid-area: hand; display: grid; gap: 10px; justify-items: center; padding-top: 6px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.msg { min-height: 1.5em; font-size: 13px; color: var(--muted); text-align: center; }
+.msg.bad { color: var(--bad); } .msg.good { color: var(--brass); }
+.hand { display: flex; justify-content: center; width: 100%; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
+.mine { font-size: 12px; color: var(--muted); }
+
+.card { --w: var(--cw); width: var(--w); aspect-ratio: 5 / 7; border-radius: calc(var(--w) * .09); position: relative; flex: none; overflow: hidden;
+  background: var(--ivory); color: var(--ink); font-family: var(--f-rank); border: 1px solid rgba(30,26,22,.18);
+  box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 4px 10px rgba(0,0,0,.28); transition: transform .14s ease; }
+.card.sm { --w: var(--cs); } .card.back { --w: var(--cb); }
+.hand .card { cursor: pointer; }
+.hand .card.sel { transform: translateY(-16px); box-shadow: 0 0 0 2px var(--brass), 0 8px 16px rgba(0,0,0,.35); }
+.card .c { position: absolute; top: 6%; left: 8%; font-size: calc(var(--w) * .28); line-height: 1; letter-spacing: -.04em; }
+.card .c.b { top: auto; left: auto; bottom: 6%; right: 8%; transform: rotate(180deg); }
+.card .m { position: absolute; inset: 0; display: grid; place-items: center; font-size: calc(var(--w) * .5); opacity: .9; letter-spacing: -.04em; }
+.card .m::before { content: ""; position: absolute; inset: 18% 16%; border: 1px solid rgba(30,26,22,.12); border-radius: 6%; }
+.card.j.red { color: var(--seal); }
+.card.j .m { font: calc(var(--w) * .34)/1.05 var(--f-han); writing-mode: vertical-rl; }
+.card.j .c { font: 700 calc(var(--w) * .13)/1 var(--f-ui); writing-mode: vertical-rl; letter-spacing: .05em; }
+.card.back { background: var(--seal) repeating-linear-gradient(45deg, rgba(248,242,228,.16) 0 3px, transparent 3px 8px); border: 3px solid var(--ivory);
+  box-shadow: 3px 3px 0 -1px var(--ivory), 3px 3px 0 0 rgba(0,0,0,.3), 0 4px 10px rgba(0,0,0,.28); }
+.card.back .m { font: calc(var(--w) * .5)/1 var(--f-han); color: var(--ivory); opacity: 1; }
+.card.back .m::before { display: none; }
+
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; border-radius: 16px; background: rgba(9,26,24,.82); text-align: center; z-index: 5; }
+.overlay .box { display: grid; gap: 10px; justify-items: center; max-width: 34ch; }
+.overlay h2 { font: 400 1.8rem/1.2 var(--f-rank); margin: 0; text-wrap: balance; }
+.overlay p { margin: 0; color: var(--muted); }
+.overlay code { color: var(--text); background: rgba(0,0,0,.35); padding: 2px 6px; border-radius: 6px; font-size: 13px; overflow-wrap: anywhere; }
+.big { font: 2.4rem/1 var(--f-rank); font-variant-numeric: tabular-nums; }
+.big.win { color: var(--brass); } .big.loss { color: var(--bad); }
+
+details { border: 1px solid var(--line); border-radius: 14px; background: var(--felt-deep); padding: 10px 16px; }
+summary { cursor: pointer; font-weight: 700; }
+.hist { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; max-height: 16em; overflow-y: auto; }
+.hist li { display: grid; grid-template-columns: 3ch 9em 1fr; gap: 8px; color: var(--muted); }
+.hist li b { color: var(--text); font-weight: 600; }
+.foot { color: var(--muted); font-size: 13px; margin: 0; max-width: 75ch; }
+
+@container (max-width: 560px) {
+  .table { --cw: 50px; --cs: 34px; --cb: 26px; padding: 12px; grid-template-columns: 1fr 1fr; grid-template-areas: "left right" "center center" "hand hand"; }
+  .seat { padding: 8px; } .badge { width: 28px; height: 28px; font-size: 16px; } .count { font-size: 1.3rem; }
+  .act { padding: 8px 14px; }
+}
+@media (prefers-reduced-motion: reduce) { .card, .seat { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><span class="han">斗地主</span>Dou Dizhu</h1>
+    <form class="deal" id="dealform">
+      <label for="seat">Seat <select id="seat"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></label>
+      <label for="seed">Seed <input id="seed" type="number" min="0" step="1" value="7" inputmode="numeric"></label>
+      <button class="act" type="submit" id="deal" disabled>Deal</button>
+      <button class="act" type="button" id="random" disabled>Random deal</button>
+    </form>
+  </header>
+
+  <main class="table" id="table">
+    <section class="seat left" id="sL"></section>
+    <section class="center" aria-label="Middle of the table">
+      <div><div class="label">Kitty · the landlord's 3 extra cards</div><div class="row" id="kitty"></div></div>
+      <div class="tobeat"><div class="label" id="tblabel">&nbsp;</div><div class="row tight" id="tobeat"></div></div>
+      <div class="status" id="status" aria-live="polite"></div>
+    </section>
+    <section class="seat right" id="sR"></section>
+    <section class="handzone" aria-label="Your hand">
+      <div class="actions">
+        <button class="act" id="pass" disabled>Pass</button>
+        <button class="act" id="hint" disabled>Hint</button>
+        <button class="act" id="clear" disabled>Clear</button>
+        <button class="act primary" id="play" disabled>Play</button>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="hand" id="hand"></div>
+      <div class="mine" id="mine"></div>
+    </section>
+
+    <div class="overlay" id="overlay">
+      <div class="box" id="obox">
+        <h2>Loading the game</h2>
+        <p>Starting Python in your browser. The first visit downloads about 10 MB; after that it loads from cache.</p>
+      </div>
+    </div>
+  </main>
+
+  <details id="histbox">
+    <summary>Play history</summary>
+    <ol class="hist" id="hist"></ol>
+  </details>
+  <p class="foot">Tap cards to pick them, then Play. Card order does not matter. Ranks low to high: 3 4 5 6 7 8 9 10 J Q K A 2, then 小王 (black joker) and 大王 (red joker). A bomb (four of a kind) or the rocket (both jokers) beats anything. The other two seats are the heuristic player from <code>players/heuristic.py</code>.</p>
+</div>
+
+<script>
+const ORDER = ["3","4","5","6","7","8","9","10","J","Q","K","A","2","BJ","RJ"];
+// Same files play.py imports; served from this folder's parent (midterms/lululizzy8/).
+const FILES = ["doudizhu/__init__.py", "doudizhu/engine.py", "players/__init__.py", "players/heuristic.py", "web/session.py"];
+const $ = (id) => document.getElementById(id);
+const slow = !matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wait = (ms) => new Promise((r) => setTimeout(r, slow ? ms : 120));
+
+let py, Session, game = null, view = null, legal = [], sel = new Set(), busy = false;
+
+function cardEl(rank, cls = "") {
+  const el = document.createElement("div");
+  if (rank === "back") { el.className = `card back ${cls}`; el.innerHTML = `<span class="m">斗</span>`; return el; }
+  if (rank === "BJ" || rank === "RJ") {
+    el.className = `card j ${rank === "RJ" ? "red" : ""} ${cls}`;
+    el.innerHTML = `<span class="c">JOKER</span><span class="m">${rank === "RJ" ? "大王" : "小王"}</span>`;
+    el.setAttribute("aria-label", rank === "RJ" ? "red joker" : "black joker");
+    return el;
+  }
+  el.className = `card ${cls}`;
+  el.innerHTML = `<span class="c">${rank}</span><span class="m">${rank}</span><span class="c b">${rank}</span>`;
+  el.setAttribute("aria-label", rank);
+  return el;
+}
+const cards = (text) => (text ? text.split(" ") : []);
+const seatName = (s) => (s === view.seat ? "You" : `Seat ${s}`);
+const roleOf = (s) => (s === view.landlord ? "landlord" : "peasant");
+
+function fan() {
+  const box = $("hand"), els = [...box.children];
+  if (!els.length) return;
+  const w = els[0].getBoundingClientRect().width, W = box.clientWidth, n = els.length;
+  const step = Math.min(w * 0.62, n > 1 ? (W - w) / (n - 1) : w);
+  els.forEach((c, i) => { c.style.marginLeft = i ? `${step - w}px` : "0"; });
+}
+
+function lastAction(s) {
+  for (let i = view.history.length - 1; i >= 0; i--) if (view.history[i][0] === s) return view.history[i][1];
+  return null;
+}
+
+function renderSeat(el, s) {
+  const lord = s === view.landlord, mate = s === view.teammate, n = view.cards_left[s], last = lastAction(s);
+  el.classList.toggle("turn", view.status === "ongoing" && view.turn === s);
+  el.setAttribute("aria-label", `Seat ${s}, ${roleOf(s)}${mate ? ", your teammate" : ""}`);
+  el.innerHTML = `
+    <div class="who"><span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
+      <div><div class="name">Seat ${s}</div><div class="role">${lord ? "Landlord" : "Peasant"}${mate ? " · teammate" : ""}</div></div></div>
+    <div class="stack"><span class="slot"></span><span class="count ${n <= 2 ? "low" : ""}">${n}<small>${n === 1 ? "card" : "cards"}</small></span></div>
+    <div class="last">${last === null ? "No move yet" : last === "pass" ? "Last: <b>pass</b>" : `Played <b>${last}</b>`}</div>`;
+  el.querySelector(".slot").append(cardEl("back"));
+}
+
+function render() {
+  const v = view, me = v.seat;
+  renderSeat($("sR"), (me + 1) % 3);  // next to play sits on your right
+  renderSeat($("sL"), (me + 2) % 3);
+  $("kitty").replaceChildren(...cards(v.kitty).map((r) => cardEl(r, "sm")));
+
+  const tb = v.to_beat;
+  const lastPlay = [...v.history].reverse().find((h) => h[1] !== "pass");
+  if (tb) {
+    $("tblabel").textContent = `To beat · ${tb.seat === me ? "your play" : `Seat ${tb.seat} (${roleOf(tb.seat)})`}`;
+    $("tobeat").replaceChildren(...cards(tb.cards).map((r) => cardEl(r)));
+  } else if (lastPlay && v.status === "ongoing") {
+    $("tblabel").textContent = `Both passed · ${seatName(v.turn)} ${v.turn === me ? "lead" : "leads"} anything`;
+    $("tobeat").replaceChildren();
+  } else {
+    $("tblabel").textContent = lastPlay ? `Last play · ${seatName(lastPlay[0])}` : `${seatName(v.landlord)} ${v.landlord === me ? "lead" : "leads"} first`;
+    $("tobeat").replaceChildren(...(lastPlay ? cards(lastPlay[1]).map((r) => cardEl(r)) : []));
+  }
+
+  const mine = v.turn === me && v.status === "ongoing";
+  $("status").innerHTML = v.status !== "ongoing" ? "Deal over." :
+    mine ? (tb ? `<em>Your turn.</em> Beat ${tb.cards}, or pass.` : "<em>Your turn.</em> Lead any combination.")
+         : `<em>${seatName(v.turn)}</em> is thinking…`;
+
+  const hand = cards(v.hand);
+  $("hand").replaceChildren(...hand.map((r, i) => {
+    const el = cardEl(r, sel.has(i) ? "sel" : "");
+    el.tabIndex = 0; el.setAttribute("role", "button"); el.setAttribute("aria-pressed", sel.has(i));
+    const toggle = () => { if (!mine || busy) return; sel.has(i) ? sel.delete(i) : sel.add(i); render(); check(); };
+    el.addEventListener("click", toggle);
+    el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+    return el;
+  }));
+  $("mine").textContent = `Seat ${me} · you · ${roleOf(me)}${v.teammate !== null ? ` · teammate is Seat ${v.teammate}` : " · playing alone"} · ${hand.length} cards`;
+
+  const can = mine && !busy;
+  $("pass").disabled = !can || !legal.includes("pass");
+  $("hint").disabled = !can;
+  $("clear").disabled = !can || !sel.size;
+  $("play").disabled = !can || !sel.size;
+
+  $("hist").replaceChildren(...v.history.map((h, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span>${i + 1}</span><span>${seatName(h[0])} (${roleOf(h[0])})</span><b>${h[1]}</b>`;
+    return li;
+  }));
+  requestAnimationFrame(fan);
+}
+
+function selectedText() {
+  const hand = cards(view.hand);
+  return [...sel].map((i) => hand[i]).sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).join(" ");
+}
+
+function say(text, kind = "") { const m = $("msg"); m.textContent = text; m.className = `msg ${kind}`; }
+
+function check() {
+  if (!sel.size) return say("");
+  const t = selectedText();
+  if (legal.includes(t)) say(`${t} is a legal play.`, "good");
+  else say(view.to_beat ? `${t} does not beat ${view.to_beat.cards}.` : `${t} is not a combination.`, "bad");
+}
+
+async function apply(reply) {
+  busy = true;
+  sel.clear();
+  for (const frame of reply.frames) { view = frame; legal = []; render(); await wait(650); }
+  view = reply.obs; legal = reply.legal; busy = false;
+  render();
+  if (reply.outcome.status !== "ongoing") showResult(reply.outcome);
+}
+
+function showResult(o) {
+  const me = view.seat, score = o.scores[me];
+  const won = o.winner && (o.winner === "landlord") === (me === view.landlord);
+  const head = o.winner === null ? "Step limit reached, no winner" : won ? "You win" : "You lose";
+  const detail = o.winner === null ? "" : `${o.winner === "landlord" ? "The landlord" : "The peasants"} won. Stakes ×${o.multiplier}${o.spring ? " (spring)" : ""}.`;
+  $("obox").innerHTML = `<h2>${head}</h2><div class="big ${score > 0 ? "win" : score < 0 ? "loss" : ""}">${score > 0 ? "+" : ""}${score}</div>
+    <p>${detail} Scores by seat: ${o.scores.join(", ")}.</p>
+    <button class="act primary" id="again">Next deal (seed ${+$("seed").value + 1})</button>
+    <button class="act" id="look">See the table</button>`;
+  $("overlay").hidden = false;
+  $("again").addEventListener("click", () => { $("seed").value = +$("seed").value + 1; deal(); });
+  $("look").addEventListener("click", () => { $("overlay").hidden = true; });
+  $("again").focus();
+}
+
+async function deal() {
+  if (!Session || busy) return;
+  const seed = Math.max(0, Math.floor(+$("seed").value || 0)), seat = +$("seat").value;
+  $("seed").value = seed;
+  if (game) game.destroy();
+  game = Session(seed, seat);
+  $("overlay").hidden = true;
+  say(`Seed ${seed}. You are seat ${seat}.`);
+  try { localStorage.setItem("ddz-deal", JSON.stringify({ seed, seat })); } catch (_) {}
+  await apply(JSON.parse(game.start()));
+  if (view.status === "ongoing") say(`Seed ${seed}. You are the ${roleOf(seat)}${seat === view.landlord ? " and lead first" : ""}.`);
+}
+
+$("dealform").addEventListener("submit", (e) => { e.preventDefault(); deal(); });
+$("random").addEventListener("click", () => { $("seed").value = Math.floor(Math.random() * 10000); deal(); });
+$("clear").addEventListener("click", () => { sel.clear(); render(); say(""); });
+$("hint").addEventListener("click", () => {
+  const h = game.hint();
+  sel.clear();
+  if (h && h !== "pass") {
+    const hand = cards(view.hand), want = h.split(" ");
+    for (const r of want) { const i = hand.findIndex((x, j) => x === r && !sel.has(j)); sel.add(i); }
+  }
+  render();
+  say(h === "pass" ? "Hint: pass." : `Hint: ${h}.`, "good");
+});
+$("pass").addEventListener("click", async () => {
+  const reply = JSON.parse(game.play("pass"));
+  if (!reply.ok) return say(reply.error, "bad");
+  say("You passed.");
+  await apply(reply);
+});
+$("play").addEventListener("click", async () => {
+  const t = selectedText();
+  const reply = JSON.parse(game.play(t));
+  if (!reply.ok) return say(`${t}: ${reply.error.replace(/^'.*?' /, "")}.`, "bad");
+  say(`You played ${t}.`);
+  await apply(reply);
+});
+new ResizeObserver(fan).observe($("hand"));
+
+try { const d = JSON.parse(localStorage.getItem("ddz-deal") || "null"); if (d) { $("seed").value = d.seed; $("seat").value = d.seat; } } catch (_) {}
+
+(async () => {
+  try {
+    py = await loadPyodide();
+    for (const f of FILES) {
+      const res = await fetch(`../${f}`);
+      if (!res.ok) throw new Error(`could not load ${f} (${res.status})`);
+      const dir = `/ddz/${f.split("/").slice(0, -1).join("/")}`;
+      py.FS.mkdirTree(dir);
+      py.FS.writeFile(`/ddz/${f}`, await res.text());
+    }
+    py.runPython("import sys; sys.path.insert(0, '/ddz')\nfrom web.session import Session");
+    Session = py.globals.get("Session");
+    $("deal").disabled = $("random").disabled = false;
+    await deal();
+  } catch (err) {
+    $("obox").innerHTML = `<h2>The game could not start</h2>
+      <p>${location.protocol === "file:" ? "Opened as a file, the page cannot read the game code." : String(err.message || err)}</p>
+      <p>From <code>midterms/lululizzy8/</code> run <code>python -m http.server 8000</code>, then open <code>http://localhost:8000/web/</code>. The first load needs internet.</p>`;
+  }
+})();
+</script>
+</body>
+</html>

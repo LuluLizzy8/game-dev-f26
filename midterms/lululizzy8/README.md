@@ -29,6 +29,13 @@ python -m unittest discover -s tests -v
 python play.py --seat 0 --seed 7
 ```
 
+**Play in a browser** (desktop or phone; same engine and heuristic opponents, run in the browser by Pyodide):
+```
+python -m http.server 8000
+```
+then open http://localhost:8000/web/ (from a phone on the same Wi-Fi, add `--bind 0.0.0.0` and use this
+computer's IP address). The first load downloads Pyodide (about 10 MB) and needs internet. Tap cards, then Play.
+
 **Run players without credentials** (heuristic, random, and the model player with a scripted fixture that
 is not a model):
 ```
@@ -94,4 +101,7 @@ Engine: `doudizhu/engine.py`. Tests: `tests/`.
   and `.claude/agents/rules-reviewer.md` are the basis for this folder's adapted `ddz-` copies;
   `course_game/narrator.py` is the pattern for the provider call. Adapted files name their source.
 - google-genai (Apache-2.0, https://github.com/googleapis/python-genai): Vertex client library, installed, not vendored.
+- Pyodide 0.26.4 (MPL-2.0, https://pyodide.org): loaded by `web/index.html` from cdn.jsdelivr.net, not vendored.
+- Fonts Young Serif, Figtree and Ma Shan Zheng (SIL Open Font License) from Google Fonts. Card art is drawn
+  in CSS in `web/index.html`; no image assets.
 - No code or assets reused. TODO: cite RLCard and DouZero if you mention them in the evaluation.

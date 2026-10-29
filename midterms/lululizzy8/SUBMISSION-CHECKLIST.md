@@ -43,7 +43,7 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 1a labels | README map, every rule labeled with locator | 🔨 (Pagat locators to verify 👤) |
 | 1b scope | README scope + Week 3 post | 🔨 (Week 3 post ✅; README scope 👤) |
 | 1c sources | README + DESIGN §9 | 🔨 (RLCard/DouZero licences if cited) |
-| 2a core loop | `play.py` start to end | ✅ built (peer playtest 👤) |
+| 2a core loop | `play.py` start to end; browser version `web/` (same engine via Pyodide, `tests/test_web.py`) | ✅ built (peer playtest 👤) |
 | 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; first live episode ✅ (traces/tuning); held-out runs ⬜ |
 | 2c information | `tests/test_game.Information`, `test_view`, `test_runner.Prompt` | ✅ |
 | 3a runs | fresh-clone dry run of README commands | ⬜ |
