@@ -57,6 +57,27 @@ real bug, now a regression test (`test_regressions.FoundInFirstLiveRun20261028`,
 fix `8379355`). The engine and players are identical between the two labels; the pair above is matched
 by hand. Output tokens (~30 per reply) are far under the 256 cap, so thinking tokens did not truncate replies.
 
+### 2026-10-28: tuning round 1 (seeds 100–104, all situations, prompt as of `eeb053f`)
+
+Full table: `results/tuning-r1-2026-10-28.md`; traces: `traces/tuning-r1/`. 5 deals per cell, so these
+are tuning observations, not results. Live cost ≈ $0.075 for 30 episodes.
+
+| Player | S1 wins / mean | S2 wins / mean | S3 wins / mean | Invalid | Fallbacks | Latency median / p95 |
+|---|---|---|---|---|---|---|
+| heuristic | 4/5, +1.6 | 1/5, −0.8 | 1/5, −0.8 | — | — | — |
+| random | 1/5, −1.6 | 1/5, −1.2 | 1/5, −1.2 | — | — | — |
+| model-history | 1/5, −3.2 | 2/5, −0.6 | 1/5, −0.8 | 0 | 0 | ~0.8 s / 1.4–2.3 s |
+| model-obs | 1/5, −1.6 | 1/5, −0.6 | 1/5, −0.8 | 0 | 0 | ~0.8 s / 4–24 s |
+
+Observations:
+- As landlord (S1) the model is far below the heuristic (paired diff −4.8 history, −3.2 no history).
+  Example, seed 104: it led its rocket while it already held the lead (wasting it), then led a single 2
+  into a bomb; the heuristic saved the jokers and won.
+- Same seed, same prompt, temperature 0 is not deterministic: seed 100 S1 won +4 in the first run and
+  lost −4 here.
+- No invalid replies or fallbacks in 30 episodes; one slow call (p95 24 s in model-obs S1) stayed under
+  the 30 s timeout.
+
 ### Held-out results
 
 TODO: after the prompt, heuristic and config are frozen (table above).
