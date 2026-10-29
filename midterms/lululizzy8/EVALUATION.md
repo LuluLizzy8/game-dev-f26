@@ -98,6 +98,21 @@ Observations:
   may be partly noise; the held-out suite is what tests it.
 - Calls per episode rose (S1: 44 → 56 total over 5 deals), still far under the 60-per-episode limit.
 
+### 2026-10-29: tuning round 3 (same seeds, prompt `2257ca7`: rule 4 added)
+
+Change: rule 4, "When you lead, play a combination you think you can win back ... Among those, start with
+your lowest." Full table: `results/tuning-r3-2026-10-29.md`; traces: `traces/tuning-r3/`. Live cost ≈ $0.107.
+
+| Player | S1 wins / mean | S2 wins / mean | S3 wins / mean | Invalid | Fallbacks |
+|---|---|---|---|---|---|
+| heuristic | 4/5, +1.6 | 1/5, −0.8 | 1/5, −0.8 | — | — |
+| model-history | 2/5, −0.4 (r2: 4/5, +2.4) | 2/5, −0.2 (r2: 3/5) | 1/5, −1.0 (r2: 2/5) | 0 | 0 |
+| model-obs | 1/5, −1.2 (r2: 2/5) | 1/5, −0.8 (r2: 2/5) | 1/5, −0.8 (r2: 1/5) | 0 | 0 |
+
+Observation: worse than round 2 everywhere. Seed 104 S1 shows why: in round 2 the model opened with its
+15-card plane; in round 3 it led a single 3 ("lead a low single card"), then played singles one at a time,
+broke up its hand and lost. "Start with your lowest" seems to override "lead long combinations first".
+
 ### Held-out results
 
 TODO: after the prompt, heuristic and config are frozen (table above).

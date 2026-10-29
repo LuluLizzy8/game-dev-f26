@@ -1,0 +1,24 @@
+{"type": "header", "seed": 104, "situation": "S2", "trial": 0, "player": "model-history", "opponents": "heuristic", "agent_seat": 0, "landlord": 2, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "7aeaef2914a2", "game_commit": "2257ca7", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 2, "action": "3 3 3 4 4 4 5 5 5 6 6 8 8 A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 0, "attempts": [{"prompt_hash": "f304257d6c1c", "raw": "{\n  \"action\": \"J J J J\",\n  \"reason\": \"Use our bomb to beat the landlord's play and take the lead.\"\n}", "error": null, "api_error": false, "latency": 0.765, "input_tokens": 820, "output_tokens": 35, "model": "gemini-3.5-flash-lite"}], "action": "J J J J", "source": "model", "accepted": true}
+{"type": "step", "step": 3, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 4, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 0, "attempts": [{"prompt_hash": "ae131bb40201", "raw": "{\"action\": \"5 6 7 8 9 10\", \"reason\": \"Lead a long straight to shed low cards.\"}", "error": null, "api_error": false, "latency": 0.75, "input_tokens": 925, "output_tokens": 31, "model": "gemini-3.5-flash-lite"}], "action": "5 6 7 8 9 10", "source": "model", "accepted": true}
+{"type": "step", "step": 6, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 7, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 0, "attempts": [{"prompt_hash": "2c2faae409c6", "raw": "{\n  \"action\": \"3\",\n  \"reason\": \"Lead my lowest single card to start shedding.\"\n}", "error": null, "api_error": false, "latency": 0.672, "input_tokens": 880, "output_tokens": 26, "model": "gemini-3.5-flash-lite"}], "action": "3", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 2, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 0, "attempts": [{"prompt_hash": "efc03e2c9c19", "raw": "{\n  \"action\": \"K\",\n  \"reason\": \"Play a higher single to contest the landlord who has only 4 cards left.\"\n}", "error": null, "api_error": false, "latency": 0.891, "input_tokens": 895, "output_tokens": 33, "model": "gemini-3.5-flash-lite"}], "action": "K", "source": "model", "accepted": true}
+{"type": "step", "step": 12, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 2, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 0, "attempts": [{"prompt_hash": "bd2e8f54d1b3", "raw": "{\"action\": \"2\", \"reason\": \"Beat the landlord's Ace with my 2 to try and take control.\"}", "error": null, "api_error": false, "latency": 0.718, "input_tokens": 924, "output_tokens": 27, "model": "gemini-3.5-flash-lite"}], "action": "2", "source": "model", "accepted": true}
+{"type": "step", "step": 15, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 16, "seat": 2, "action": "BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 18, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 19, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 21, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 22, "seat": 2, "action": "RJ", "source": "forced", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, -2, 4], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, -2, 4]}, "steps": 22, "calls": 5, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": -2, "elapsed": 3.796}
