@@ -106,6 +106,8 @@ class DouDizhu:
 
     def observe(self, seat):
         """R15: only what this seat may know."""
+        if seat not in range(3):  # a negative index would return another seat's hand
+            raise ValueError(f"no seat {seat!r}")
         return {
             "seat": seat,
             "role": "landlord" if seat == self.landlord else "peasant",
@@ -139,6 +141,8 @@ class DouDizhu:
             return {"ok": False, "error": "episode is over"}
         if seat != self.turn:
             return {"ok": False, "error": f"not seat {seat}'s turn"}
+        if not isinstance(action, str):
+            return {"ok": False, "error": f"action must be text, got {type(action).__name__}"}
         moves = self._moves(seat)
         if action.strip().lower() == "pass":
             if not self.last:
