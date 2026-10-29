@@ -22,15 +22,15 @@ what that means for CI and the dated freeze.
 | 1a labels | `README.md` map R1–R16 + new rows in §2.1 (runner rules included) | Pagat locators to verify |
 | 1b scope | §1; README scope statement | needs my voice + Week 3 post |
 | 1c sources | §9: Pagat, course-repo skill/reviewer/narrator pattern, google-genai | Pagat locators and RLCard/DouZero licences to open |
-| 2a core loop | engine + `play.py` human mode (§12) | `play.py` TODO, needed by Nov 1 |
-| 2b model player | `players/model.py` called only by `runner.py` (§4–§5) | TODO |
-| 2c information | `observe`/`legal_actions` per seat; reshuffle tests on observation *and* prompt (§3, §7) | engine part done |
-| 3a runs | README commands for PowerShell and bash, pinned `requirements.txt`, no-credential fixture run (§8) | TODO |
-| 3b limits | `runner.py` step / call / HTTP-timeout / wall-clock / invalid limits, explicit reasons (§5) | step limit done |
-| 3c CI | five check kinds in the folder workflow (§7) | regression done; runner limits TODO; CI first runs at push |
-| 3d agent team | folder-local `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | TODO |
+| 2a core loop | engine + `play.py` human mode (§12) | built (`play.py`) |
+| 2b model player | `players/model.py` called only by `runner.py` (§4–§5) | built; first live episode TODO |
+| 2c information | `observe`/`legal_actions` per seat; reshuffle tests on observation *and* prompt (§3, §7) | built + tested (`test_game`, `test_view`, `test_runner.Prompt`) |
+| 3a runs | README commands for PowerShell and bash, pinned `requirements.txt`, no-credential fixture run (§8) | README done; fresh-clone check TODO |
+| 3b limits | `runner.py` step / call / HTTP-timeout / wall-clock / invalid limits, explicit reasons (§5) | built + tested (`test_runner.Limits`) |
+| 3c CI | five check kinds in the folder workflow (§7) | all five kinds present locally (55 tests); CI first runs at push |
+| 3d agent team | folder-local `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | config + 4 reviews done; session exports TODO |
 | 4a choices | §11 decision table with the alternative each beat | this doc |
-| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds per situation (§4.1, §6) | TODO |
+| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds per situation (§4.1, §6) | baseline built; runs TODO |
 | 5a comparison | `EVALUATION.md`; suite frozen by a dated local commit before tuning (§6) | TODO |
 | 5b authorship | `AGENT-TEAM.md`, limitations, peer notes **[student voice]** | TODO |
 | 5c recording | 3–5 min script (§12) | TODO |
@@ -172,7 +172,7 @@ asymmetry is stated in EVALUATION.md limitations.
 ### 4.2 Model player (`players/model.py`)
 
 - **Input per turn:** system prompt with a rules summary, the teammate's conventions and the output
-  format; user message with the observation as JSON and the numbered legal list.
+  format; user message with the observation rendered as a text table (`doudizhu/view.py`) and the numbered legal list.
 - **Output:** JSON `{"action": "<exact string from the list>"}`. An optional `"reason"` field is logged
   but never used for control.
 - **No tools.** No file, shell, repository or evaluator access; no tool definitions in the request.
@@ -235,9 +235,11 @@ end in a forfeit). The only latency figure so far is one 246-token setup request
 p95 are measured on tuning seeds before the held-out run, and the limits are re-checked against them.
 
 **Trace format.** One JSONL file per episode: header (seed, situation, seats, player ids, model id as
-returned by the API, game version = git commit, config hash), one line per step (seat, source
-`model|fallback|forced|heuristic|random`, action, accepted, latency, input/output tokens, raw reply),
-then the final result with its terminal reason.
+requested (`model_requested`), game version = git commit, config hash), one line per step (seat, source
+`model|fallback|forced|heuristic|random`, action, accepted, and per model attempt: prompt hash,
+latency, input/output tokens, raw reply, model id returned by the API),
+then the final result with its terminal reason and `models_returned`. API-error text is reduced
+to the exception type and status code (provider messages can contain the project ID).
 
 ---
 

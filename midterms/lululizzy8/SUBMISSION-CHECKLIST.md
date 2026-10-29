@@ -29,9 +29,9 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy c
 | Role | Artifact | Evidence of use | Status |
 |---|---|---|---|
 | Implementation agent | `CLAUDE.md` | exported session transcripts in `sessions/` (cleaned) | 🔨 (export sessions 👤 with `/export`) |
-| Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change; invoked by name in ≥ 2 sessions | 🔨 |
+| Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change; invoked by name in ≥ 2 sessions | 🔨 (steps followed for R19 + regressions in this session; named invocations 👤 in folder sessions) |
 | Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | invoked by name in ≥ 2 sessions | 🔨 |
-| Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` | 🔨 |
+| Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` (`2026-10-28-runner-review.md`) | ✅ first run (decisions 👤) |
 | Design reviews | `reviews/2026-10-28-design-review*.md` | 3 reviewers on rev 1–2 | ✅ (my decisions 👤) |
 
 Skills are found by Claude Code only when a session is started in `midterms/lululizzy8/`.
@@ -43,12 +43,12 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 1a labels | README map, every rule labeled with locator | 🔨 (Pagat locators to verify 👤) |
 | 1b scope | README scope + Week 3 post | 🔨 (Week 3 post ✅; README scope 👤) |
 | 1c sources | README + DESIGN §9 | 🔨 (RLCard/DouZero licences if cited) |
-| 2a core loop | `play.py` start to end | 🔨 |
-| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 |
-| 2c information | `tests/test_game.Information`, `test_view`, `test_runner` prompt leak test | 🔨 |
+| 2a core loop | `play.py` start to end | ✅ built (peer playtest 👤) |
+| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built + fixture-tested; first live episode ⬜ |
+| 2c information | `tests/test_game.Information`, `test_view`, `test_runner.Prompt` | ✅ |
 | 3a runs | fresh-clone dry run of README commands | ⬜ |
-| 3b limits | `runner.py` + `tests/test_runner.py` | 🔨 |
-| 3c CI | invariants, legal/illegal, terminal, regression (`test_regressions.py` ✅), limits | 🔨 |
+| 3b limits | `runner.py` + `tests/test_runner.py` | ✅ |
+| 3c CI | all five kinds present, 55 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after push |
 | 3d agent team | table above | 🔨 |
 | 4a choices | DESIGN §11 | ✅ |
 | 4b experiment | heuristic baseline, paired deals, 30 held-out seeds | 🔨 |

@@ -12,7 +12,8 @@ from doudizhu.engine import DouDizhu
 from players import heuristic
 from players.model import FixtureModel, build_prompt
 from players.random_player import RandomPlayer
-from runner import load_config, run_episode
+import runner
+from runner import forfeit, load_config, run_episode
 
 CONFIG, _ = load_config()
 BAD = "not json"
@@ -48,12 +49,26 @@ class Limits(unittest.TestCase):
         header, steps, result = run_episode(0, "S1", "model-history", model=FixtureModel([BAD] * 50),
                                             config=config(invalid_limit=3))
         self.assertEqual((result["reason"], result["invalid"]), ("invalid_limit", 3))
+        self.assertEqual((result["winner"], result["agent_score"]), ("peasants", -2))
 
     def test_wall_clock_timeout(self):
         ticks = iter(range(0, 10_000, 100))  # each clock read advances 100 s
         header, steps, result = run_episode(0, "S1", "model-history", model=FixtureModel(),
                                             config=config(wall_clock_seconds=250), clock=lambda: next(ticks))
-        self.assertEqual(result["reason"], "timeout")
+        self.assertEqual((result["reason"], result["winner"], result["agent_score"]), ("timeout", "peasants", -2))
+
+    def test_forfeit_keeps_the_bomb_multiplier(self):
+        g = DouDizhu()
+        g.reset(0)
+        g.bombs = 2  # two bombs already played
+        landlord_agent = forfeit(g, g.landlord, "call_limit")
+        self.assertEqual(landlord_agent["multiplier"], 4)
+        self.assertEqual(landlord_agent["scores"][g.landlord], -8)
+        peasant = (g.landlord + 1) % 3
+        peasant_agent = forfeit(g, peasant, "timeout")
+        self.assertEqual(peasant_agent["scores"][g.landlord], 8)
+        self.assertEqual([peasant_agent["scores"][s] for s in range(3) if s != g.landlord], [-4, -4])
+        self.assertFalse(peasant_agent["spring"])
 
     def test_peasant_forfeit_loses_for_both_peasants(self):
         header, steps, result = run_episode(0, "S2", "model-history", model=FixtureModel(), config=config(call_limit=1))
@@ -75,6 +90,17 @@ class Fallback(unittest.TestCase):
         self.assertEqual(first["source"], "fallback")
         self.assertEqual(len(first["attempts"]), 2)
         self.assertEqual(result["invalid"], 2)
+        # S1: the agent is the landlord and its first decision is the opening lead, from its own view.
+        g = DouDizhu()
+        g.reset(0)
+        self.assertEqual(first["step"], 1)
+        self.assertEqual(first["action"], heuristic.choose(g.observe(g.landlord), g.legal_actions(g.landlord)))
+
+    def test_api_error_is_not_shown_to_the_model(self):
+        model = FixtureModel([RuntimeError("projects/secret-project/locations/global")])
+        header, steps, result = run_episode(0, "S1", "model-history", model=model)
+        self.assertNotIn("rejected", model.prompts[1])
+        self.assertNotIn("secret-project", json.dumps(steps))
 
     def test_retry_sees_the_error(self):
         model = FixtureModel([BAD])
@@ -131,6 +157,36 @@ class Prompt(unittest.TestCase):
                 before, after = self.reshuffled_prompts(g, g.turn, variant)
                 self.assertEqual(before, after)
 
+    def test_runner_sends_exactly_the_agent_view(self):
+        """Every prompt run_episode sends equals build_prompt(observe(agent), legal_actions(agent)).
+        With the reshuffle test above, this covers the runner path, including S2's first turn."""
+        games = []
+
+        class Recording(DouDizhu):
+            def reset(self, *args, **kwargs):
+                games.append(self)
+                return super().reset(*args, **kwargs)
+
+        class Checking(FixtureModel):
+            def ask(inner, prompt, legal):
+                g = games[-1]
+                agent = (g.landlord + runner.SITUATIONS[situation]) % 3
+                self.assertEqual(g.turn, agent)
+                self.assertEqual(legal, g.legal_actions(agent))
+                self.assertEqual(prompt, build_prompt(g.observe(agent), legal, variant))
+                return super().ask(prompt, legal)
+
+        original = runner.DouDizhu
+        runner.DouDizhu = Recording
+        try:
+            for situation in ("S1", "S2", "S3"):
+                for variant in ("model-history", "model-obs"):
+                    model = Checking()
+                    run_episode(4, situation, variant, model=model)
+                    self.assertTrue(model.prompts)
+        finally:
+            runner.DouDizhu = original
+
     def test_no_seed_or_trace_path_in_prompts(self):
         model = FixtureModel()
         with tempfile.TemporaryDirectory() as d:
@@ -155,10 +211,13 @@ class Prompt(unittest.TestCase):
 
 class Baselines(unittest.TestCase):
     def test_baselines_finish_deals_without_illegal_moves(self):
-        for seed in range(50):
-            for player in ("heuristic", "random"):
-                header, steps, result = run_episode(seed, "S1", player)  # run_episode asserts every step is accepted
-                self.assertEqual(result["reason"], "hand_empty")
+        for seed in range(20):
+            for situation in ("S1", "S2", "S3"):
+                for player in ("heuristic", "random"):
+                    for opponents in ("heuristic", "random"):
+                        # run_episode raises if any step is refused
+                        header, steps, result = run_episode(seed, situation, player, opponents)
+                        self.assertEqual(result["reason"], "hand_empty")
 
     def test_heuristic_ignores_hidden_hands(self):
         for seed in range(10):
@@ -187,7 +246,9 @@ class Trace(unittest.TestCase):
             lines = [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines()]
         self.assertEqual((lines[0]["type"], lines[-1]["type"]), ("header", "result"))
         self.assertFalse(lines[0]["live"])
-        self.assertEqual(lines[0]["model"], "scripted-fixture-v1")
+        self.assertEqual(lines[0]["model_requested"], "scripted-fixture-v1")
+        self.assertEqual(lines[-1]["models_returned"], ["scripted-fixture-v1"])
+        self.assertTrue(all(l["accepted"] for l in lines if l["type"] == "step"))
         self.assertIn(lines[-1]["reason"], ("hand_empty", "step_limit", "call_limit", "timeout", "invalid_limit"))
         sources = {l["source"] for l in lines if l["type"] == "step"}
         self.assertLessEqual(sources, {"model", "fallback", "forced", "heuristic"})

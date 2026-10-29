@@ -2,6 +2,7 @@
 import unittest
 
 from doudizhu.engine import DouDizhu
+from test_game import snapshot
 
 
 class FoundByRulesReview20261028(unittest.TestCase):
@@ -19,9 +20,11 @@ class FoundByRulesReview20261028(unittest.TestCase):
 
     def test_step_refuses_non_string_action(self):
         # Bug: a model reply like {"action": 3} or null crashed step with AttributeError.
+        before = snapshot(self.g), [list(h) for h in self.g.hands]
         for action in (3, None, ["3"]):
             result = self.g.step(self.g.turn, action)
             self.assertFalse(result["ok"])
+        self.assertEqual((snapshot(self.g), [list(h) for h in self.g.hands]), before)
         self.assertEqual(self.g.steps, 0)
 
 

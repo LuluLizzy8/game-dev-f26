@@ -69,7 +69,7 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
 
     header = {"type": "header", "seed": seed, "situation": situation, "trial": trial, "player": player,
               "opponents": opponents, "agent_seat": agent, "landlord": g.landlord,
-              "live": bool(is_model and model.live), "model": model.model_id if is_model else None,
+              "live": bool(is_model and model.live), "model_requested": model.model_id if is_model else None,
               "config_hash": config_hash, "game_commit": game_commit(), "limits": limits,
               "sampling": config.get("sampling")}
     steps, calls, invalid = [], 0, 0
@@ -101,12 +101,12 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
                 if reply.action is not None:
                     action, source = reply.action, "model"
                     break
-                if not reply.api_error:
+                if not reply.api_error:  # a failed call is not shown to the model: it never replied
                     invalid += 1
                     if invalid >= limits["invalid_limit"]:
                         result = forfeit(g, agent, "invalid_limit")
                         break
-                error = reply.error
+                    error = reply.error
             record["attempts"] = attempts
             if result is not None:
                 record["forfeit"] = result["reason"]
@@ -118,13 +118,16 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
             action = baseline_choice(seat, obs, legal)
             source = player if seat == agent else opponents
         outcome = g.step(seat, action)
-        assert outcome["ok"], (action, outcome)  # every source picks from the legal list
-        record.update(action=action, source=source)
+        if not outcome["ok"]:  # every source picks from the legal list; a refusal here is a runner bug
+            raise RuntimeError(f"refused {action!r} from {source}: {outcome}")
+        record.update(action=action, source=source, accepted=True)
         steps.append(record)
 
     if result is None:
         result = dict(g.outcome(), forfeit=False)
+    returned = sorted({a["model"] for s in steps for a in s.get("attempts", []) if a["model"]})
     result.update(type="result", engine_outcome=g.outcome(), steps=g.steps, calls=calls, invalid=invalid,
+                  models_returned=returned,
                   agent_score=result["scores"][agent], elapsed=round(clock() - started, 3))
     if trace_path:
         Path(trace_path).parent.mkdir(parents=True, exist_ok=True)

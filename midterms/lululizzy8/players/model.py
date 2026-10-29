@@ -105,7 +105,8 @@ class FixtureModel:
         started = time.monotonic()
         raw = self.replies.pop(0) if self.replies else json.dumps({"action": legal[0]})
         if isinstance(raw, Exception):
-            return Reply(None, None, f"call failed: {raw}", True, time.monotonic() - started, model=self.model_id)
+            return Reply(None, None, f"call failed: {type(raw).__name__}", True, time.monotonic() - started,
+                         model=self.model_id)
         action, error = parse_reply(raw, legal)
         return Reply(action, raw, error, False, time.monotonic() - started, 0, 0, self.model_id)
 
@@ -149,8 +150,10 @@ class VertexModel:
             response = self.client.models.generate_content(
                 model=self.model_id, contents=prompt, config=self.gen_config)
         except Exception as error:  # timeouts, quota, network: a failed call, counted by the runner
-            return Reply(None, None, f"call failed: {type(error).__name__}: {error}"[:300], True,
-                         time.monotonic() - started, model=self.model_id)
+            # Only type and status code: provider messages can contain the project ID, and traces are public.
+            code = getattr(error, "code", None) or getattr(error, "status_code", None)
+            return Reply(None, None, f"call failed: {type(error).__name__}" + (f" {code}" if code else ""),
+                         True, time.monotonic() - started, model=self.model_id)
         latency = time.monotonic() - started
         usage = response.usage_metadata
         tokens_in = getattr(usage, "prompt_token_count", None)

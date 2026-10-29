@@ -33,6 +33,13 @@ Seeds 0–104, all seats heuristic:
 Baseline strength on development seeds 0–99 (agent seat heuristic vs random, opponents heuristic), wins out
 of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 
+## Known bounds of the runner (from the 2026-10-28 runner review)
+
+- The wall clock is checked before each model call, so one call can overrun the limit by up to the
+  30 s HTTP timeout, and an episode whose clock runs out after the agent's last decision ends normally.
+- To check on tuning seeds before the held-out run: whether thinking tokens count against
+  `max_output_tokens` = 256 and cut replies short (they would count as invalid replies).
+
 ## Results
 
 TODO: comparison table from `report.py` (tuning seeds, then held-out), with model id as returned by the API,
@@ -47,7 +54,16 @@ TODO: `traces/heldout/` (committed) and `traces/tuning/`.
 ## CI evidence
 
 TODO: link to the green Actions run for the submitted commit. Locally:
-`python -m unittest discover -s tests -v` → 47 tests OK on 2026-10-28.
+`python -m unittest discover -s tests -v` → 55 tests OK on 2026-10-28.
+
+| CI check kind (rubric 3c) | Tests |
+|---|---|
+| Rule invariants | `test_combos.Invariants`; `test_game.Turns.test_full_games_end_and_conserve_cards` |
+| Legal / illegal actions | `test_combos.Lead`, `Rejected`, `Beats`; `test_game.Turns`; `test_runner.Fallback` |
+| Terminal outcome | `test_game.Scoring`; `test_runner.Baselines` |
+| Observed regression | `test_regressions` (two bugs found by review, test committed failing in `7168315`, fixed in `72bfc27`) |
+| Episode limits | `test_game.Limits`; `test_runner.Limits` (call, invalid, timeout, step, forfeit scoring) |
+| Information boundary | `test_game.Information`; `test_view`; `test_runner.Prompt` |
 
 ## Change log after the freeze
 

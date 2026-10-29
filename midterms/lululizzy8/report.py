@@ -31,7 +31,7 @@ def pct(values, q):
 
 def summarize(group, baseline):
     attempts = [a for ep in group for s in ep["steps"] for a in s.get("attempts", [])]
-    latencies = [a["latency"] for a in attempts if not a["api_error"]]
+    latencies = [a["latency"] for a in attempts]  # failed calls included, so slowness is not hidden
     sources = [s.get("source") for ep in group for s in ep["steps"] if s["seat"] == ep["header"]["agent_seat"]]
     reasons = defaultdict(int)
     for ep in group:
@@ -40,11 +40,13 @@ def summarize(group, baseline):
     row = {
         "episodes": len(group),
         "wins": sum(won(ep) for ep in group),
-        "losses": sum(not won(ep) and ep["result"]["winner"] is not None for ep in group),
+        "losses_in_play": sum(not won(ep) and ep["result"]["reason"] == "hand_empty" for ep in group),
         "no_result": reasons["step_limit"],
         "call_limit": reasons["call_limit"], "timeout": reasons["timeout"], "invalid_limit": reasons["invalid_limit"],
         "mean_score": round(statistics.mean(ep["result"]["agent_score"] for ep in group), 2),
         "fallback_free_wins": f"{sum(won(ep) for ep in clean)}/{len(clean)}",
+        "fallback_free_mean_score": round(statistics.mean(ep["result"]["agent_score"] for ep in clean), 2)
+        if clean else "-",
         "invalid_replies": sum(ep["result"]["invalid"] for ep in group),
         "api_errors": sum(a["api_error"] for a in attempts),
         "fallbacks": sources.count("fallback"),
@@ -55,17 +57,21 @@ def summarize(group, baseline):
         "tokens_in": sum(a["input_tokens"] or 0 for a in attempts),
         "tokens_out": sum(a["output_tokens"] or 0 for a in attempts),
     }
-    # Paired comparison with the heuristic on the same (seed, situation, opponents), trial 0 of the baseline.
+    # Paired comparison with trial 0 of the heuristic on the same deal, engine and config.
     diffs, discordant = [], 0
     for ep in group:
-        h = ep["header"]
-        base = baseline.get((h["seed"], h["situation"], h["opponents"]))
-        if base and h["player"] != "heuristic":
+        base = baseline.get(pair_key(ep["header"]))
+        if base and ep["header"]["player"] != "heuristic":
             diffs.append(ep["result"]["agent_score"] - base["result"]["agent_score"])
             discordant += won(ep) != won(base)
+    row["pairs"] = f"{len(diffs)}/{len(group)}" if group[0]["header"]["player"] != "heuristic" else "-"
     row["paired_diff_vs_heuristic"] = round(statistics.mean(diffs), 2) if diffs else "-"
     row["discordant_pairs"] = f"{discordant}/{len(diffs)}" if diffs else "-"
     return row
+
+
+def pair_key(h):
+    return h["seed"], h["situation"], h["opponents"], h["game_commit"], h["config_hash"]
 
 
 def table(episodes):
@@ -73,12 +79,12 @@ def table(episodes):
     for ep in episodes:
         h = ep["header"]
         if h["player"] == "heuristic" and h["trial"] == 0:
-            baseline[(h["seed"], h["situation"], h["opponents"])] = ep
+            baseline[pair_key(h)] = ep
     groups = defaultdict(list)
     for ep in episodes:
         h = ep["header"]
         groups[(h["player"], "live" if h["live"] else ("fixture" if h["player"].startswith("model") else "-"),
-                h["model"] or "-", h["situation"], h["opponents"])].append(ep)
+                h.get("model_requested") or "-", h["situation"], h["opponents"])].append(ep)
     rows = []
     for key in sorted(groups):
         seeds = sorted({ep["header"]["seed"] for ep in groups[key]})
@@ -91,7 +97,10 @@ def table(episodes):
     out += ["| " + " | ".join(str(r[c]) for c in cols) + " |" for r in rows]
     commits = sorted({ep["header"]["game_commit"] for ep in episodes})
     configs = sorted({ep["header"]["config_hash"] for ep in episodes})
-    out += ["", f"Game commits: {', '.join(commits)}. Config hashes: {', '.join(configs)}.",
+    returned = sorted({m for ep in episodes for m in ep["result"].get("models_returned", [])})
+    out += ["", f"Game commits: {', '.join(commits)}. Config hashes: {', '.join(configs)}. "
+            f"Model ids returned by the API: {', '.join(returned) or 'none'}.",
+            "losses_in_play excludes forfeits, which have their own columns (call_limit, timeout, invalid_limit).",
             "Tokens are as reported by the API; cost = tokens x the dated price recorded in EVALUATION.md."]
     return "\n".join(out) + "\n"
 
