@@ -78,6 +78,26 @@ Observations:
 - No invalid replies or fallbacks in 30 episodes; one slow call (p95 24 s in model-obs S1) stayed under
   the 30 s timeout.
 
+### 2026-10-29: tuning round 2 (same seeds, prompt `27e56eb`: three strategy rules added)
+
+Change: the system prompt gained a "Strategy" section: (1) never play a bomb or rocket when you already
+have the lead; (2) don't lead 2s or jokers as singles early; (3) check the rest of the hand can still be
+played out. Full table: `results/tuning-r2-2026-10-29.md`; traces: `traces/tuning-r2/`. Live cost ≈ $0.106.
+
+| Player | S1 wins / mean | S2 wins / mean | S3 wins / mean | Invalid | Fallbacks | Latency median / p95 |
+|---|---|---|---|---|---|---|
+| heuristic | 4/5, +1.6 | 1/5, −0.8 | 1/5, −0.8 | — | — | — |
+| model-history | 4/5, +2.4 (r1: 1/5, −3.2) | 3/5, +0.2 (r1: 2/5) | 2/5, −0.4 (r1: 1/5) | 0 | 0 | ~0.8 s / 1.3–1.9 s |
+| model-obs | 2/5, −0.8 (r1: 1/5, −1.6) | 2/5, −0.2 (r1: 1/5) | 1/5, −1.0 (r1: 1/5) | 0 | 0 | ~0.8 s / ~1 s |
+
+Observations:
+- Bomb/rocket played while already holding the lead (rough count over model leads after two passes):
+  1 of 66 in round 1, 0 of 68 in round 2.
+- `model-history` moved from well below the heuristic to level with or above it on these 5 deals per
+  situation; `model-obs` improved less. With 5 deals and the run-to-run variation seen in round 1, this
+  may be partly noise; the held-out suite is what tests it.
+- Calls per episode rose (S1: 44 → 56 total over 5 deals), still far under the 60-per-episode limit.
+
 ### Held-out results
 
 TODO: after the prompt, heuristic and config are frozen (table above).
