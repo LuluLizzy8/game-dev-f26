@@ -28,5 +28,16 @@ class FoundByRulesReview20261028(unittest.TestCase):
         self.assertEqual(self.g.steps, 0)
 
 
+class FoundInFirstLiveRun20261028(unittest.TestCase):
+    """First live tuning run (traces/tuning, seed 100): writing a trace made the folder look modified, so the
+    next run's game_commit got "-dirty", and report.py could not pair the model with its heuristic baseline."""
+
+    def test_outputs_do_not_mark_the_code_dirty(self):
+        from runner import is_dirty
+        self.assertFalse(is_dirty(["?? traces/", "?? results/tuning.md", " M traces/tuning/a.jsonl"]))
+        self.assertTrue(is_dirty(["?? traces/", " M runner.py"]))
+        self.assertFalse(is_dirty([]))
+
+
 if __name__ == "__main__":
     unittest.main()
