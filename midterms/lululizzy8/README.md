@@ -2,7 +2,7 @@
 
 ## Scope statement
 
-DRAFT, rewrite in your own words. Scope changed from Guandan; post the change in the Week 3 thread.
+DRAFT, rewrite in your own words. (Scope change from Guandan posted in the Week 3 thread.)
 
 One episode is one deal of three-player Dou Dizhu (斗地主). The seed shuffles the deck and picks the
 landlord; there is no bidding. The deal ends when one player empties their hand. Changed from Guandan
@@ -14,14 +14,44 @@ matches, the four-player and two-deck variants.
 
 ## Commands
 
-All commands run from `midterms/lululizzy8/`. Python 3.12. The engine, baseline and tests use only the
-standard library; the live model player will also need `google-genai` (pinned in `requirements.txt`).
+All commands run from `midterms/lululizzy8/`. Python 3.12. The engine, baselines and tests use only the
+standard library; the live model player also needs `google-genai` (pinned in `requirements.txt`).
 
+Recording: TODO link.
+
+**Test** (no credentials, no network; the same command CI runs):
 ```
 python -m unittest discover -s tests -v
 ```
 
-Play, baseline and model-player commands: TODO, not built yet.
+**Play** one deal yourself against two heuristic players (type a number from the list, or the cards):
+```
+python play.py --seat 0 --seed 7
+```
+
+**Run players without credentials** (heuristic, random, and the model player with a scripted fixture that
+is not a model):
+```
+python runner.py --player heuristic --situation S1 --seeds 0-9 --out traces/scratch
+python runner.py --player model-history --fixture --situation S1 --seeds 0-2 --out traces/scratch
+python report.py traces/scratch --out results/scratch.md
+python tools/measure.py
+```
+
+**Live model player** (Vertex AI, `gemini-3.5-flash-lite`; spends cloud credit):
+```
+pip install -r requirements.txt
+gcloud auth application-default login
+```
+PowerShell:
+```
+$env:COURSE_PROVIDER='vertex'; $env:COURSE_MODEL='gemini-3.5-flash-lite'
+$env:GOOGLE_CLOUD_PROJECT='<your project id>'; $env:GOOGLE_CLOUD_LOCATION='global'
+python runner.py --player model-history --situation S1 --seeds 100-100 --out traces/tuning
+```
+bash: the same variables with `export NAME=value`. Missing variables stop the run; it never falls back to
+the fixture. Situations: `S1` agent is landlord, `S2` peasant after the landlord, `S3` peasant before.
+Players: `heuristic`, `random`, `model-history`, `model-obs`. See `EVALUATION.md` for the declared suite.
 
 ## Rule/source map
 
