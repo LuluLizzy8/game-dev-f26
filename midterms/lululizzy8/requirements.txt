@@ -1,0 +1,2 @@
+# Only the live model player needs this; engine, baselines and tests use the standard library.
+google-genai==2.33.0

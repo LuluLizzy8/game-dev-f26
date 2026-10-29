@@ -1,0 +1,42 @@
+{
+  "schema_version": "course-1",
+  "purpose": "Play one seat of a three-player Dou Dizhu deal by choosing one action from the legal list each turn.",
+  "tools_available": [],
+  "prohibited_actions": [
+    "mutate game state",
+    "see other players' hands, the seed or the trace",
+    "access files, shell, repository, evaluator or credentials"
+  ],
+  "memory_policy": "No persistent memory. model-history sees the public play history of the current deal (<= 154 entries); model-obs sees no history. Nothing carries across turns except what the observation shows.",
+  "context_sources": [
+    "doudizhu/engine.py:DouDizhu.observe (agent seat only)",
+    "doudizhu/engine.py:DouDizhu.legal_actions (agent seat only)",
+    "doudizhu/view.py:render"
+  ],
+  "prompts_or_system_instructions": "players/model.py:SYSTEM_PROMPT",
+  "model_choice": {
+    "provider": "vertex",
+    "model": "gemini-3.5-flash-lite",
+    "location": "global",
+    "selection": "explicit COURSE_PROVIDER and COURSE_MODEL; resolved model identifier recorded from the API response"
+  },
+  "sampling": {
+    "temperature": 0,
+    "top_p": 1,
+    "max_output_tokens": 256
+  },
+  "limits": {
+    "max_steps": 200,
+    "call_limit": 60,
+    "call_timeout_seconds": 30,
+    "wall_clock_seconds": 1800,
+    "invalid_limit": 10,
+    "retries_per_turn": 1
+  },
+  "named_failure_modes": [
+    "invalid JSON",
+    "action not in the legal list",
+    "provider timeout, quota or API error",
+    "call, timeout or invalid-reply forfeit"
+  ]
+}
