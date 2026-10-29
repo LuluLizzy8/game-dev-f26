@@ -1,0 +1,18 @@
+name: midterm-lululizzy8
+on:
+  pull_request:
+    paths:
+      - "midterms/lululizzy8/**"
+      - ".github/workflows/midterm-lululizzy8.yml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: midterms/lululizzy8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m unittest discover -s tests -v
