@@ -189,17 +189,24 @@ asymmetry is stated in EVALUATION.md limitations.
 
 ### 4.3 Memory / history variants (required comparison for partial observation)
 
-Dou Dizhu is partially observed (hidden hands), so both variants run on the **same held-out seeds**
-with the same frozen prompt, differing only in the `history` field:
+Dou Dizhu is partially observed (hidden hands), so all three model variants run on the **same held-out
+seeds** with the same frozen strategy prompt:
 
 - **`model-history`**: full public play history (bounded by the deal: ≤ 154 entries).
-- **`model-obs`**: no history; current play to beat, card counts, own hand, kitty.
+- **`model-obs`**: no history; current play to beat, card counts, own hand, kitty. Differs from
+  `model-history` only in the `history` field.
+- **`model-notes`** (added 2026-10-29, R23): the same as `model-history`, plus the model's own note from
+  its previous turn (≤ 300 characters, one line). It writes a new note in a required `notes` field with
+  each move; the runner stores it (the model still has no memory). The note shown is the last accepted
+  reply's note, or "(none)"; notes from rejected replies are dropped. `notes` comes after `action` in
+  the reply, so a note plans later moves, not the current one.
 
 Disclosed: `model-obs` sees less than the heuristic and `model-history` (the heuristic ignores history
-anyway, so this only handicaps the model). - **`model-notes`** (added 2026-10-29, R23): the same as `model-history`, plus the model's own note from
-  its previous turn (≤ 300 characters; it writes a new one in a `notes` field each move). The runner
-  stores the note; the model still has no memory. Its system prompt is the shared one plus a short notes
-  instruction. Compared with `model-history` it changes exactly one thing: the model's own memory.
+anyway, so this only handicaps the model). `model-notes` vs `model-history` is **not** a one-variable
+change: besides the note itself, `model-notes` has a longer system prompt (`NOTES_ADDENDUM`), a different
+response schema (`notes` required) and a longer reply to write under the same output-token cap. A
+difference between them is the effect of "notes as a whole", not of memory alone. It was also added after
+tuning rounds 1–3, so its addendum was not tuned.
 
 No variant has memory across episodes. Each model call is independent; everything the model knows is in
 that turn's message.
@@ -284,9 +291,9 @@ seed count below is sized for that.
 Each situation gets ≥ 30 live trials, above the brief's minimum of two.
 
 **Budget.** ~20 non-forced calls per episode; ~1–2k input tokens per call (measured on tuning seeds
-before the held-out run). 220 live episodes ≈ 4–9M tokens. **TODO: price from the Vertex pricing
-page on the run date and record the date.** Wall time ≈ 220 × 20 × 4 s ≈ 5 h sequential; run the
-three situations as parallel processes.
+before the held-out run). 310 live episodes (220 + 90 `model-notes`). Measured in tuning: ~5k input and
+~200 output tokens per episode, ~1 s per call; price recorded in EVALUATION.md (2026-10-28) → ≈ $0.65 and
+roughly 1–1.5 h sequential; the three situations can run as parallel processes.
 
 **Metrics per player × situation:**
 - wins / losses / no-result, with forfeits by reason (`call_limit`, `timeout`, `invalid_limit`) in

@@ -13,7 +13,7 @@
     "doudizhu/engine.py:DouDizhu.legal_actions (agent seat only)",
     "doudizhu/view.py:render"
   ],
-  "prompts_or_system_instructions": "players/model.py:SYSTEM_PROMPT",
+  "prompts_or_system_instructions": "players/model.py:system_prompt(variant) and schema(variant): SYSTEM_PROMPT and SCHEMA for model-history and model-obs; SYSTEM_PROMPT + NOTES_ADDENDUM and NOTES_SCHEMA for model-notes",
   "model_choice": {
     "provider": "vertex",
     "model": "gemini-3.5-flash-lite",

@@ -97,6 +97,8 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
             action, source = legal[0], "forced"  # R20
         elif seat == agent and is_model:
             action, source, error, attempts = None, None, None, []
+            if player == "model-notes":
+                record["notes_in"] = notes
             for _ in range(1 + limits["retries_per_turn"]):
                 if calls >= limits["call_limit"]:
                     result = forfeit(g, agent, "call_limit")
@@ -114,7 +116,7 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
                                  "model": reply.model})
                 if reply.action is not None:
                     action, source = reply.action, "model"
-                    if player == "model-notes" and reply.notes is not None:
+                    if player == "model-notes":  # the shown note is the last accepted reply's note, or none
                         notes = reply.notes
                     break
                 if not reply.api_error:  # a failed call is not shown to the model: it never replied

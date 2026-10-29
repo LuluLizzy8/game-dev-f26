@@ -74,7 +74,7 @@ def build_prompt(obs, legal, variant="model-history", error=None, notes=None):
         obs = {k: v for k, v in obs.items() if k != "history"}
     lines = [render(obs)]
     if variant == "model-notes":
-        lines.append(f"Your notes from your previous turn: {notes or '(none yet)'}")
+        lines.append(f"Your notes from your previous turn: {notes or '(none)'}")
     lines += ["", "Legal actions:"]
     lines += [f"  {i}. {a}" for i, a in enumerate(legal, 1)]
     if error:
@@ -121,7 +121,8 @@ def parse_reply(raw, legal):
     if not isinstance(data, dict) or "action" not in data:
         return None, 'reply must be a JSON object with an "action" field', None
     notes = data.get("notes")
-    notes = notes[:NOTES_LIMIT] if isinstance(notes, str) else None
+    # one line, so a note cannot imitate other prompt sections
+    notes = " ".join(notes.split())[:NOTES_LIMIT] if isinstance(notes, str) else None
     action = normalize(data["action"], legal)
     if action is None:
         return None, f"{data['action']!r} is not in the legal action list", notes

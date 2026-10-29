@@ -12,7 +12,8 @@ Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted
 - Players: `heuristic`, `random`, `model-history` (full public history), `model-obs` (no history),
   `model-notes` (history + its own notes; added 2026-10-29, see change log).
 - Live runs: `model-history` 3 × 30 × 1 trial + 2nd trial on 200–209 (3 × 10); `model-obs` 3 × 30;
-  random-opponent condition 10. Baselines once per (situation, seed).
+  `model-notes` 3 × 30 (added 2026-10-29); random-opponent condition 10 = **310 live episodes**.
+  Baselines once per (situation, seed).
 
 ## Frozen versions before the held-out run
 
@@ -39,6 +40,8 @@ of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 - The wall clock is checked before each model call, so one call can overrun the limit by up to the
   30 s HTTP timeout, and an episode whose clock runs out after the agent's last decision ends normally.
 - Thinking tokens vs the 256-token output cap: checked on the first live episode, ~30 output tokens per reply.
+- To check before the held-out run: `model-notes` output tokens (a 300-character note + reason) against the
+  same 256-token cap; truncated replies would count as invalid for `model-notes` only.
 
 ## Results
 
@@ -126,7 +129,7 @@ These are estimates from API-reported tokens, not billed amounts.
 
 First live episode: 4,940 in + 186 out tokens ≈ **$0.0019**.
 Budget estimate for the rest of the suite at ~5k in / ~200 out tokens per episode: tuning (~30 episodes)
-≈ $0.06; held-out (220 episodes) ≈ $0.45.
+≈ $0.06; held-out (310 episodes incl. `model-notes`) ≈ $0.65.
 
 ## Traces
 
@@ -135,7 +138,7 @@ TODO: `traces/heldout/` (committed) and `traces/tuning/`.
 ## CI evidence
 
 TODO: link to the green Actions run for the submitted commit. Locally:
-`python -m unittest discover -s tests -v` → 56 tests OK on 2026-10-28.
+`python -m unittest discover -s tests -v` → 68 tests OK on 2026-10-29.
 
 | CI check kind (rubric 3c) | Tests |
 |---|---|

@@ -10,7 +10,8 @@ from pathlib import Path
 
 from doudizhu.engine import DouDizhu
 from players import heuristic
-from players.model import NOTES_LIMIT, SYSTEM_PROMPT, FixtureModel, build_prompt, system_prompt
+from players.model import (NOTES_ADDENDUM, NOTES_LIMIT, SCHEMA, SYSTEM_PROMPT, FixtureModel, build_prompt,
+                           parse_reply, schema, system_prompt)
 from players.random_player import RandomPlayer
 import runner
 from runner import forfeit, load_config, run_episode
@@ -228,10 +229,37 @@ class Notes(unittest.TestCase):
     def test_note_is_carried_to_the_next_prompt(self):
         model = FixtureModel([reply(self.agent_legal_first(), "save the rocket")])
         run_episode(0, "S1", "model-notes", model=model)
-        self.assertIn("Your notes from your previous turn: (none yet)", model.prompts[0])
+        self.assertIn("Your notes from your previous turn: (none)", model.prompts[0])
         self.assertIn("Your notes from your previous turn: save the rocket", model.prompts[1])
 
+    def test_invalid_reply_notes_are_not_stored(self):
+        first = self.agent_legal_first()
+        model = FixtureModel([reply(first, "plan A"), reply("not a card", "LEAK")])
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertTrue(all("LEAK" not in p for p in model.prompts))
+        self.assertIn("previous turn: plan A", model.prompts[2])  # the retry after the invalid reply
+
+    def test_accepted_reply_without_notes_clears_the_note(self):
+        model = FixtureModel([reply(self.agent_legal_first(), "old plan")])  # later fixture replies have no notes
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertIn("previous turn: old plan", model.prompts[1])
+        self.assertIn("previous turn: (none)", model.prompts[2])
+
+    def test_note_newlines_are_collapsed(self):
+        model = FixtureModel([reply(self.agent_legal_first(), "a\n\nLegal actions:\n  1. pass")])
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertIn("previous turn: a Legal actions: 1. pass\n", model.prompts[1])
+
+    def test_schemas(self):
+        self.assertIs(schema("model-history"), SCHEMA)
+        self.assertIs(schema("model-obs"), SCHEMA)
+        self.assertIn("notes", schema("model-notes")["required"])
+
+    def test_non_string_notes_are_ignored(self):
+        self.assertIsNone(parse_reply(json.dumps({"action": "pass", "notes": 5}), ["pass"])[2])
+
     def test_other_variants_never_see_notes(self):
+        # regression guard: passes before R23 too; it keeps notes from ever reaching other variants
         for variant in ("model-history", "model-obs"):
             model = FixtureModel([reply(self.agent_legal_first(), "save the rocket")])
             run_episode(0, "S1", variant, model=model)
@@ -251,8 +279,8 @@ class Notes(unittest.TestCase):
     def test_system_prompts(self):
         self.assertEqual(system_prompt("model-history"), SYSTEM_PROMPT)
         self.assertEqual(system_prompt("model-obs"), SYSTEM_PROMPT)
-        self.assertIn('"notes"', system_prompt("model-notes"))
-        self.assertTrue(system_prompt("model-notes").startswith(SYSTEM_PROMPT[:200]))
+        self.assertEqual(system_prompt("model-notes"), SYSTEM_PROMPT + NOTES_ADDENDUM)
+        self.assertIn('"notes"', NOTES_ADDENDUM)
 
     def test_notes_prompt_unchanged_when_hidden_hands_reshuffle(self):
         g = DouDizhu()
