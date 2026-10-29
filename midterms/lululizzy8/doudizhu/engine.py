@@ -112,6 +112,7 @@ class DouDizhu:
             "seat": seat,
             "role": "landlord" if seat == self.landlord else "peasant",
             "landlord": self.landlord,
+            "teammate": None if seat == self.landlord else 3 - seat - self.landlord,  # R19
             "hand": label(self.hands[seat]),
             "kitty": label(self.kitty),
             "cards_left": [len(h) for h in self.hands],
@@ -180,7 +181,8 @@ class DouDizhu:
         if not self.reason:
             return {"status": "ongoing"}
         if self.winner is None:
-            return {"status": "terminal", "reason": self.reason, "winner": None, "scores": [0, 0, 0]}
+            return {"status": "terminal", "reason": self.reason, "winner": None,
+                    "spring": False, "multiplier": 1, "scores": [0, 0, 0]}
         landlord_won = self.winner == self.landlord
         plays = Counter(s for s, a in self.history if a != "pass")
         if landlord_won:

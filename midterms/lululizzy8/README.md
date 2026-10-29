@@ -48,7 +48,13 @@ Engine: `doudizhu/engine.py`. Tests: `tests/`.
 | R13a | The base stake is 1. | design | Follows from R4: with no bid there is no bid value. | `outcome` |
 | R14 | An episode stops with reason `step_limit` after `max_steps` accepted actions, including passes (default 200); no one wins. | design | A hard bound for the runner. Natural play cannot reach it: at most 52 plays with at most 2 passes between them is ≤ 154 steps, so it is a backstop. | `step` / `test_game.Limits` |
 | R15 | A player observes their own hand, the kitty, every player's card count, whose turn it is, the play to beat and the public play history. Never another player's hand. | design | Matches what a player at a real table can see. | `observe` / `test_game.Information` |
-| R16 | An action is a space-separated card list (`3 3 3 4`, `BJ RJ`) or `pass`. Card order does not matter. A refused action changes nothing. | design | Card lists are readable by a model and by a TA. | `step` / `test_game.Turns` |
+| R16 | An action is a space-separated card list (`3 3 3 4`, `BJ RJ`) or `pass`. Card order does not matter. A refused action, including a non-text action, changes nothing. | design | Card lists are readable by a model and by a TA. | `step` / `test_game.Turns`, `test_regressions` |
+| R17 | (Dropped: forced landlord seat. The runner seats the agent relative to the seeded landlord.) | — | DESIGN.md §2.1 | — |
+| R18 | The runner ends an episode as a forfeit when the agent seat exceeds its model-call limit (`call_limit`), the episode wall clock (`timeout`) or its invalid-reply limit (`invalid_limit`). The agent's side loses at the current bomb multiplier, no spring. The engine's `outcome()` is unchanged. | design | DESIGN.md §5: a run that ran out of budget did not succeed and must not look like a draw. | `runner.forfeit` / `test_runner.Limits` |
+| R19 | The observation names the seat's `teammate`: the other peasant for a peasant, `None` for the landlord. | design | Derivable from the public `landlord` field; stops a player misreading teams. | `observe` / `test_game.Information.test_teammate_is_named` |
+| R20 | When a seat has exactly one legal action, the runner plays it without calling the player, labeled `forced`. | design | DESIGN.md §5: not a decision; calling the model would only spend budget. | `runner.run_episode` / `test_runner.Forced` |
+| R21 | After a failed reply and a failed retry, the runner plays the heuristic's choice from that seat's own observation and legal list, labeled `fallback`. | design | DESIGN.md §5: keeps the deal playable; the label keeps results honest. | `runner.run_episode` / `test_runner.Fallback` |
+| R22 | Observation variants: `model-history` sees the full public history (≤ 154 entries); `model-obs` sees the same observation with `history` removed. | design | DESIGN.md §4.3: required history vs observation-only comparison. | `players/model.py` / `test_runner.Prompt` |
 
 ## Sources and reuse terms
 

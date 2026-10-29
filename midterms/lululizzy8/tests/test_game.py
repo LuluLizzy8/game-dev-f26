@@ -115,6 +115,16 @@ class Information(unittest.TestCase):
                 self.assertEqual((g.observe(viewer), g.legal_actions(viewer)), before)
                 g.hands = saved
 
+    def test_teammate_is_named(self):
+        """R19: a peasant sees the other peasant's seat; the landlord has no teammate."""
+        for seed in range(6):
+            g = DouDizhu()
+            g.reset(seed)
+            peasants = [s for s in range(3) if s != g.landlord]
+            self.assertIsNone(g.observe(g.landlord)["teammate"])
+            self.assertEqual(g.observe(peasants[0])["teammate"], peasants[1])
+            self.assertEqual(g.observe(peasants[1])["teammate"], peasants[0])
+
 
 class Scoring(unittest.TestCase):
     """R12, R13."""
@@ -142,6 +152,21 @@ class Scoring(unittest.TestCase):
         out = self.play(g, [(0, "3"), (1, "5"), (2, "6"), (0, "9"), (1, "A")])
         self.assertEqual((out["spring"], out["scores"]), (False, [-2, 1, 1]))
 
+    # Regression guards from the 2026-10-28 rules review (finding 14); they pass on the current engine.
+    def test_landlord_wins_without_spring(self):
+        out = self.play(game_with(["3 9", "5 6", "4 7"]), [(0, "3"), (1, "5"), (2, "7"), (0, "9")])
+        self.assertEqual((out["winner"], out["spring"], out["scores"]), ("landlord", False, [2, -1, -1]))
+
+    def test_rocket_doubles(self):
+        g = game_with(["3 9 BJ RJ", "4 A", "5 K"])
+        out = self.play(g, [(0, "3"), (1, "4"), (2, "5"), (0, "BJ RJ"), (1, "pass"), (2, "pass"), (0, "9")])
+        self.assertEqual((out["multiplier"], out["scores"]), (2, [4, -2, -2]))
+
+    def test_two_bombs_multiply(self):
+        g = game_with(["3 5 5 5 5 9", "4 6 6 6 6", "7 K"])
+        out = self.play(g, [(0, "3"), (1, "4"), (2, "7"), (0, "5 5 5 5"), (1, "6 6 6 6")])
+        self.assertEqual((out["winner"], out["multiplier"], out["scores"]), ("peasants", 4, [-8, 4, 4]))
+
 
 class Limits(unittest.TestCase):
     """R14."""
@@ -153,6 +178,7 @@ class Limits(unittest.TestCase):
             g.step(g.turn, g.legal_actions(g.turn)[0])
         out = g.outcome()
         self.assertEqual((out["reason"], out["winner"], out["scores"]), ("step_limit", None, [0, 0, 0]))
+        self.assertEqual((out["spring"], out["multiplier"]), (False, 1))  # same keys as hand_empty
         self.assertEqual(g.legal_actions(g.turn), [])
         self.assertFalse(g.step(g.turn, "3")["ok"])
 
