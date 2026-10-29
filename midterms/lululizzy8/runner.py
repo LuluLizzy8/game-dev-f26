@@ -24,13 +24,25 @@ def load_config(path=HERE / "agent-config.json"):
     return json.loads(text), hashlib.sha256(text).hexdigest()[:12]
 
 
+OUTPUTS = ("traces/", "results/")  # run outputs, not code: they must not change the game version
+
+
+def is_dirty(porcelain_lines, prefix=""):
+    """True if any changed path under this folder is code rather than run output."""
+    paths = [line[3:].strip('"').removeprefix(prefix) for line in porcelain_lines if line.strip()]
+    return any(not p.startswith(OUTPUTS) for p in paths)
+
+
+def git(*args):
+    return subprocess.run(["git", "-C", str(HERE), *args], capture_output=True, text=True, timeout=5).stdout
+
+
 def game_commit():
     try:
-        out = subprocess.run(["git", "-C", str(HERE), "rev-parse", "--short", "HEAD"],
-                             capture_output=True, text=True, timeout=5).stdout.strip()
-        dirty = subprocess.run(["git", "-C", str(HERE), "status", "--porcelain", "--", "."],
-                               capture_output=True, text=True, timeout=5).stdout.strip()
-        return (out or "unknown") + ("-dirty" if dirty else "")
+        commit = git("rev-parse", "--short", "HEAD").strip() or "unknown"
+        prefix = git("rev-parse", "--show-prefix").strip()  # porcelain paths are relative to the repo root
+        dirty = is_dirty(git("status", "--porcelain", "--", ".").splitlines(), prefix)
+        return commit + ("-dirty" if dirty else "")
     except (OSError, subprocess.SubprocessError):
         return "unknown"
 
