@@ -25,7 +25,7 @@ Changes to it go in the EVALUATION.md change log with a reason, never silently.
 ```
 python runner.py --player <heuristic|random|model-history|model-obs> --situation <S1|S2|S3> \
   --seeds <a-b> [--trials N] [--opponents heuristic|random] [--fixture] --out traces/<name>
-python report.py traces/<name> [more dirs] --out results/<name>.md
+python report.py traces/<name> [more dirs] --price-in <USD/1M in> --price-out <USD/1M out> \n  --out results/<name>.md
 ```
 
 ## After running

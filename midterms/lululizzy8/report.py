@@ -74,7 +74,7 @@ def pair_key(h):
     return h["seed"], h["situation"], h["opponents"], h["game_commit"], h["config_hash"]
 
 
-def table(episodes):
+def table(episodes, price_in=None, price_out=None):
     baseline = {}
     for ep in episodes:
         h = ep["header"]
@@ -88,8 +88,11 @@ def table(episodes):
     rows = []
     for key in sorted(groups):
         seeds = sorted({ep["header"]["seed"] for ep in groups[key]})
-        rows.append(dict(zip(("player", "mode", "model", "situation", "opponents"), key),
-                         seeds=f"{seeds[0]}-{seeds[-1]}", **summarize(groups[key], baseline)))
+        row = dict(zip(("player", "mode", "model", "situation", "opponents"), key),
+                   seeds=f"{seeds[0]}-{seeds[-1]}", **summarize(groups[key], baseline))
+        if price_in is not None and price_out is not None:  # USD per 1M tokens
+            row["est_cost_usd"] = round((row["tokens_in"] * price_in + row["tokens_out"] * price_out) / 1e6, 6)
+        rows.append(row)
     if not rows:
         return "No traces found.\n"
     cols = list(rows[0])
@@ -109,8 +112,10 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("dirs", nargs="+")
     p.add_argument("--out", help="write UTF-8 markdown here instead of printing")
+    p.add_argument("--price-in", type=float, help="USD per 1M input tokens (dated price in EVALUATION.md)")
+    p.add_argument("--price-out", type=float, help="USD per 1M output tokens")
     args = p.parse_args(argv)
-    text = table(load(args.dirs))
+    text = table(load(args.dirs), args.price_in, args.price_out)
     if args.out:
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
         Path(args.out).write_text(text, encoding="utf-8")

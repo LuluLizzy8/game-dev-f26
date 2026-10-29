@@ -46,10 +46,10 @@ of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 Table: `results/tuning-2026-10-28.md`; traces: `traces/tuning/`. One live episode, so this shows the
 pipeline working, not which player is better.
 
-| Player | Mode | Result | Agent score | Calls | Invalid | Fallbacks | Forced | Latency median / max | Tokens in / out |
+| Player | Mode | Result | Agent score | Calls | Invalid | Fallbacks | Forced | Latency median / max | Tokens in / out (est. cost) |
 |---|---|---|---|---|---|---|---|---|---|
 | heuristic | — | landlord wins | +2 | 0 | 0 | 0 | 2 | — | — |
-| model-history | live, `gemini-3.5-flash-lite` (id returned by API) | landlord wins (rocket played, ×2) | +4 | 6 | 0 | 0 | 1 | 0.84 s / 2.28 s | 4,940 / 186 |
+| model-history | live, `gemini-3.5-flash-lite` (id returned by API) | landlord wins (rocket played, ×2) | +4 | 6 | 0 | 0 | 1 | 0.84 s / 2.28 s | 4,940 / 186 (≈ $0.0019) |
 
 The report shows `pairs 0/1` for this run: the live episode was labeled game commit `ed6502c` and the
 heuristic run `ed6502c-dirty`, because writing the first trace made the folder look modified. That is a
@@ -61,7 +61,15 @@ by hand. Output tokens (~30 per reply) are far under the 256 cap, so thinking to
 
 TODO: after the prompt, heuristic and config are frozen (table above).
 
-**Price used:** TODO (source URL and date).
+**Price used:** Gemini 3.5 Flash-Lite on Vertex AI, location `global`, standard (not batch) rate:
+**$0.30 per 1M input tokens, $2.50 per 1M output tokens** (text output includes reasoning tokens).
+Source: https://cloud.google.com/vertex-ai/generative-ai/pricing, checked 2026-10-28. Cached input
+($0.03) is not used. Cost = tokens × price, via `python report.py <dirs> --price-in 0.30 --price-out 2.50`.
+These are estimates from API-reported tokens, not billed amounts.
+
+First live episode: 4,940 in + 186 out tokens ≈ **$0.0019**.
+Budget estimate for the rest of the suite at ~5k in / ~200 out tokens per episode: tuning (~30 episodes)
+≈ $0.06; held-out (220 episodes) ≈ $0.45.
 
 ## Traces
 

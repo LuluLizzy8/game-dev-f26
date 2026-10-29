@@ -48,6 +48,11 @@ class Report(unittest.TestCase):
         self.assertIn("| model-history | live |", text)
         self.assertIn("m-001", text)
 
+    def test_cost_column(self):
+        text = table(self.model, price_in=0.30, price_out=2.50)
+        # 3 episodes x (10 in, 2 out) = 30 in, 6 out -> (30*0.30 + 6*2.50) / 1e6
+        self.assertIn("| 2.4e-05 |", text)
+
 
 if __name__ == "__main__":
     unittest.main()
