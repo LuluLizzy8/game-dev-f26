@@ -51,7 +51,7 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 3c CI | all five kinds present, 55 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after push |
 | 3d agent team | table above | 🔨 |
 | 4a choices | DESIGN §11 | ✅ |
-| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds | 🔨 |
+| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds; three memory variants | 🔨 |
 | 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | 🔨 |
 | 5b authorship | AGENT-TEAM + limitations in my voice, peer notes used | ⬜ 👤 |
 | 5c recording | 3–5 min | ⬜ 👤 |

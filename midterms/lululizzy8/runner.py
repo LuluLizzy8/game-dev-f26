@@ -11,12 +11,12 @@ from pathlib import Path
 
 from doudizhu.engine import DouDizhu
 from players import heuristic
-from players.model import FixtureModel, build_prompt, prompt_hash
+from players.model import FixtureModel, build_prompt, prompt_hash, system_prompt
 from players.random_player import RandomPlayer
 
 HERE = Path(__file__).resolve().parent
 SITUATIONS = {"S1": 0, "S2": 1, "S3": 2}  # agent seat = (landlord + k) % 3
-PLAYERS = ("heuristic", "random", "model-history", "model-obs")
+PLAYERS = ("heuristic", "random", "model-history", "model-obs", "model-notes")
 
 
 def load_config(path=HERE / "agent-config.json"):
@@ -85,6 +85,7 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
               "config_hash": config_hash, "game_commit": game_commit(), "limits": limits,
               "sampling": config.get("sampling")}
     steps, calls, invalid = [], 0, 0
+    notes = None  # R23: the model-notes player's own note, kept here because the model has no memory
     started = clock()
     result = None
 
@@ -103,15 +104,18 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
                 if clock() - started >= limits["wall_clock_seconds"]:
                     result = forfeit(g, agent, "timeout")
                     break
-                prompt = build_prompt(obs, legal, player, error)
-                reply = model.ask(prompt, legal)
+                prompt = build_prompt(obs, legal, player, error, notes)
+                reply = model.ask(prompt, legal, player)
                 calls += 1
-                attempts.append({"prompt_hash": prompt_hash(prompt), "raw": reply.raw, "error": reply.error,
+                attempts.append({"prompt_hash": prompt_hash(prompt, system_prompt(player)), "raw": reply.raw,
+                                 "error": reply.error,
                                  "api_error": reply.api_error, "latency": round(reply.latency, 3),
                                  "input_tokens": reply.input_tokens, "output_tokens": reply.output_tokens,
                                  "model": reply.model})
                 if reply.action is not None:
                     action, source = reply.action, "model"
+                    if player == "model-notes" and reply.notes is not None:
+                        notes = reply.notes
                     break
                 if not reply.api_error:  # a failed call is not shown to the model: it never replied
                     invalid += 1

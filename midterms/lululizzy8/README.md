@@ -51,7 +51,7 @@ python runner.py --player model-history --situation S1 --seeds 100-100 --out tra
 ```
 bash: the same variables with `export NAME=value`. Missing variables stop the run; it never falls back to
 the fixture. Situations: `S1` agent is landlord, `S2` peasant after the landlord, `S3` peasant before.
-Players: `heuristic`, `random`, `model-history`, `model-obs`. See `EVALUATION.md` for the declared suite.
+Players: `heuristic`, `random`, `model-history`, `model-obs`, `model-notes`. See `EVALUATION.md` for the declared suite.
 
 ## Rule/source map
 
@@ -85,6 +85,7 @@ Engine: `doudizhu/engine.py`. Tests: `tests/`.
 | R20 | When a seat has exactly one legal action, the runner plays it without calling the player, labeled `forced`. | design | DESIGN.md §5: not a decision; calling the model would only spend budget. | `runner.run_episode` / `test_runner.Forced` |
 | R21 | After a failed reply and a failed retry, the runner plays the heuristic's choice from that seat's own observation and legal list, labeled `fallback`. | design | DESIGN.md §5: keeps the deal playable; the label keeps results honest. | `runner.run_episode` / `test_runner.Fallback` |
 | R22 | Observation variants: `model-history` sees the full public history (≤ 154 entries); `model-obs` sees the same observation with `history` removed. | design | DESIGN.md §4.3: required history vs observation-only comparison. | `players/model.py` / `test_runner.Prompt` |
+| R23 | `model-notes` sees everything `model-history` sees plus its own note from its previous turn (at most 300 characters). The runner stores the note; it changes only after a model move (not after a fallback or forced move). No other variant sees notes. | design | DESIGN.md §4.3: tests whether the model's own memory helps beyond the public history. The note is the model's own text, built from its own view, so it carries no hidden information. | `runner.run_episode`, `players/model.py` / `test_runner.Notes` |
 
 ## Sources and reuse terms
 

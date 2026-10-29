@@ -10,7 +10,7 @@ from pathlib import Path
 
 from doudizhu.engine import DouDizhu
 from players import heuristic
-from players.model import FixtureModel, build_prompt
+from players.model import NOTES_LIMIT, SYSTEM_PROMPT, FixtureModel, build_prompt, system_prompt
 from players.random_player import RandomPlayer
 import runner
 from runner import forfeit, load_config, run_episode
@@ -168,19 +168,20 @@ class Prompt(unittest.TestCase):
                 return super().reset(*args, **kwargs)
 
         class Checking(FixtureModel):
-            def ask(inner, prompt, legal):
+            def ask(inner, prompt, legal, variant_arg=None):
                 g = games[-1]
                 agent = (g.landlord + runner.SITUATIONS[situation]) % 3
                 self.assertEqual(g.turn, agent)
                 self.assertEqual(legal, g.legal_actions(agent))
                 self.assertEqual(prompt, build_prompt(g.observe(agent), legal, variant))
-                return super().ask(prompt, legal)
+                self.assertEqual(variant_arg, variant)
+                return super().ask(prompt, legal, variant_arg)
 
         original = runner.DouDizhu
         runner.DouDizhu = Recording
         try:
             for situation in ("S1", "S2", "S3"):
-                for variant in ("model-history", "model-obs"):
+                for variant in ("model-history", "model-obs", "model-notes"):  # fixture writes no notes
                     model = Checking()
                     run_episode(4, situation, variant, model=model)
                     self.assertTrue(model.prompts)
@@ -207,6 +208,64 @@ class Prompt(unittest.TestCase):
         self.assertNotIn("History", no_history)
         self.assertNotIn("last action", no_history)
         self.assertIn("To beat:", no_history)
+
+
+def reply(action, notes=None):
+    data = {"action": action}
+    if notes is not None:
+        data["notes"] = notes
+    return json.dumps(data)
+
+
+class Notes(unittest.TestCase):
+    """R23: model-notes = model-history plus the model's own note from its previous turn, held by the runner."""
+
+    def agent_legal_first(self, seed=0):
+        g = DouDizhu()
+        g.reset(seed)
+        return g.legal_actions(g.landlord)[0]
+
+    def test_note_is_carried_to_the_next_prompt(self):
+        model = FixtureModel([reply(self.agent_legal_first(), "save the rocket")])
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertIn("Your notes from your previous turn: (none yet)", model.prompts[0])
+        self.assertIn("Your notes from your previous turn: save the rocket", model.prompts[1])
+
+    def test_other_variants_never_see_notes(self):
+        for variant in ("model-history", "model-obs"):
+            model = FixtureModel([reply(self.agent_legal_first(), "save the rocket")])
+            run_episode(0, "S1", variant, model=model)
+            self.assertTrue(all("notes" not in p.lower() for p in model.prompts), variant)
+
+    def test_note_is_capped(self):
+        model = FixtureModel([reply(self.agent_legal_first(), "x" * 1000)])
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertIn("x" * NOTES_LIMIT, model.prompts[1])
+        self.assertNotIn("x" * (NOTES_LIMIT + 1), model.prompts[1])
+
+    def test_note_survives_a_fallback_turn(self):
+        model = FixtureModel([reply(self.agent_legal_first(), "keep pairs"), BAD, BAD])
+        run_episode(0, "S1", "model-notes", model=model)
+        self.assertIn("Your notes from your previous turn: keep pairs", model.prompts[3])
+
+    def test_system_prompts(self):
+        self.assertEqual(system_prompt("model-history"), SYSTEM_PROMPT)
+        self.assertEqual(system_prompt("model-obs"), SYSTEM_PROMPT)
+        self.assertIn('"notes"', system_prompt("model-notes"))
+        self.assertTrue(system_prompt("model-notes").startswith(SYSTEM_PROMPT[:200]))
+
+    def test_notes_prompt_unchanged_when_hidden_hands_reshuffle(self):
+        g = DouDizhu()
+        g.reset(3)
+        g.step(g.turn, heuristic.choose(g.observe(g.turn), g.legal_actions(g.turn)))
+        viewer = g.turn
+        before = build_prompt(g.observe(viewer), g.legal_actions(viewer), "model-notes", notes="n")
+        others = [s for s in range(3) if s != viewer]
+        pool = g.hands[others[0]] + g.hands[others[1]]
+        random.Random(1).shuffle(pool)
+        cut = len(g.hands[others[0]])
+        g.hands[others[0]], g.hands[others[1]] = sorted(pool[:cut]), sorted(pool[cut:])
+        self.assertEqual(build_prompt(g.observe(viewer), g.legal_actions(viewer), "model-notes", notes="n"), before)
 
 
 class Baselines(unittest.TestCase):

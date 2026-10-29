@@ -196,9 +196,13 @@ with the same frozen prompt, differing only in the `history` field:
 - **`model-obs`**: no history; current play to beat, card counts, own hand, kitty.
 
 Disclosed: `model-obs` sees less than the heuristic and `model-history` (the heuristic ignores history
-anyway, so this only handicaps the model). No persistent memory across episodes or of the model's own
-reasoning: public history already holds what a real player could remember, and adding self-notes would
-change two variables at once. That omission is a stated design result.
+anyway, so this only handicaps the model). - **`model-notes`** (added 2026-10-29, R23): the same as `model-history`, plus the model's own note from
+  its previous turn (≤ 300 characters; it writes a new one in a `notes` field each move). The runner
+  stores the note; the model still has no memory. Its system prompt is the shared one plus a short notes
+  instruction. Compared with `model-history` it changes exactly one thing: the model's own memory.
+
+No variant has memory across episodes. Each model call is independent; everything the model knows is in
+that turn's message.
 
 ---
 
@@ -274,6 +278,7 @@ seed count below is sized for that.
 | heuristic, random | heuristic | 3 situations × 30 seeds, one run each (deterministic / seeded) |
 | `model-history` | heuristic | 3 × 30 × 1 trial, plus a 2nd trial on seeds 200–209 (3 × 10) to measure run-to-run variation = 120 |
 | `model-obs` | heuristic | 3 × 30 × 1 = 90 |
+| `model-notes` (added 2026-10-29, before any held-out run) | heuristic | 3 × 30 × 1 = 90 |
 | `model-history` vs heuristic, held-out opponent | random | S1, seeds 200–209 = 10 each |
 
 Each situation gets ≥ 30 live trials, above the brief's minimum of two.
@@ -429,7 +434,7 @@ recommended, what I decided and why. No agent approves a gate or merges the PR.
 | Opponents | heuristic (+ random as a held-out opponent) | model vs model | Fixed opponents make deals comparable across players. |
 | Teammate knowledge | conventions described to the model | say nothing | Removes most of the "copy of itself" advantage. |
 | Comparison | paired deals, 30 held-out seeds per situation | independent deals; 10 seeds | Reduces card luck; enough discordant pairs to show a difference. |
-| History | full public history vs none, same seeds | persistent memory | Tests card counting cleanly; memory adds a second variable. |
+| History / memory | three variants: no history, full public history, history + own notes | one variant only | Each step adds one kind of information, so each comparison changes one thing. |
 | Fallback | heuristic move, labeled, plus fallback-free stats | random move; skip turn | Keeps the deal playable; results stay honest. |
 | Budget breach | runner forfeit = loss, own column | continue on fallback; draw | A run that ran out of budget did not succeed. |
 

@@ -9,7 +9,8 @@ Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted
 - Situations: **S1** agent is landlord; **S2** peasant after the landlord; **S3** peasant before the landlord.
 - Opponents: heuristic (all runs); random (held-out opponent condition, S1, seeds 200–209).
 - Seeds: heuristic development 0–99; prompt tuning 100–104; **held out 200–229**.
-- Players: `heuristic`, `random`, `model-history` (full public history), `model-obs` (no history).
+- Players: `heuristic`, `random`, `model-history` (full public history), `model-obs` (no history),
+  `model-notes` (history + its own notes; added 2026-10-29, see change log).
 - Live runs: `model-history` 3 × 30 × 1 trial + 2nd trial on 200–209 (3 × 10); `model-obs` 3 × 30;
   random-opponent condition 10. Baselines once per (situation, seed).
 
@@ -148,5 +149,8 @@ TODO: link to the green Actions run for the submitted commit. Locally:
 ## Change log after the freeze
 
 - 2026-10-28: none.
+- 2026-10-29: added the `model-notes` player (R23) at my request, before any held-out seed was run.
+  Reason: every model call is independent, so `model-history` cannot remember its own plan; this tests
+  whether its own notes help beyond the public history. Adds 90 held-out episodes (≈ $0.2).
 
 ## Limitations **[student voice — TODO]**

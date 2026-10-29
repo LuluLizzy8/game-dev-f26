@@ -7,7 +7,7 @@
     "see other players' hands, the seed or the trace",
     "access files, shell, repository, evaluator or credentials"
   ],
-  "memory_policy": "No persistent memory. model-history sees the public play history of the current deal (<= 154 entries); model-obs sees no history. Nothing carries across turns except what the observation shows.",
+  "memory_policy": "No persistent memory; every call is independent. model-history sees the public play history of the current deal (<= 154 entries); model-obs sees no history; model-notes sees the history plus its own note from its previous turn (<= 300 characters), stored by the runner. Nothing carries across episodes.",
   "context_sources": [
     "doudizhu/engine.py:DouDizhu.observe (agent seat only)",
     "doudizhu/engine.py:DouDizhu.legal_actions (agent seat only)",

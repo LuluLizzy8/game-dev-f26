@@ -46,20 +46,44 @@ SCHEMA = {
     "required": ["action"],
 }
 
+# R23: model-notes keeps a short note to itself between turns. The runner stores it; the model has no memory.
+NOTES_LIMIT = 300
+NOTES_ADDENDUM = f"""
 
-def build_prompt(obs, legal, variant="model-history", error=None):
-    """The whole model input for one turn. R22: model-obs drops the public history."""
+You also get your own notes from your previous turn. Add a "notes" field to your reply: what you want to
+remember next turn (plan, cards you think are gone, what to save), at most {NOTES_LIMIT} characters:
+{{"action": "...", "reason": "...", "notes": "..."}}"""
+NOTES_SCHEMA = {
+    "type": "object",
+    "properties": {"action": {"type": "string"}, "reason": {"type": "string"}, "notes": {"type": "string"}},
+    "required": ["action", "notes"],
+}
+
+
+def system_prompt(variant):
+    return SYSTEM_PROMPT + NOTES_ADDENDUM if variant == "model-notes" else SYSTEM_PROMPT
+
+
+def schema(variant):
+    return NOTES_SCHEMA if variant == "model-notes" else SCHEMA
+
+
+def build_prompt(obs, legal, variant="model-history", error=None, notes=None):
+    """The whole model input for one turn. R22: model-obs drops the public history. R23: model-notes adds notes."""
     if variant == "model-obs":
         obs = {k: v for k, v in obs.items() if k != "history"}
-    lines = [render(obs), "", "Legal actions:"]
+    lines = [render(obs)]
+    if variant == "model-notes":
+        lines.append(f"Your notes from your previous turn: {notes or '(none yet)'}")
+    lines += ["", "Legal actions:"]
     lines += [f"  {i}. {a}" for i, a in enumerate(legal, 1)]
     if error:
         lines += ["", f"Your previous reply was rejected: {error}. Choose again from the list."]
     return "\n".join(lines)
 
 
-def prompt_hash(text):
-    return hashlib.sha256((SYSTEM_PROMPT + "\n" + text).encode()).hexdigest()[:12]
+def prompt_hash(text, system=SYSTEM_PROMPT):
+    return hashlib.sha256((system + "\n" + text).encode()).hexdigest()[:12]
 
 
 def normalize(text, legal):
@@ -85,19 +109,23 @@ class Reply:
     input_tokens: int | None = None
     output_tokens: int | None = None
     model: str | None = None
+    notes: str | None = None  # model-notes only; capped at NOTES_LIMIT
 
 
 def parse_reply(raw, legal):
+    """-> (action or None, error or None, notes or None)."""
     try:
         data = json.loads(raw)
     except (json.JSONDecodeError, TypeError):
-        return None, "reply was not valid JSON"
+        return None, "reply was not valid JSON", None
     if not isinstance(data, dict) or "action" not in data:
-        return None, 'reply must be a JSON object with an "action" field'
+        return None, 'reply must be a JSON object with an "action" field', None
+    notes = data.get("notes")
+    notes = notes[:NOTES_LIMIT] if isinstance(notes, str) else None
     action = normalize(data["action"], legal)
     if action is None:
-        return None, f"{data['action']!r} is not in the legal action list"
-    return action, None
+        return None, f"{data['action']!r} is not in the legal action list", notes
+    return action, None, notes
 
 
 class FixtureModel:
@@ -110,15 +138,15 @@ class FixtureModel:
         self.replies = list(replies or [])  # strings or Exceptions, used in order; then legal[0]
         self.prompts = []
 
-    def ask(self, prompt, legal):
+    def ask(self, prompt, legal, variant="model-history"):
         self.prompts.append(prompt)
         started = time.monotonic()
         raw = self.replies.pop(0) if self.replies else json.dumps({"action": legal[0]})
         if isinstance(raw, Exception):
             return Reply(None, None, f"call failed: {type(raw).__name__}", True, time.monotonic() - started,
                          model=self.model_id)
-        action, error = parse_reply(raw, legal)
-        return Reply(action, raw, error, False, time.monotonic() - started, 0, 0, self.model_id)
+        action, error, notes = parse_reply(raw, legal)
+        return Reply(action, raw, error, False, time.monotonic() - started, 0, 0, self.model_id, notes)
 
 
 class VertexModel:
@@ -144,21 +172,25 @@ class VertexModel:
                 retry_options=types.HttpRetryOptions(attempts=1),
             ),
         )
-        self.gen_config = types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT,
+        self.sampling = sampling
+
+    def gen_config(self, variant):
+        types = self.types
+        return types.GenerateContentConfig(
+            system_instruction=system_prompt(variant),
             response_mime_type="application/json",
-            response_json_schema=SCHEMA,
-            temperature=sampling["temperature"],
-            top_p=sampling["top_p"],
-            max_output_tokens=sampling["max_output_tokens"],
+            response_json_schema=schema(variant),
+            temperature=self.sampling["temperature"],
+            top_p=self.sampling["top_p"],
+            max_output_tokens=self.sampling["max_output_tokens"],
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
         )
 
-    def ask(self, prompt, legal):
+    def ask(self, prompt, legal, variant="model-history"):
         started = time.monotonic()
         try:
             response = self.client.models.generate_content(
-                model=self.model_id, contents=prompt, config=self.gen_config)
+                model=self.model_id, contents=prompt, config=self.gen_config(variant))
         except Exception as error:  # timeouts, quota, network: a failed call, counted by the runner
             # Only type and status code: provider messages can contain the project ID, and traces are public.
             code = getattr(error, "code", None) or getattr(error, "status_code", None)
@@ -173,5 +205,5 @@ class VertexModel:
         if not response.candidates or response.candidates[0].finish_reason != self.types.FinishReason.STOP:
             return Reply(None, None, "the reply did not complete normally", False, latency, tokens_in, tokens_out, model)
         raw = response.text
-        action, error = parse_reply(raw, legal)
-        return Reply(action, raw, error, False, latency, tokens_in, tokens_out, model)
+        action, error, notes = parse_reply(raw, legal)
+        return Reply(action, raw, error, False, latency, tokens_in, tokens_out, model, notes)
