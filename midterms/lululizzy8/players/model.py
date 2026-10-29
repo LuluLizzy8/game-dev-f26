@@ -27,6 +27,13 @@ Your teammate (if you are a peasant) is a scripted player with these habits: it 
 combination, shedding as many cards as it can; it plays the cheapest card set that beats; it does not
 beat your plays unless it can go out; it bombs only when an opponent has 4 or fewer cards.
 
+Strategy:
+1. Never play a bomb or the rocket when "To beat" is nothing (you already have the lead): it wins
+   nothing. Save bombs and the rocket to take the lead back, or to go out.
+2. Do not lead 2s or jokers as singles early. Lead low cards and long combinations first; keep high
+   cards to regain the lead later.
+3. Before each play, check that the cards you would have left can still be played out in a few turns.
+
 Each turn you get the table and a numbered list of every legal action. Reply with JSON only:
 {"action": "<exactly one action string from the list>", "reason": "<at most one short sentence>"}"""
 
