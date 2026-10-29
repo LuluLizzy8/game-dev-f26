@@ -1,6 +1,6 @@
 # Evaluation
 
-Status: skeleton. No live episodes yet. Tables are filled with the `ddz-eval-run` skill.
+Status: in progress. One live tuning episode so far. Tables are filled with the `ddz-eval-run` skill.
 
 ## Declared suite (frozen before tuning)
 
@@ -37,13 +37,29 @@ of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 
 - The wall clock is checked before each model call, so one call can overrun the limit by up to the
   30 s HTTP timeout, and an episode whose clock runs out after the agent's last decision ends normally.
-- To check on tuning seeds before the held-out run: whether thinking tokens count against
-  `max_output_tokens` = 256 and cut replies short (they would count as invalid replies).
+- Thinking tokens vs the 256-token output cap: checked on the first live episode, ~30 output tokens per reply.
 
 ## Results
 
-TODO: comparison table from `report.py` (tuning seeds, then held-out), with model id as returned by the API,
-config hash, game commit, latency, tokens, and cost.
+### 2026-10-28: first live episode (tuning seed 100, S1), checkpoint evidence
+
+Table: `results/tuning-2026-10-28.md`; traces: `traces/tuning/`. One live episode, so this shows the
+pipeline working, not which player is better.
+
+| Player | Mode | Result | Agent score | Calls | Invalid | Fallbacks | Forced | Latency median / max | Tokens in / out |
+|---|---|---|---|---|---|---|---|---|---|
+| heuristic | — | landlord wins | +2 | 0 | 0 | 0 | 2 | — | — |
+| model-history | live, `gemini-3.5-flash-lite` (id returned by API) | landlord wins (rocket played, ×2) | +4 | 6 | 0 | 0 | 1 | 0.84 s / 2.28 s | 4,940 / 186 |
+
+The report shows `pairs 0/1` for this run: the live episode was labeled game commit `ed6502c` and the
+heuristic run `ed6502c-dirty`, because writing the first trace made the folder look modified. That is a
+real bug, now a regression test (`test_regressions.FoundInFirstLiveRun20261028`, failing commit `5a002a0`,
+fix `8379355`). The engine and players are identical between the two labels; the pair above is matched
+by hand. Output tokens (~30 per reply) are far under the 256 cap, so thinking tokens did not truncate replies.
+
+### Held-out results
+
+TODO: after the prompt, heuristic and config are frozen (table above).
 
 **Price used:** TODO (source URL and date).
 
@@ -54,14 +70,14 @@ TODO: `traces/heldout/` (committed) and `traces/tuning/`.
 ## CI evidence
 
 TODO: link to the green Actions run for the submitted commit. Locally:
-`python -m unittest discover -s tests -v` → 55 tests OK on 2026-10-28.
+`python -m unittest discover -s tests -v` → 56 tests OK on 2026-10-28.
 
 | CI check kind (rubric 3c) | Tests |
 |---|---|
 | Rule invariants | `test_combos.Invariants`; `test_game.Turns.test_full_games_end_and_conserve_cards` |
 | Legal / illegal actions | `test_combos.Lead`, `Rejected`, `Beats`; `test_game.Turns`; `test_runner.Fallback` |
 | Terminal outcome | `test_game.Scoring`; `test_runner.Baselines` |
-| Observed regression | `test_regressions` (two bugs found by review, test committed failing in `7168315`, fixed in `72bfc27`) |
+| Observed regression | `test_regressions`: two bugs found by review (failing `7168315`, fixed `72bfc27`); one found in the first live run (failing `5a002a0`, fixed `8379355`) |
 | Episode limits | `test_game.Limits`; `test_runner.Limits` (call, invalid, timeout, step, forfeit scoring) |
 | Information boundary | `test_game.Information`; `test_view`; `test_runner.Prompt` |
 
