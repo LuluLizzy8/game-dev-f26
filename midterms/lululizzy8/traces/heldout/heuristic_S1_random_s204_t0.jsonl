@@ -1,0 +1,45 @@
+{"type": "header", "seed": 204, "situation": "S1", "trial": 0, "player": "heuristic", "opponents": "random", "agent_seat": 0, "landlord": 0, "live": false, "model_requested": null, "config_hash": "13e067d04638", "game_commit": "eed053e", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 0, "action": "3 3 3 3 7 7 9 9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 3, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 4, "seat": 0, "action": "4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 1, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 6, "seat": 2, "action": "10", "source": "random", "accepted": true}
+{"type": "step", "step": 7, "seat": 0, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 1, "action": "A", "source": "random", "accepted": true}
+{"type": "step", "step": 9, "seat": 2, "action": "2", "source": "random", "accepted": true}
+{"type": "step", "step": 10, "seat": 0, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 12, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 13, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 1, "action": "7", "source": "random", "accepted": true}
+{"type": "step", "step": 15, "seat": 2, "action": "9", "source": "random", "accepted": true}
+{"type": "step", "step": 16, "seat": 0, "action": "Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 1, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 18, "seat": 2, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 19, "seat": 0, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 1, "action": "10", "source": "random", "accepted": true}
+{"type": "step", "step": 21, "seat": 2, "action": "Q", "source": "random", "accepted": true}
+{"type": "step", "step": 22, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 1, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 24, "seat": 2, "action": "A", "source": "random", "accepted": true}
+{"type": "step", "step": 25, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 1, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 27, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 28, "seat": 0, "action": "7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 1, "action": "K", "source": "random", "accepted": true}
+{"type": "step", "step": 30, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 31, "seat": 0, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 1, "action": "BJ", "source": "random", "accepted": true}
+{"type": "step", "step": 33, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 34, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 35, "seat": 1, "action": "9", "source": "random", "accepted": true}
+{"type": "step", "step": 36, "seat": 2, "action": "Q", "source": "random", "accepted": true}
+{"type": "step", "step": 37, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 1, "action": "2", "source": "random", "accepted": true}
+{"type": "step", "step": 39, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 40, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 41, "seat": 1, "action": "8", "source": "random", "accepted": true}
+{"type": "step", "step": 42, "seat": 2, "action": "pass", "source": "random", "accepted": true}
+{"type": "step", "step": 43, "seat": 0, "action": "Q", "source": "heuristic", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 1, "scores": [2, -1, -1], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 1, "scores": [2, -1, -1]}, "steps": 43, "calls": 0, "invalid": 0, "models_returned": [], "agent_score": 2, "elapsed": 0.0}

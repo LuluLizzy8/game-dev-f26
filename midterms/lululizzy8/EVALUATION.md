@@ -1,6 +1,6 @@
 # Evaluation
 
-Status: in progress. One live tuning episode so far. Tables are filled with the `ddz-eval-run` skill.
+Status: held-out suite run 2026-11-06. Tables are filled with the `ddz-eval-run` skill.
 
 ## Declared suite (frozen before tuning)
 
@@ -121,7 +121,46 @@ broke up its hand and lost. "Start with your lowest" seems to override "lead lon
 
 ### Held-out results
 
-TODO: after the prompt, heuristic and config are frozen (table above).
+### 2026-11-06: held-out suite (seeds 200–229), frozen versions
+
+Full table (every field, every condition): `results/heldout-2026-11-06.md`; traces: `traces/heldout/`
+(510 episodes: 310 live, 200 baseline). Live model `gemini-3.5-flash-lite` (id as returned by the API),
+Vertex AI `global`, config hash `13e067d04638`, game commit `eed053e` in every trace header.
+Price: the dated rate below. Live cost ≈ **$1.27** (estimate was $0.65; history prompts grew longer than
+measured on development seeds).
+
+**Main comparison, trial 1 only, so every player has the same 30 deals per situation, opponents heuristic.**
+Wins out of 30 and mean agent score.
+
+| Player | S1 (landlord) | S2 (peasant after landlord) | S3 (peasant before landlord) |
+|---|---|---|---|
+| heuristic (baseline) | **17/30, +0.27** | **13/30, −0.13** | 13/30, −0.13 |
+| random | 2/30, −2.00 | 9/30, −0.40 | 10/30, −0.47 |
+| model-history | 8/30, −1.20 | 8/30, −0.53 | 12/30, −0.30 |
+| model-obs (no history) | 3/30, −1.93 | 11/30, −0.30 | **14/30, −0.07** |
+| model-notes (history + own notes) | 10/30, −0.53 | 12/30, −0.30 | 11/30, −0.50 |
+
+Failures over all 310 live episodes: 0 forfeits (call limit, timeout, invalid limit), 0 step-limit
+endings, 0 fallback moves, 3 invalid replies (each fixed on the retry), 1 API error (retried).
+Latency median 0.8–1.0 s, p95 ≤ 2.3 s. Tokens and cost per condition are in the full table.
+
+Repeated trials: `model-history` ran a second trial on seeds 200–209 in every situation. The two trials
+gave the same win/loss on 7/10 (S1), 5/10 (S2) and 9/10 (S3) deals, so temperature 0 is not deterministic
+and single deals vary a lot.
+
+Random opponents (S1, seeds 200–209): heuristic 10/10 (+2.2), `model-history` 7/10 (+0.4), random 3/10.
+
+Reading (10 or 30 deals per cell; no statistical certainty implied):
+- The heuristic baseline is the strongest player as landlord (S1): 17/30 vs 8–10/30 for the model
+  players. Paired on the same deals, `model-history` scores −1.55 per deal below the heuristic over
+  all 40 S1 episodes. The round 2 prompt's gains on the 5 tuning deals did not hold on held-out deals.
+- As a peasant (S2, S3) all players are close (8–14 wins out of 30), with differences inside the
+  trial-to-trial variation above. A peasant's result also depends on the heuristic teammate.
+- History vs observation only: history helped as landlord (8 vs 3 wins, −1.20 vs −1.93) and not as a
+  peasant. Own notes helped most as landlord (10/30, −0.53), but notes also change the system prompt and
+  reply format (DESIGN §4.3), so this is not a one-variable comparison, and `model-notes` was never tuned.
+- The experiment separates the players: random is clearly below the heuristic in S1 (2 vs 17 wins), and
+  the model is between them.
 
 **Price used:** Gemini 3.5 Flash-Lite on Vertex AI, location `global`, standard (not batch) rate:
 **$0.30 per 1M input tokens, $2.50 per 1M output tokens** (text output includes reasoning tokens).
@@ -135,7 +174,7 @@ Budget estimate for the rest of the suite at ~5k in / ~200 out tokens per episod
 
 ## Traces
 
-TODO: `traces/heldout/` (committed) and `traces/tuning/`.
+`traces/heldout/` (held-out suite), `traces/tuning*/` (tuning rounds), `traces/notes-check/`. One JSON object per line: header, steps (with every model attempt, raw reply, latency, tokens, source `model`/`forced`/`fallback`), result.
 
 ## CI evidence
 

@@ -1,0 +1,53 @@
+{"type": "header", "seed": 203, "situation": "S2", "trial": 0, "player": "model-obs", "opponents": "heuristic", "agent_seat": 0, "landlord": 2, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "13e067d04638", "game_commit": "eed053e", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 2, "action": "3 4 5 6 7 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 0, "attempts": [{"prompt_hash": "b1fc23e67962", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"I cannot beat the landlord's straight with a higher straight of the same length.\"\n}", "error": null, "api_error": false, "latency": 0.937, "input_tokens": 703, "output_tokens": 34, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 3, "seat": 1, "action": "5 6 7 8 9 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 4, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 5, "seat": 0, "attempts": [{"prompt_hash": "14b4048bc2fb", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Teammate played a straight and I need to keep my higher straight to beat the landlord.\"\n}", "error": null, "api_error": false, "latency": 0.781, "input_tokens": 706, "output_tokens": 36, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 6, "seat": 1, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 7, "seat": 2, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 0, "attempts": [{"prompt_hash": "32070c51633e", "raw": "{\n  \"action\": \"Q Q\",\n  \"reason\": \"Play a higher pair to beat the landlord.\"\n}", "error": null, "api_error": false, "latency": 0.797, "input_tokens": 700, "output_tokens": 27, "model": "gemini-3.5-flash-lite"}], "action": "Q Q", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 2, "action": "K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 12, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 2, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 0, "attempts": [{"prompt_hash": "673458fd3636", "raw": "{\n  \"action\": \"J\",\n  \"reason\": \"Play a higher single to challenge the landlord.\"\n}", "error": null, "api_error": false, "latency": 0.938, "input_tokens": 707, "output_tokens": 26, "model": "gemini-3.5-flash-lite"}], "action": "J", "source": "model", "accepted": true}
+{"type": "step", "step": 15, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 2, "action": "Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 0, "attempts": [{"prompt_hash": "b2c7ad7abb23", "raw": "{\n  \"action\": \"2\",\n  \"reason\": \"Play 2 to take the lead with a high card.\"\n}", "error": null, "api_error": false, "latency": 0.937, "input_tokens": 661, "output_tokens": 29, "model": "gemini-3.5-flash-lite"}], "action": "2", "source": "model", "accepted": true}
+{"type": "step", "step": 18, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 20, "seat": 0, "attempts": [{"prompt_hash": "200aef6a8f4e", "raw": "{\"action\": \"4\", \"reason\": \"Lead a low single card to shed cards and retain higher pairs and straights.\"}", "error": null, "api_error": false, "latency": 3.016, "input_tokens": 788, "output_tokens": 27, "model": "gemini-3.5-flash-lite"}], "action": "4", "source": "model", "accepted": true}
+{"type": "step", "step": 21, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 2, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 0, "attempts": [{"prompt_hash": "a2d965b8568e", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Save our high singles and pairs for later.\"\n}", "error": null, "api_error": false, "latency": 0.906, "input_tokens": 677, "output_tokens": 26, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 24, "seat": 1, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 25, "seat": 2, "action": "10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 0, "attempts": [{"prompt_hash": "1bd11d2551d0", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Save high cards to regain the lead later.\"\n}", "error": null, "api_error": false, "latency": 0.75, "input_tokens": 653, "output_tokens": 26, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 27, "seat": 1, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 28, "seat": 2, "action": "Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 0, "attempts": [{"prompt_hash": "5585ad063b52", "raw": "{\n  \"action\": \"A\",\n  \"reason\": \"Play a higher single to challenge the landlord and retain initiative.\"\n}", "error": null, "api_error": false, "latency": 2.109, "input_tokens": 651, "output_tokens": 29, "model": "gemini-3.5-flash-lite"}], "action": "A", "source": "model", "accepted": true}
+{"type": "step", "step": 30, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 33, "seat": 1, "action": "BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 34, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 35, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 36, "seat": 1, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 37, "seat": 2, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 0, "attempts": [{"prompt_hash": "878e3b632f31", "raw": "{\"action\": \"pass\", \"reason\": \"Save higher cards and keep control for later.\"}", "error": null, "api_error": false, "latency": 1.0, "input_tokens": 645, "output_tokens": 20, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 39, "seat": 1, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 40, "seat": 2, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 41, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 42, "seat": 1, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 43, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 44, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 45, "seat": 1, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 46, "seat": 2, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 47, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 48, "seat": 1, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 49, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 50, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 51, "seat": 1, "action": "A", "source": "forced", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 1, "scores": [1, 1, -2], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 1, "scores": [1, 1, -2]}, "steps": 51, "calls": 10, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": 1, "elapsed": 12.171}

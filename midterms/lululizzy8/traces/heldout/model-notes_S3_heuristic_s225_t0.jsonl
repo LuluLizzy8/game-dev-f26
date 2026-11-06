@@ -1,0 +1,24 @@
+{"type": "header", "seed": 225, "situation": "S3", "trial": 0, "player": "model-notes", "opponents": "heuristic", "agent_seat": 1, "landlord": 2, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "13e067d04638", "game_commit": "eed053e", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 2, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 0, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 3, "seat": 1, "notes_in": null, "attempts": [{"prompt_hash": "31882c3455b3", "raw": "{\n  \"action\": \"K K\",\n  \"notes\": \"Teammate played 4 4. I played K K to contest the lead. Keep 888 and 1010 for later.\",\n  \"reason\": \"Play K K to beat teammate's pair and try to take the lead.\"\n}", "error": null, "api_error": false, "latency": 0.828, "input_tokens": 836, "output_tokens": 72, "model": "gemini-3.5-flash-lite"}], "action": "K K", "source": "model", "accepted": true}
+{"type": "step", "step": 4, "seat": 2, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 6, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 7, "seat": 2, "action": "5 5 5 6 6 6 J J Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 9, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 10, "seat": 2, "action": "7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 0, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 12, "seat": 1, "notes_in": "Teammate played 4 4. I played K K to contest the lead. Keep 888 and 1010 for later.", "attempts": [{"prompt_hash": "84545bb0d818", "raw": "{\n  \"action\": \"10\",\n  \"notes\": \"Teammate led 9, I beat with 10. Need to block landlord who has only 5 cards left.\",\n  \"reason\": \"I play 10 to beat teammate's 9 and keep the initiative.\"\n}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1001, "output_tokens": 67, "model": "gemini-3.5-flash-lite"}], "action": "10", "source": "model", "accepted": true}
+{"type": "step", "step": 13, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 15, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 16, "seat": 2, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 0, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 18, "seat": 1, "notes_in": "Teammate led 9, I beat with 10. Need to block landlord who has only 5 cards left.", "attempts": [{"prompt_hash": "44b5e4b31d76", "raw": "{\n  \"action\": \"J\",\n  \"notes\": \"Landlord has 3 cards left. Played J to beat teammate's 9 and block landlord.\",\n  \"reason\": \"Play J to beat the previous play and block the landlord who has only 3 cards left.\"\n}", "error": null, "api_error": false, "latency": 0.828, "input_tokens": 1083, "output_tokens": 63, "model": "gemini-3.5-flash-lite"}], "action": "J", "source": "model", "accepted": true}
+{"type": "step", "step": 19, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 21, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 22, "seat": 2, "action": "BJ RJ", "source": "heuristic", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, -2, 4], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, -2, 4]}, "steps": 22, "calls": 3, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": -2, "elapsed": 2.578}

@@ -19,7 +19,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy c
 |---|---|---|
 | `README.md` | setup / play / test / evaluation commands from a fresh clone, working dir for each; scope statement; rule/source map with labels; sources + reuse terms; recording link | 🔨 (scope 👤 in my voice; recording link ⬜) |
 | `EVALUATION.md` | declared suite, comparison table, traces/links, CI evidence for this version, limitations paragraph | 🔨 (limitations 👤) |
-| `AGENT-TEAM.md` | one-page log: each agent, what it could see/do, what it recommended, what I decided, where the evidence is | ⬜ 👤 (my voice) |
+| `AGENT-TEAM.md` | one-page log: each agent, what it could see/do, what it recommended, what I decided, where the evidence is | 🔨 draft from the repo history; rewrite in my voice 👤 |
 | Peer playtest notes, received and given | `peer-notes/` | ⬜ 👤 (playtest week of Nov 2, notes by Nov 6) |
 | Recording, 3–5 min, agent playing without manual moves, limits stated | link in README + PR | ⬜ 👤 |
 | Game, executable player, baseline, tests, agent configs, reports, traces | this folder | 🔨 |
@@ -30,7 +30,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy c
 |---|---|---|---|
 | Implementation agent | `CLAUDE.md` | exported session transcripts in `sessions/` (cleaned) | 🔨 (export sessions 👤 with `/export`) |
 | Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change; invoked by name in ≥ 2 sessions | 🔨 (steps followed for R19 + regressions in this session; named invocations 👤 in folder sessions) |
-| Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | invoked by name in ≥ 2 sessions | 🔨 |
+| Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | invoked by name in ≥ 2 sessions | 🔨 (steps followed for tuning and held-out runs; named invocations need a session started in this folder 👤) |
 | Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` (`2026-10-28-runner-review.md`) | ✅ first run (decisions 👤) |
 | Design reviews | `reviews/2026-10-28-design-review*.md` | 3 reviewers on rev 1–2 | ✅ (my decisions 👤) |
 
@@ -44,15 +44,15 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 1b scope | README scope + Week 3 post | 🔨 (Week 3 post ✅; README scope 👤) |
 | 1c sources | README + DESIGN §9 | 🔨 (RLCard/DouZero licences if cited) |
 | 2a core loop | `play.py` start to end; browser version `web/` (same engine via Pyodide, `tests/test_web.py`) | ✅ built (peer playtest 👤) |
-| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; first live episode ✅ (traces/tuning); held-out runs ⬜ |
+| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; held-out runs ✅ 2026-11-06 (`traces/heldout/`, 310 live, 0 fallbacks) |
 | 2c information | `tests/test_game.Information`, `test_view`, `test_runner.Prompt` | ✅ |
 | 3a runs | fresh-clone dry run of README commands | ⬜ |
 | 3b limits | `runner.py` + `tests/test_runner.py` | ✅ |
 | 3c CI | all five kinds present, 55 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after push |
 | 3d agent team | table above | 🔨 |
 | 4a choices | DESIGN §11 | ✅ |
-| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds; three memory variants | 🔨 |
-| 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | 🔨 |
+| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds; three memory variants | ✅ run and interpreted in EVALUATION |
+| 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | ✅ held-out 2026-11-06 (`results/heldout-2026-11-06.md`) |
 | 5b authorship | AGENT-TEAM + limitations in my voice, peer notes used | ⬜ 👤 |
 | 5c recording | 3–5 min | ⬜ 👤 |
 

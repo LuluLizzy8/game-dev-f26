@@ -1,0 +1,48 @@
+{"type": "header", "seed": 217, "situation": "S2", "trial": 0, "player": "model-notes", "opponents": "heuristic", "agent_seat": 2, "landlord": 1, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "13e067d04638", "game_commit": "eed053e", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 1, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 2, "notes_in": null, "attempts": [{"prompt_hash": "4117a4b8729a", "raw": "{\n  \"action\": \"K K\",\n  \"notes\": \"Used KK to beat landlord's pair of 3s. Keep low pairs and save jokers for defense.\",\n  \"reason\": \"Play a higher pair to contest the landlord's lead.\"\n}", "error": null, "api_error": false, "latency": 1.0, "input_tokens": 828, "output_tokens": 59, "model": "gemini-3.5-flash-lite"}], "action": "K K", "source": "model", "accepted": true}
+{"type": "step", "step": 3, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 4, "seat": 1, "action": "2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 2, "notes_in": "Used KK to beat landlord's pair of 3s. Keep low pairs and save jokers for defense.", "attempts": [{"prompt_hash": "969eecc312e1", "raw": "{\n  \"action\": \"BJ RJ\",\n  \"notes\": \"Used rocket (BJ RJ) to take the lead from landlord's 2s. Will lead low straight or singles next.\",\n  \"reason\": \"Use the rocket to stop the landlord's high pair and take control.\"\n}", "error": null, "api_error": false, "latency": 0.843, "input_tokens": 855, "output_tokens": 65, "model": "gemini-3.5-flash-lite"}], "action": "BJ RJ", "source": "model", "accepted": true}
+{"type": "step", "step": 6, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 7, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 8, "seat": 2, "notes_in": "Used rocket (BJ RJ) to take the lead from landlord's 2s. Will lead low straight or singles next.", "attempts": [{"prompt_hash": "7512da784ce1", "raw": "{\n  \"action\": \"4 5 6 7 8 9\",\n  \"notes\": \"Led the straight to shed low cards. Retain high cards to regain lead later.\",\n  \"reason\": \"Leading the 6-card straight to clear low cards and keep control.\"\n}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1010, "output_tokens": 65, "model": "gemini-3.5-flash-lite"}], "action": "4 5 6 7 8 9", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 10, "seat": 1, "action": "5 6 7 8 9 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 12, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 13, "seat": 1, "action": "5 5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 2, "notes_in": "Led the straight to shed low cards. Retain high cards to regain lead later.", "attempts": [{"prompt_hash": "56eb68a1b74b", "raw": "{\n  \"action\": \"Q Q\",\n  \"notes\": \"Played QQ to beat landlord's pair, leaving 4, 7, 8, A. Landlord has 8 cards left.\",\n  \"reason\": \"Beat the pair with QQ to maintain pressure and force landlord's high cards.\"\n}", "error": null, "api_error": false, "latency": 0.906, "input_tokens": 983, "output_tokens": 69, "model": "gemini-3.5-flash-lite"}], "action": "Q Q", "source": "model", "accepted": true}
+{"type": "step", "step": 15, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 17, "seat": 2, "notes_in": "Played QQ to beat landlord's pair, leaving 4, 7, 8, A. Landlord has 8 cards left.", "attempts": [{"prompt_hash": "2b194de46d0f", "raw": "{\n  \"action\": \"4\",\n  \"notes\": \"Led my lowest single 4. Remaining hand: 7, 8, J, A.\",\n  \"reason\": \"I must lead my lowest single to shed cards.\"\n}", "error": null, "api_error": false, "latency": 0.938, "input_tokens": 1047, "output_tokens": 53, "model": "gemini-3.5-flash-lite"}], "action": "4", "source": "model", "accepted": true}
+{"type": "step", "step": 18, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 1, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 2, "notes_in": "Led my lowest single 4. Remaining hand: 7, 8, J, A.", "attempts": [{"prompt_hash": "f616498360aa", "raw": "{\"action\": \"7\", \"notes\": \"Play 7 to beat the landlord's 6, keeping J and A for higher singles.\", \"reason\": \"Beat the 6 with my 7.\"}", "error": null, "api_error": false, "latency": 0.906, "input_tokens": 1084, "output_tokens": 44, "model": "gemini-3.5-flash-lite"}], "action": "7", "source": "model", "accepted": true}
+{"type": "step", "step": 21, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 1, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 2, "notes_in": "Play 7 to beat the landlord's 6, keeping J and A for higher singles.", "attempts": [{"prompt_hash": "34a938dea4f2", "raw": "{\"action\": \"A\", \"notes\": \"Play A to beat 8 and keep J for later.\", \"reason\": \"My Ace beats the landlord's 8.\"}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1115, "output_tokens": 37, "model": "gemini-3.5-flash-lite"}], "action": "A", "source": "model", "accepted": true}
+{"type": "step", "step": 24, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 25, "seat": 1, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 27, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 28, "seat": 1, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 30, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 1, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 33, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 34, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 35, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 36, "seat": 0, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 37, "seat": 1, "action": "Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 39, "seat": 0, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 40, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 41, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 42, "seat": 0, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 43, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 44, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 45, "seat": 0, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 46, "seat": 1, "action": "K", "source": "heuristic", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, 4, -2], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "landlord", "spring": false, "multiplier": 2, "scores": [-2, 4, -2]}, "steps": 46, "calls": 7, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": -2, "elapsed": 6.437}

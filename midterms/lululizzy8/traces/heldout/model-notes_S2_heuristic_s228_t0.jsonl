@@ -1,0 +1,53 @@
+{"type": "header", "seed": 228, "situation": "S2", "trial": 0, "player": "model-notes", "opponents": "heuristic", "agent_seat": 1, "landlord": 0, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "13e067d04638", "game_commit": "eed053e", "limits": {"max_steps": 200, "call_limit": 60, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 0, "action": "3 3 3 7 7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 1, "notes_in": null, "attempts": [{"prompt_hash": "cc0a979a1f46", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord played a plane with pairs. Save my cards and let teammate act.\",\n  \"reason\": \"I want to save my airplanes and high pairs to beat later.\"\n}", "error": null, "api_error": false, "latency": 0.875, "input_tokens": 857, "output_tokens": 52, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 3, "seat": 2, "action": "5 5 Q Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 4, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 5, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 6, "seat": 2, "action": "4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 7, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 1, "notes_in": "Landlord played a plane with pairs. Save my cards and let teammate act.", "attempts": [{"prompt_hash": "e81a118159e6", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Let teammate handle low singles if possible, save my hand for a strong counter later.\",\n  \"reason\": \"I will pass to save my middle cards and let my teammate contest the landlord.\"\n}", "error": null, "api_error": false, "latency": 0.812, "input_tokens": 936, "output_tokens": 56, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 2, "action": "6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 0, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 1, "notes_in": "Let teammate handle low singles if possible, save my hand for a strong counter later.", "attempts": [{"prompt_hash": "b9ca332ba960", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Let landlord play higher singles, save my cards for middle control.\",\n  \"reason\": \"Save higher singles for later control.\"\n}", "error": null, "api_error": false, "latency": 0.907, "input_tokens": 968, "output_tokens": 43, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 12, "seat": 2, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 0, "action": "10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 1, "notes_in": "Let landlord play higher singles, save my cards for middle control.", "attempts": [{"prompt_hash": "a548b5fb050a", "raw": "{\n  \"action\": \"J\",\n  \"notes\": \"Played J to beat landlord's 10, retaining high cards.\",\n  \"reason\": \"I will play a Jack to beat the landlord's 10 and try to take control.\"\n}", "error": null, "api_error": false, "latency": 0.875, "input_tokens": 998, "output_tokens": 58, "model": "gemini-3.5-flash-lite"}], "action": "J", "source": "model", "accepted": true}
+{"type": "step", "step": 15, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 1, "notes_in": "Played J to beat landlord's 10, retaining high cards.", "attempts": [{"prompt_hash": "b267449b2dde", "raw": "{\"action\": \"A\", \"notes\": \"Play A to beat landlord's K, retaining 2 and other high cards for later.\", \"reason\": \"My Ace beats the landlord's King.\"}", "error": null, "api_error": false, "latency": 0.797, "input_tokens": 1022, "output_tokens": 43, "model": "gemini-3.5-flash-lite"}], "action": "A", "source": "model", "accepted": true}
+{"type": "step", "step": 18, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 21, "seat": 2, "action": "BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 23, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 24, "seat": 2, "action": "7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 25, "seat": 0, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 1, "notes_in": "Play A to beat landlord's K, retaining 2 and other high cards for later.", "attempts": [{"prompt_hash": "79e5d0c8da2d", "raw": "{\"action\": \"9\", \"notes\": \"Play 9 to beat landlord's 8, keeping higher singles.\", \"reason\": \"Beat the 8 with a 9 to contest the trick.\"}", "error": null, "api_error": false, "latency": 0.937, "input_tokens": 1182, "output_tokens": 43, "model": "gemini-3.5-flash-lite"}], "action": "9", "source": "model", "accepted": true}
+{"type": "step", "step": 27, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 28, "seat": 0, "action": "10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 1, "notes_in": "Play 9 to beat landlord's 8, keeping higher singles.", "attempts": [{"prompt_hash": "e73483f931d4", "raw": "{\n  \"action\": \"J\",\n  \"notes\": \"Beat landlord's 10 with J to maintain pressure and keep high K for later.\",\n  \"reason\": \"Beat the 10 with a higher single J.\"\n}", "error": null, "api_error": false, "latency": 0.891, "input_tokens": 1211, "output_tokens": 53, "model": "gemini-3.5-flash-lite"}], "action": "J", "source": "model", "accepted": true}
+{"type": "step", "step": 30, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 33, "seat": 2, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 34, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 35, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 36, "seat": 2, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 37, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 38, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 39, "seat": 2, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 40, "seat": 0, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 41, "seat": 1, "notes_in": "Beat landlord's 10 with J to maintain pressure and keep high K for later.", "attempts": [{"prompt_hash": "653e51cb7bcf", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord played J. Let teammate or landlord take the lead; save high cards like Q and K.\",\n  \"reason\": \"Save our high Q and K for later since the landlord played a high J.\"\n}", "error": null, "api_error": false, "latency": 1.063, "input_tokens": 1379, "output_tokens": 60, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 42, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 43, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 44, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 45, "seat": 2, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 46, "seat": 0, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 47, "seat": 1, "notes_in": "Landlord played J. Let teammate or landlord take the lead; save high cards like Q and K.", "attempts": [{"prompt_hash": "8ff985abbecc", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord has 4 cards. Pass and let teammate handle single J.\",\n  \"reason\": \"Save Q and K to beat landlord later.\"\n}", "error": null, "api_error": false, "latency": 0.797, "input_tokens": 1469, "output_tokens": 48, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 48, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 49, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 50, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 51, "seat": 2, "action": "10", "source": "forced", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 1, "scores": [-2, 1, 1], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 1, "scores": [-2, 1, 1]}, "steps": 51, "calls": 9, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": 1, "elapsed": 7.969}
