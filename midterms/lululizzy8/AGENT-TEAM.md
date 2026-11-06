@@ -12,7 +12,7 @@ in the session.
 
 | Agent | Role | Could see / do | Could not | Evidence |
 |---|---|---|---|---|
-| Claude Code with `CLAUDE.md` | Implementation (programmer, producer) | Read and edit this folder and its workflow file; run tests; run live episodes when I said so; commit locally | Push, open a PR, edit other folders, review its own changes, write my student-voice sections | `CLAUDE.md`; commits on `lululizzy8/midterm`; `sessions/` [TODO: export] |
+| Claude Code with `CLAUDE.md` | Implementation (programmer, producer) | Read and edit this folder and its workflow file; run tests; run live episodes when I said so; commit locally | Push, open a PR, edit other folders, review its own changes, write my student-voice sections | `CLAUDE.md`; commits on `lululizzy8/midterm`; `sessions/2026-11-game-creation.txt` |
 | `ddz-rule-change` skill | Reusable skill (rules process) | Steps for any rule change: README map row, failing test first, engine, reviewer | — | `.claude/skills/ddz-rule-change/SKILL.md`; used for R18–R23 and the three regression fixes |
 | `ddz-eval-run` skill | Reusable skill (QA / evaluation) | Steps for running episodes: seed ranges, freeze before held-out seeds, live vs fixture labels | — | `.claude/skills/ddz-eval-run/SKILL.md`; tuning rounds 1–3 and the held-out run |
 | `ddz-rules-reviewer` subagent | Independent review (QA) | Read, Grep, Glob only; reviewed changes it did not write; never asked to approve | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/2026-10-28-runner-review.md` (18 findings), `reviews/2026-10-29-notes-review.md` (13), `reviews/2026-11-06-two-deck-review.md` (14) |

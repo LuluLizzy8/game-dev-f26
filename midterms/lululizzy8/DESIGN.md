@@ -29,7 +29,7 @@ what that means for CI and the dated freeze.
 | 3a runs | README commands for PowerShell and bash, pinned `requirements.txt`, no-credential fixture run (§8) | README done; fresh-clone check TODO |
 | 3b limits | `runner.py` step / call / HTTP-timeout / wall-clock / invalid limits, explicit reasons (§5) | built + tested (`test_runner.Limits`) |
 | 3c CI | five check kinds in the folder workflow (§7) | all five kinds present locally (55 tests); CI first runs at push |
-| 3d agent team | folder-local `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | config + 4 reviews done; session exports TODO |
+| 3d agent team | folder-local `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | config + 5 reviews done; first session export in `sessions/` |
 | 4a choices | §11 decision table with the alternative each beat | this doc |
 | 4b experiment | heuristic baseline, paired deals, 30 held-out seeds per situation (§4.1, §6) | baseline built; runs TODO |
 | 5a comparison | `EVALUATION.md`; suite frozen by a dated local commit before tuning (§6) | TODO |

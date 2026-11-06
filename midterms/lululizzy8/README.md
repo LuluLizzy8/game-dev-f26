@@ -63,6 +63,12 @@ bash: the same variables with `export NAME=value`. Missing variables stop the ru
 the fixture. Situations: `S1` agent is landlord, `S2` peasant after the landlord, `S3` peasant before.
 Players: `heuristic`, `random`, `model-history`, `model-obs`, `model-notes`. See `EVALUATION.md` for the declared suite.
 
+## Other documents
+
+- `DESIGN.md`: design, limits and decision table. `EVALUATION.md`: suites, results and limitations.
+- `AGENT-TEAM.md`: the agents, what each could do, and my decisions. `reviews/`: independent review findings.
+- `sessions/`: exported Claude Code conversations, cleaned of the project ID, local paths and LAN address.
+
 ## Rule/source map
 
 Source **[Pagat]**: John McLeod, "Dou Dizhu", pagat.com, https://www.pagat.com/climbing/doudizhu.html.

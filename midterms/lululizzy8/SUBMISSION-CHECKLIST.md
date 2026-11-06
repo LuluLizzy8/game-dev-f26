@@ -28,7 +28,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy c
 
 | Role | Artifact | Evidence of use | Status |
 |---|---|---|---|
-| Implementation agent | `CLAUDE.md` | exported session transcripts in `sessions/` (cleaned) | 🔨 (export sessions 👤 with `/export`) |
+| Implementation agent | `CLAUDE.md` | exported session transcripts in `sessions/` (cleaned) | ✅ `sessions/2026-11-game-creation.txt` (project ID, LAN IP and local paths removed); other sessions optional 👤 |
 | Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change; invoked by name in ≥ 2 sessions | 🔨 (steps followed for R19 + regressions in this session; named invocations 👤 in folder sessions) |
 | Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | invoked by name in ≥ 2 sessions | 🔨 (steps followed for tuning and held-out runs; named invocations need a session started in this folder 👤) |
 | Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` (`2026-10-28-runner-review.md`) | ✅ first run (decisions 👤) |
