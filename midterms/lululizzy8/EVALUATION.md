@@ -17,12 +17,14 @@ Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted
 
 ## Frozen versions before the held-out run
 
+Frozen 2026-11-06, before any held-out seed was run.
+
 | Item | Commit / hash |
 |---|---|
-| `players/model.py` (prompt) | TODO |
-| `players/heuristic.py` | TODO |
-| `agent-config.json` (config hash in every trace) | TODO |
-| Game commit | TODO |
+| `players/model.py` (prompt) | `fa58165`: the round 2 prompt (`27e56eb`); rule 4 from round 3 removed because it made play worse |
+| `players/heuristic.py` | `253e79f` (unchanged since it was written) |
+| `agent-config.json` (config hash in every trace) | `cb6d27a`, config hash `13e067d04638` |
+| Game commit | the commit recorded in each held-out trace header (`game_commit`) |
 
 ## Measurements on non-held-out seeds (2026-10-28, `python tools/measure.py`)
 
@@ -40,8 +42,8 @@ of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 - The wall clock is checked before each model call, so one call can overrun the limit by up to the
   30 s HTTP timeout, and an episode whose clock runs out after the agent's last decision ends normally.
 - Thinking tokens vs the 256-token output cap: checked on the first live episode, ~30 output tokens per reply.
-- To check before the held-out run: `model-notes` output tokens (a 300-character note + reason) against the
-  same 256-token cap; truncated replies would count as invalid for `model-notes` only.
+- `model-notes` output tokens against the same 256-token cap: checked 2026-11-06 on tuning seeds 100–101
+  (S1, 10 calls, `traces/notes-check/`): median 68, max 76, so notes are not truncated.
 
 ## Results
 
@@ -152,6 +154,7 @@ TODO: link to the green Actions run for the submitted commit. Locally:
 ## Change log after the freeze
 
 - 2026-10-28: none.
+- 2026-11-06: prompt frozen at the round 2 version (see the frozen-versions table).
 - 2026-10-29: added the `model-notes` player (R23) at my request, before any held-out seed was run.
   Reason: every model call is independent, so `model-history` cannot remember its own plan; this tests
   whether its own notes help beyond the public history. Adds 90 held-out episodes (≈ $0.2).
