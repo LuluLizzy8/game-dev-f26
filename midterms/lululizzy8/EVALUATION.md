@@ -29,7 +29,14 @@ superseded, and its numbers do not describe the current game. Tables are filled 
 
 ### Frozen versions
 
-TWO_DECK_FROZEN
+Frozen 2026-11-06, before any two-deck held-out seed was run.
+
+| Item | Commit / hash |
+|---|---|
+| `players/model.py` (prompt) | `e9fb2d8`: round 2 strategy rules, rules paragraph rewritten for two decks; not re-tuned |
+| `players/heuristic.py` | `e9fb2d8`: smallest bomb first (fewest cards, then lowest rank) |
+| `agent-config.json` | `e9fb2d8`, config hash `9540bd7658e1` (call_limit 120, max_steps 400) |
+| Game commit | the commit recorded in each held-out trace header (`game_commit`) |
 
 ### Results
 
