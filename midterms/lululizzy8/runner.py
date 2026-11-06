@@ -59,7 +59,8 @@ def forfeit(g, agent_seat, reason):
 
 
 def run_episode(seed, situation, player, opponents="heuristic", model=None, config=None,
-                trial=0, trace_path=None, clock=time.monotonic, config_hash=None):
+                trial=0, trace_path=None, clock=time.monotonic, config_hash=None, on_step=None):
+    """on_step(g, record), if given, is called after each accepted move (web/serve.py shows live games with it)."""
     if config is None:
         config, config_hash = load_config()
     elif config_hash is None:  # an in-memory config (tests): hash its content
@@ -140,6 +141,8 @@ def run_episode(seed, situation, player, opponents="heuristic", model=None, conf
             raise RuntimeError(f"refused {action!r} from {source}: {outcome}")
         record.update(action=action, source=source, accepted=True)
         steps.append(record)
+        if on_step:
+            on_step(g, record)
 
     if result is None:
         result = dict(g.outcome(), forfeit=False)

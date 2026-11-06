@@ -32,12 +32,22 @@ python -m unittest discover -s tests -v
 python play.py --seat 0 --seed 7
 ```
 
-**Play in a browser** (desktop or phone; same engine and heuristic opponents, run in the browser by Pyodide):
+**Play in a browser** (card table for desktop or phone; rebuilt after the [playtest](playtest.txt)):
 ```
-python -m http.server 8000
+python web/serve.py
 ```
-then open http://localhost:8000/web/ (from a phone on the same Wi-Fi, add `--bind 0.0.0.0` and use this
-computer's IP address). The first load downloads Pyodide (about 10 MB) and needs internet. Tap cards, then Play.
+then open http://localhost:8000/web/. The home screen has four choices:
+1. **Play the game** against two heuristic players. Tap cards, then Play; drag cards to reorder your hand.
+2. **Rule handbook**, every combination with pictures (also the button top right on every screen).
+3. **Watch the baseline**: three heuristic players, following one seat.
+4. **Watch the AI**: the model plays one seat live (needs the live-model setup below; spends cloud credit).
+
+Play, the handbook and the baseline run in the browser (Pyodide, the same engine and heuristic; the first
+load downloads about 10 MB and needs internet), so any static server also works for them. Watch the AI
+runs `runner.run_episode` on this computer with the evaluation's limits and labels, saves a trace to
+`traces/watch/`, and sends the page only the AI seat's view. The server listens on this computer only; for a
+phone on the same Wi-Fi, use `python web/serve.py --host 0.0.0.0` and this computer's IP address (anyone on
+that network could then start live games).
 
 **Run players without credentials** (heuristic, random, and the model player with a scripted fixture that
 is not a model):

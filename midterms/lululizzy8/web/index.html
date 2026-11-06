@@ -10,11 +10,10 @@
 <!-- Pyodide runs the same Python engine and heuristic as play.py; see web/session.py. -->
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <style>
-/* One card table: opponents up top, the play in the middle, your fan at the bottom; reflows by its own width. */
 :root {
   --page: #0b1d1b; --felt: #18443e; --felt-deep: #0f2e2a; --rim: #2c5a52;
   --brass: #d9a441; --ivory: #f8f2e4; --ink: #1e1a16; --seal: #b3261e;
-  --text: #e8eee9; --muted: #9db6af; --line: rgba(232,238,233,.14); --bad: #f1a39c;
+  --text: #e8eee9; --muted: #9db6af; --line: rgba(232,238,233,.14); --bad: #f1a39c; --good: #a8dcb4;
   --f-rank: "Young Serif", Georgia, "Times New Roman", serif;
   --f-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-han: "Ma Shan Zheng", "KaiTi", "STKaiti", serif;
@@ -24,61 +23,105 @@
 html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; background: var(--page); color: var(--text); font-family: var(--f-ui); font-size: 15px; line-height: 1.5; }
 [hidden] { display: none !important; }
-.wrap { container-type: inline-size; max-width: 1120px; margin: 0 auto; padding-block: 16px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
-.table > * { min-width: 0; }  /* the unfanned hand must not widen the grid; fan() fits it */
-header { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; }
-h1 { font: 400 clamp(1.4rem, 3vw, 1.9rem)/1.1 var(--f-rank); margin: 0; }
-h1 .han { font-family: var(--f-han); color: var(--brass); margin-right: .3em; }
-.deal { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.deal label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
-.deal input, .deal select { font: 600 14px var(--f-ui); color: var(--text); background: var(--felt-deep); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 36px; }
-.deal input { width: 6.5em; font-variant-numeric: tabular-nums; }
-button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.wrap { container-type: inline-size; max-width: 1120px; margin: 0 auto; padding-block: 12px 32px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
+.table > *, .home > * { min-width: 0; }
+
+/* Top bar: home on the left, handbook always top right */
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.brand { font: 400 clamp(1.3rem, 3vw, 1.7rem)/1.1 var(--f-rank); background: none; border: 0; color: var(--text); padding: 4px 0; cursor: pointer; }
+.brand .han { font-family: var(--f-han); color: var(--brass); margin-right: .3em; }
+button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-visible, .tile:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
 .act { font: 700 14px var(--f-ui); border-radius: 999px; padding: 8px 18px; border: 1px solid var(--line); background: rgba(0,0,0,.25); color: var(--text); cursor: pointer; min-height: 40px; }
 .act.primary { background: var(--brass); color: var(--ink); border-color: var(--brass); }
 .act:disabled { opacity: .45; cursor: default; }
+.act.book::before { content: "📖 "; }
 
-.table { position: relative; border: 6px solid var(--rim); border-radius: 22px;
+/* Home screen */
+.home { display: grid; gap: 18px; justify-items: center; padding: 28px 0 12px; text-align: center; }
+.home h1 { font: 400 clamp(2.2rem, 7vw, 3.6rem)/1.05 var(--f-rank); margin: 0; }
+.home h1 .han { display: block; font-family: var(--f-han); color: var(--brass); font-size: 1.3em; }
+.home .sub { color: var(--muted); margin: 0; max-width: 46ch; }
+.tiles { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; max-width: 760px; }
+.tile { display: grid; gap: 10px; align-content: start; text-align: left; padding: 18px; border-radius: 18px; border: 1px solid var(--line);
+  background: radial-gradient(ellipse at 30% 0%, var(--felt) 0%, var(--felt-deep) 90%); color: var(--text); }
+.tile h2 { margin: 0; font: 400 1.35rem/1.2 var(--f-rank); display: flex; gap: 10px; align-items: center; }
+.tile h2 .n { font: 700 13px/1 var(--f-ui); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--brass); color: var(--ink); flex: none; }
+.tile p { margin: 0; color: var(--muted); font-size: 14px; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.opts label { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.opts input, .opts select { font: 600 14px var(--f-ui); color: var(--text); background: var(--felt-deep); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 36px; }
+.opts input { width: 6.5em; font-variant-numeric: tabular-nums; }
+.note { font-size: 13px; color: var(--muted); }
+.note code { color: var(--text); background: rgba(0,0,0,.35); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
+.note.warn { color: var(--brass); }
+
+/* Card table */
+.table { position: relative; border: 6px solid var(--rim); border-radius: 26px;
   background: radial-gradient(ellipse at 50% 40%, var(--felt) 0%, var(--felt-deep) 85%); padding: 16px; display: grid; gap: 14px;
-  grid-template-columns: minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr); grid-template-areas: "left center right" "hand hand hand";
-  --cw: 72px; --cs: 46px; --cb: 34px; min-height: 420px; }
-.seat { display: grid; gap: 8px; align-content: start; justify-items: start; padding: 10px 12px; border-radius: 14px; background: rgba(0,0,0,.18); border: 1px solid var(--line); transition: box-shadow .2s, border-color .2s; }
+  grid-template-columns: minmax(0,1fr) minmax(0,1.7fr) minmax(0,1fr); grid-template-areas: "left center right" "me me me";
+  --cw: 72px; --cs: 40px; --cb: 30px; min-height: 480px; }
+.seat { display: grid; gap: 8px; align-content: start; justify-items: start; padding: 12px; border-radius: 16px; background: rgba(0,0,0,.18); border: 2px solid transparent; transition: box-shadow .25s, border-color .25s; position: relative; }
 .seat.left { grid-area: left; } .seat.right { grid-area: right; justify-items: end; text-align: right; }
-.seat.turn { border-color: var(--brass); box-shadow: 0 0 0 3px rgba(217,164,65,.25); }
-.who { display: flex; align-items: center; gap: 8px; }
-.seat.right .who, .seat.right .stack { flex-direction: row-reverse; }
+.seat.turn, .mezone.turn { border-color: var(--brass); box-shadow: 0 0 0 4px rgba(217,164,65,.22), 0 0 28px rgba(217,164,65,.25); }
+.turnflag { display: none; font: 700 11px/1 var(--f-ui); letter-spacing: .08em; text-transform: uppercase; background: var(--brass); color: var(--ink); padding: 5px 9px; border-radius: 999px; }
+.turn > .who .turnflag, .mezone.turn .turnflag { display: inline-block; }
+.who { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.seat.right .who { flex-direction: row-reverse; }
 .badge { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 20px/1 var(--f-han); background: var(--ivory); color: var(--ink); flex: none; }
 .badge.lord { background: var(--seal); color: var(--ivory); }
 .name { font-weight: 700; font-size: 14px; }
 .role { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
-.stack { display: flex; align-items: center; gap: 10px; }
-.count { font: 1.6rem/1 var(--f-rank); font-variant-numeric: tabular-nums; }
-.count small { display: block; font: 600 11px var(--f-ui); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.backs { display: flex; padding-left: 0; min-height: calc(var(--cb) * 1.4); }
+.seat.right .backs { flex-direction: row-reverse; }
+.backs .card { margin-left: calc(var(--cb) * -0.72); } .backs .card:first-child { margin-left: 0; }
+.seat.right .backs .card { margin-left: 0; margin-right: calc(var(--cb) * -0.72); } .seat.right .backs .card:first-child { margin-right: 0; }
+.count { font: 1.7rem/1 var(--f-rank); font-variant-numeric: tabular-nums; }
+.count small { font: 600 11px var(--f-ui); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-left: 4px; }
 .count.low { color: var(--bad); }
-.last { font-size: 13px; color: var(--muted); }
-.last b { color: var(--text); font-weight: 600; }
+.bubble { font-size: 13px; padding: 6px 10px; border-radius: 12px; background: var(--ivory); color: var(--ink); font-weight: 600; max-width: 100%; position: relative; }
+.bubble.pass { background: rgba(0,0,0,.35); color: var(--muted); font-style: italic; }
+.bubble.think { background: rgba(217,164,65,.18); color: var(--brass); }
+.dots span { animation: blink 1.2s infinite; } .dots span:nth-child(2) { animation-delay: .2s; } .dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .2; } 40% { opacity: 1; } }
 
-.center { grid-area: center; display: grid; gap: 12px; justify-items: center; align-content: start; text-align: center; }
+.center { grid-area: center; display: grid; gap: 10px; justify-items: center; align-content: start; text-align: center; }
 .label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-.row.tight { width: 100%; column-gap: 0; row-gap: 22px; }  /* fan() overlaps these cards to fit */
-.tobeat { display: grid; gap: 6px; justify-items: center; padding: 10px 16px 12px; border-radius: 14px; border: 1px dashed rgba(217,164,65,.5); min-width: 60%; min-height: calc(var(--cw) * 1.4 + 40px); max-width: 100%; }
-.status { font-weight: 600; }
+.row { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
+.row.tight { width: 100%; column-gap: 0; row-gap: 22px; }  /* fit() overlaps these cards */
+.kitty .card { margin-left: calc(var(--cs) * -0.45); } .kitty .card:first-child { margin-left: 0; }
+.stakes { font: 700 12px var(--f-ui); color: var(--ink); background: var(--brass); padding: 3px 10px; border-radius: 999px; }
+.pile { width: 100%; display: grid; gap: 8px; justify-items: center; padding: 12px; border-radius: 16px; border: 1px dashed rgba(217,164,65,.45); min-height: calc(var(--cw) * 1.4 + 70px); }
+.current { display: grid; gap: 6px; justify-items: center; width: 100%; }
+.current.land .card { animation: land .35s ease-out; }
+@keyframes land { from { transform: translateY(-14px) scale(1.06); opacity: .3; } }
+.earlier { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: center; align-items: center; opacity: .8; }
+.chip { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
+.chip .row .card { margin-left: calc(var(--cs) * -0.55); } .chip .row .card:first-child { margin-left: 0; }
+.discard { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.discard .card { margin-left: -26px; } .discard .card:first-child { margin-left: 0; }
+.status { font-weight: 600; min-height: 1.5em; }
 .status em { font-style: normal; color: var(--brass); }
 
-.handzone { grid-area: hand; display: grid; gap: 10px; justify-items: center; padding-top: 6px; }
+.mezone { grid-area: me; display: grid; gap: 10px; justify-items: center; padding: 12px; border-radius: 18px; border: 2px solid transparent; background: rgba(0,0,0,.12); transition: box-shadow .25s, border-color .25s; }
+.mezone .who { justify-content: center; }
+.reason { font-size: 14px; max-width: 60ch; text-align: center; }
 .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.msg { min-height: 1.5em; font-size: 13px; color: var(--muted); text-align: center; }
-.msg.bad { color: var(--bad); } .msg.good { color: var(--brass); }
+.msg { min-height: 1.5em; font-size: 14px; color: var(--muted); text-align: center; max-width: 70ch; }
+.msg.bad { color: var(--bad); } .msg.good { color: var(--good); }
 .hand { display: flex; flex-wrap: wrap; row-gap: 22px; justify-content: center; width: 100%; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
-.mine { font-size: 12px; color: var(--muted); }
+.mine { font-size: 12px; color: var(--muted); text-align: center; }
+.watchbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }
+.usage { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 .card { --w: var(--cw); width: var(--w); aspect-ratio: 5 / 7; border-radius: calc(var(--w) * .09); position: relative; flex: none; overflow: hidden;
   background: var(--ivory); color: var(--ink); font-family: var(--f-rank); border: 1px solid rgba(30,26,22,.18);
-  box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 4px 10px rgba(0,0,0,.28); transition: transform .14s ease; }
+  box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 4px 10px rgba(0,0,0,.28); transition: transform .14s ease; user-select: none; -webkit-user-select: none; }
 .card.sm { --w: var(--cs); } .card.back { --w: var(--cb); }
-.hand .card { cursor: pointer; }
-.hand .card.sel { transform: translateY(-16px); box-shadow: 0 0 0 2px var(--brass), 0 8px 16px rgba(0,0,0,.35); }
+.hand .card { cursor: grab; touch-action: none; }
+.hand .card.sel { transform: translateY(-18px); box-shadow: 0 0 0 3px var(--brass), 0 8px 16px rgba(0,0,0,.35); }
+.hand .card.drag { cursor: grabbing; z-index: 10; transition: none; opacity: .92; box-shadow: 0 12px 24px rgba(0,0,0,.5); }
+.hand .card.drop-before { box-shadow: -4px 0 0 0 var(--brass), 0 4px 10px rgba(0,0,0,.28); }
+.hand .card.drop-after { box-shadow: 4px 0 0 0 var(--brass), 0 4px 10px rgba(0,0,0,.28); }
 .card .c { position: absolute; top: 6%; left: 8%; font-size: calc(var(--w) * .28); line-height: 1; letter-spacing: -.04em; }
 .card .c.b { top: auto; left: auto; bottom: 6%; right: 8%; transform: rotate(180deg); }
 .card .m { position: absolute; inset: 0; display: grid; place-items: center; font-size: calc(var(--w) * .5); opacity: .9; letter-spacing: -.04em; }
@@ -86,94 +129,204 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .card.j.red { color: var(--seal); }
 .card.j .m { font: calc(var(--w) * .34)/1.05 var(--f-han); writing-mode: vertical-rl; }
 .card.j .c { font: 700 calc(var(--w) * .13)/1 var(--f-ui); writing-mode: vertical-rl; letter-spacing: .05em; }
-.card.back { background: var(--seal) repeating-linear-gradient(45deg, rgba(248,242,228,.16) 0 3px, transparent 3px 8px); border: 3px solid var(--ivory);
-  box-shadow: 3px 3px 0 -1px var(--ivory), 3px 3px 0 0 rgba(0,0,0,.3), 0 4px 10px rgba(0,0,0,.28); }
+.card.back { background: var(--seal) repeating-linear-gradient(45deg, rgba(248,242,228,.16) 0 3px, transparent 3px 8px); border: 2px solid var(--ivory); }
 .card.back .m { font: calc(var(--w) * .5)/1 var(--f-han); color: var(--ivory); opacity: 1; }
 .card.back .m::before { display: none; }
 
-.overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; border-radius: 16px; background: rgba(9,26,24,.82); text-align: center; z-index: 5; }
-.overlay .box { display: grid; gap: 10px; justify-items: center; max-width: 34ch; }
+.overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; border-radius: 20px; background: rgba(9,26,24,.86); text-align: center; z-index: 20; }
+.overlay .box { display: grid; gap: 10px; justify-items: center; max-width: 40ch; }
 .overlay h2 { font: 400 1.8rem/1.2 var(--f-rank); margin: 0; text-wrap: balance; }
 .overlay p { margin: 0; color: var(--muted); }
-.overlay code { color: var(--text); background: rgba(0,0,0,.35); padding: 2px 6px; border-radius: 6px; font-size: 13px; overflow-wrap: anywhere; }
 .big { font: 2.4rem/1 var(--f-rank); font-variant-numeric: tabular-nums; }
 .big.win { color: var(--brass); } .big.loss { color: var(--bad); }
 
-details { border: 1px solid var(--line); border-radius: 14px; background: var(--felt-deep); padding: 10px 16px; }
-summary { cursor: pointer; font-weight: 700; }
-.hist { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; max-height: 16em; overflow-y: auto; }
-.hist li { display: grid; grid-template-columns: 3ch 9em 1fr; gap: 8px; color: var(--muted); }
+details.hist { border: 1px solid var(--line); border-radius: 14px; background: var(--felt-deep); padding: 10px 16px; }
+details.hist summary { cursor: pointer; font-weight: 700; }
+.hist ol { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; font-size: 14px; font-variant-numeric: tabular-nums; max-height: 16em; overflow-y: auto; }
+.hist li { display: grid; grid-template-columns: 3ch 11em 1fr; gap: 8px; color: var(--muted); }
 .hist li b { color: var(--text); font-weight: 600; }
-.foot { color: var(--muted); font-size: 13px; margin: 0; max-width: 75ch; }
 
-@container (max-width: 560px) {
-  .table { --cw: 50px; --cs: 34px; --cb: 26px; padding: 12px; grid-template-columns: 1fr 1fr; grid-template-areas: "left right" "center center" "hand hand"; }
+/* Handbook */
+dialog.book { width: min(760px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--line); border-radius: 18px; background: var(--felt-deep); color: var(--text); --cw: 34px; --cs: 30px; }
+dialog.book::backdrop { background: rgba(0,0,0,.6); }
+.bookhead { position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; background: var(--felt-deep); border-bottom: 1px solid var(--line); z-index: 1; }
+.bookhead h2 { margin: 0; font: 400 1.4rem/1.2 var(--f-rank); }
+.bookbody { padding: 4px 18px 20px; }
+.bookbody h3 { font: 400 1.1rem/1.3 var(--f-rank); margin: 18px 0 6px; color: var(--brass); }
+.bookbody p, .bookbody li { color: var(--text); font-size: 14px; }
+.bookbody p { margin: 6px 0; }
+.bookbody ul { margin: 6px 0; padding-left: 20px; }
+.combos { display: grid; gap: 8px; }
+.combo { display: grid; grid-template-columns: minmax(0, 12em) minmax(0, 1fr); gap: 4px 14px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(0,0,0,.18); }
+.combo b { font-size: 14px; } .combo small { display: block; color: var(--muted); font-size: 12px; }
+.combo .row { justify-content: flex-start; gap: 3px; }
+.ranks { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+.ranks .arrow { color: var(--muted); padding: 0 2px; }
+
+@container (max-width: 600px) {
+  .tiles { grid-template-columns: minmax(0, 1fr); }
+  .table { --cw: 48px; --cs: 30px; --cb: 22px; padding: 10px; gap: 10px; grid-template-columns: 1fr 1fr; grid-template-areas: "left right" "center center" "me me"; }
   .seat { padding: 8px; } .badge { width: 28px; height: 28px; font-size: 16px; } .count { font-size: 1.3rem; }
   .act { padding: 8px 14px; }
+  .hist li { grid-template-columns: 3ch 8em 1fr; }
 }
-@media (prefers-reduced-motion: reduce) { .card, .seat { transition: none; } }
+@media (max-width: 520px) { .combo { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .card, .seat, .mezone { transition: none; } .current.land .card, .dots span { animation: none; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
+  <div class="bar">
+    <button class="brand" id="homebtn" aria-label="Home"><span class="han">斗地主</span>Dou Dizhu</button>
+    <button class="act book" id="bookbtn">Handbook</button>
+  </div>
+
+  <!-- 1. Home screen -->
+  <section class="home" id="home" aria-label="Home">
     <h1><span class="han">斗地主</span>Dou Dizhu</h1>
-    <form class="deal" id="dealform">
-      <label for="seat">Seat <select id="seat"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></label>
-      <label for="seed">Seed <input id="seed" type="number" min="0" step="1" value="7" inputmode="numeric"></label>
-      <button class="act" type="submit" id="deal" disabled>Deal</button>
-      <button class="act" type="button" id="random" disabled>Random deal</button>
-    </form>
-  </header>
-
-  <main class="table" id="table">
-    <section class="seat left" id="sL"></section>
-    <section class="center" aria-label="Middle of the table">
-      <div><div class="label">Kitty · the landlord's 9 extra cards</div><div class="row" id="kitty"></div></div>
-      <div class="tobeat"><div class="label" id="tblabel">&nbsp;</div><div class="row tight" id="tobeat"></div></div>
-      <div class="status" id="status" aria-live="polite"></div>
-    </section>
-    <section class="seat right" id="sR"></section>
-    <section class="handzone" aria-label="Your hand">
-      <div class="actions">
-        <button class="act" id="pass" disabled>Pass</button>
-        <button class="act" id="hint" disabled>Hint</button>
-        <button class="act" id="clear" disabled>Clear</button>
-        <button class="act primary" id="play" disabled>Play</button>
+    <p class="sub">Fight the landlord. Two decks, three players: one landlord plays alone against two peasants who share a side.</p>
+    <div class="tiles">
+      <div class="tile">
+        <h2><span class="n">1</span>Play the game</h2>
+        <p>You take one seat; the other two are the heuristic player.</p>
+        <div class="opts">
+          <label>Play as <select id="p-role"><option value="any">Any seat</option><option value="0">Landlord</option><option value="1">Peasant</option></select></label>
+          <label>Deal # <input id="p-seed" type="number" min="0" step="1" inputmode="numeric"></label>
+        </div>
+        <button class="act primary" id="go-play" disabled>Loading…</button>
       </div>
-      <div class="msg" id="msg" aria-live="polite"></div>
-      <div class="hand" id="hand"></div>
-      <div class="mine" id="mine"></div>
-    </section>
-
-    <div class="overlay" id="overlay">
-      <div class="box" id="obox">
-        <h2>Loading the game</h2>
-        <p>Starting Python in your browser. The first visit downloads about 10 MB; after that it loads from cache.</p>
+      <div class="tile">
+        <h2><span class="n">2</span>Rule handbook</h2>
+        <p>Every combination you can play, with pictures, plus how turns, bombs and scoring work. Also top right on every screen.</p>
+        <button class="act" id="go-book">Open the handbook</button>
+      </div>
+      <div class="tile">
+        <h2><span class="n">3</span>Watch the baseline</h2>
+        <p>Three copies of the rule-based heuristic play a deal. You follow one seat and see only that seat's cards.</p>
+        <div class="opts">
+          <label>Follow <select id="b-role"><option value="0">Landlord</option><option value="1">Peasant</option></select></label>
+          <label>Deal # <input id="b-seed" type="number" min="0" step="1" inputmode="numeric"></label>
+        </div>
+        <button class="act primary" id="go-base" disabled>Loading…</button>
+      </div>
+      <div class="tile">
+        <h2><span class="n">4</span>Watch the AI</h2>
+        <p>The language model plays one seat live against two heuristic players, with the evaluation's limits and labels. Its one-line reason shows on each move.</p>
+        <div class="opts">
+          <label>Player <select id="a-player"><option value="model-history">model-history</option><option value="model-obs">model-obs</option><option value="model-notes">model-notes</option></select></label>
+          <label>AI is <select id="a-sit"><option value="S2">Peasant (S2)</option><option value="S3">Peasant (S3)</option><option value="S1">Landlord (S1)</option></select></label>
+          <label>Deal # <input id="a-seed" type="number" min="0" step="1" inputmode="numeric"></label>
+        </div>
+        <button class="act primary" id="go-ai" disabled>Checking…</button>
+        <div class="note" id="ai-note"></div>
       </div>
     </div>
-  </main>
+  </section>
 
-  <details id="histbox">
-    <summary>Play history</summary>
-    <ol class="hist" id="hist"></ol>
-  </details>
-  <p class="foot">Tap cards to pick them, then Play. Card order does not matter. Ranks low to high: 3 4 5 6 7 8 9 10 J Q K A 2, then 小王 (black joker) and 大王 (red joker). Two decks: a bomb (4 to 8 of a kind) or the rocket (all four jokers) beats anything; a longer bomb beats a shorter one. The other two seats are the heuristic player from <code>players/heuristic.py</code>.</p>
+  <!-- 2. Table -->
+  <section id="game" hidden>
+    <main class="table" id="table">
+      <section class="seat left" id="sL"></section>
+      <section class="center" aria-label="Middle of the table">
+        <div><div class="label">Landlord's 9 extra cards</div><div class="row kitty" id="kitty"></div></div>
+        <span class="stakes" id="stakes" hidden></span>
+        <div class="pile" aria-label="Played cards">
+          <div class="label" id="pilelabel">&nbsp;</div>
+          <div class="current" id="current"><div class="row tight" id="curcards"></div></div>
+          <div class="earlier" id="earlier"></div>
+          <div class="discard" id="discard"></div>
+        </div>
+        <div class="status" id="status" aria-live="polite"></div>
+      </section>
+      <section class="seat right" id="sR"></section>
+      <section class="mezone" id="me" aria-label="Your seat">
+        <div class="who" id="mewho"></div>
+        <div class="reason" id="reason" hidden></div>
+        <div class="actions" id="playbar">
+          <button class="act" id="pass" disabled>Pass</button>
+          <button class="act" id="hint" disabled>Hint</button>
+          <button class="act" id="sort">Sort</button>
+          <button class="act" id="clear" disabled>Clear</button>
+          <button class="act primary" id="play" disabled>Play</button>
+        </div>
+        <div class="watchbar" id="watchbar" hidden>
+          <button class="act" id="pause">Pause</button>
+          <label class="note">Speed <select id="speed" class="act"><option value="1.6">Slow</option><option value="1" selected>Normal</option><option value="0.45">Fast</option></select></label>
+          <span class="usage" id="usage"></span>
+        </div>
+        <div class="msg" id="msg" aria-live="polite"></div>
+        <div class="hand" id="hand"></div>
+        <div class="mine" id="mine"></div>
+      </section>
+      <div class="overlay" id="overlay" hidden><div class="box" id="obox"></div></div>
+    </main>
+    <details class="hist"><summary>Play history</summary><ol id="hist"></ol></details>
+  </section>
 </div>
+
+<!-- 3. Handbook -->
+<dialog class="book" id="book" aria-labelledby="booktitle">
+  <div class="bookhead"><h2 id="booktitle">Rule handbook</h2><button class="act" id="bookclose">Close</button></div>
+  <div class="bookbody">
+    <h3>The goal</h3>
+    <p>Be the first to play every card in your hand. The <b>landlord</b> (地) plays alone. The two <b>peasants</b> (农) are a team: if either peasant empties their hand first, both peasants win.</p>
+    <h3>The deal: two decks</h3>
+    <ul>
+      <li>108 cards: eight of each rank and two of each joker. Suits do not matter.</li>
+      <li>Each player gets 33 cards. The 9 left over go face up to the landlord, who starts with 42.</li>
+      <li>The landlord plays first.</li>
+    </ul>
+    <h3>Card order, low to high</h3>
+    <div class="ranks" id="rankrow"></div>
+    <h3>A turn</h3>
+    <ul>
+      <li><b>Leading</b> (nobody has played, or both others passed): play any combination below.</li>
+      <li><b>Following</b>: play the <i>same kind</i> with the <i>same number of cards</i> and a <i>higher main rank</i>, or a bomb, or the rocket. Otherwise pass.</li>
+      <li>The main rank is the rank of the triple, the four, or the lowest card of a sequence. Extra cards ("kickers") do not count.</li>
+      <li>When both other players pass, whoever played last leads again with anything.</li>
+      <li>You can pass even if you could beat the play. The leader cannot pass.</li>
+    </ul>
+    <h3>Combinations</h3>
+    <div class="combos" id="combos"></div>
+    <h3>Bombs and the rocket</h3>
+    <ul>
+      <li>A bomb beats any play that is not a bomb.</li>
+      <li>Between bombs, <b>more cards wins</b>; with the same number of cards, the higher rank wins. So 3 3 3 3 3 beats 2 2 2 2.</li>
+      <li>The rocket (all four jokers) beats everything. One black and one red joker together are not a play.</li>
+    </ul>
+    <h3>Scoring</h3>
+    <ul>
+      <li>The stake starts at 1 and doubles for every bomb or rocket played.</li>
+      <li>It doubles once more for a <b>spring</b>: the landlord wins before either peasant plays a card, or the peasants win after the landlord played only once.</li>
+      <li>The landlord wins or loses 2 × the stake; each peasant wins or loses 1 × the stake.</li>
+      <li>A deal that reaches 400 moves ends with no winner (it practically never happens).</li>
+    </ul>
+    <h3>Controls</h3>
+    <ul>
+      <li>Tap or click cards to pick them, then <b>Play</b>. Play only lights up when the picked cards are a legal move; the message under the buttons says why not.</li>
+      <li>Drag a card left or right to reorder your hand (on a keyboard: focus a card and press Shift + ← or →). <b>Sort</b> puts it back in rank order.</li>
+      <li><b>Hint</b> picks what the heuristic player would play. There is no time limit on your turn.</li>
+      <li>Other players' cards are always face down; you only see how many they have left.</li>
+    </ul>
+  </div>
+</dialog>
 
 <script>
 const ORDER = ["3","4","5","6","7","8","9","10","J","Q","K","A","2","BJ","RJ"];
-// Same files play.py imports; served from this folder's parent (midterms/lululizzy8/).
 const FILES = ["doudizhu/__init__.py", "doudizhu/engine.py", "players/__init__.py", "players/heuristic.py", "web/session.py"];
+const PRICE = { input: 0.30, output: 2.50, date: "2026-10-28" };  // USD per 1M tokens, EVALUATION.md
 const $ = (id) => document.getElementById(id);
-const slow = !matchMedia("(prefers-reduced-motion: reduce)").matches;
-const wait = (ms) => new Promise((r) => setTimeout(r, slow ? ms : 120));
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const rankIdx = (r) => ORDER.indexOf(r);
 
-let py, Session, game = null, view = null, legal = [], sel = new Set(), busy = false;
+let py, Session, landlordOf;
+const S = { mode: null, run: 0, game: null, view: null, legal: [], hand: [], sel: new Set(), nextId: 0,
+            busy: false, thinking: null, landed: false, paused: false, ai: null, reason: null };
 
+/* ---------- cards ---------- */
 function cardEl(rank, cls = "") {
   const el = document.createElement("div");
-  if (rank === "back") { el.className = `card back ${cls}`; el.innerHTML = `<span class="m">斗</span>`; return el; }
+  if (rank === "back") { el.className = `card back ${cls}`; el.innerHTML = `<span class="m">斗</span>`; el.setAttribute("aria-hidden", "true"); return el; }
   if (rank === "BJ" || rank === "RJ") {
     el.className = `card j ${rank === "RJ" ? "red" : ""} ${cls}`;
     el.innerHTML = `<span class="c">JOKER</span><span class="m">${rank === "RJ" ? "大王" : "小王"}</span>`;
@@ -186,10 +339,8 @@ function cardEl(rank, cls = "") {
   return el;
 }
 const cards = (text) => (text ? text.split(" ") : []);
-const seatName = (s) => (s === view.seat ? "You" : `Seat ${s}`);
-const roleOf = (s) => (s === view.landlord ? "landlord" : "peasant");
-
-function fan() { fit($("hand")); fit($("tobeat")); }
+const row = (text, cls = "") => { const d = document.createElement("div"); d.className = "row"; d.append(...cards(text).map((r) => cardEl(r, cls))); return d; };
+const isBomb = (t) => { const c = cards(t); return (c.length >= 4 && c.every((x) => x === c[0])) || t === "BJ BJ RJ RJ"; };
 
 function fit(box) {
   const els = [...box.children];
@@ -203,156 +354,381 @@ function fit(box) {
     if (step >= w * 0.34 || rows === 3) break;
     rows++;
   }
-  if (rows > 1) step = (W - w - 1) / (perRow - 1);  // fill each row so the next card wraps exactly at perRow
+  if (rows > 1) step = (W - w - 1) / (perRow - 1);
   els.forEach((c, i) => { c.style.marginLeft = i % perRow ? `${step - w}px` : "0"; });
 }
+const fan = () => { fit($("hand")); fit($("curcards")); };
 
-function lastAction(s) {
-  for (let i = view.history.length - 1; i >= 0; i--) if (view.history[i][0] === s) return view.history[i][1];
-  return null;
+/* ---------- names ---------- */
+const me = () => S.view.seat;
+const roleOf = (s) => (s === S.view.landlord ? "landlord" : "peasant");
+function seatName(s) {
+  if (s !== me()) return `Seat ${s}`;
+  return S.mode === "play" ? "You" : S.mode === "ai" ? "The AI" : `Seat ${s}`;
+}
+const verb = (s, you, other) => (s === me() && S.mode === "play" ? you : other);
+
+/* ---------- the pile: the current round's plays, earlier rounds face down ---------- */
+function rounds(history) {
+  let earlier = 0, round = [];
+  for (const [s, a] of history) {
+    const passes = round.length >= 2 && round.at(-1)[1] === "pass" && round.at(-2)[1] === "pass";
+    if (a !== "pass" && passes) { earlier += round.reduce((n, [, x]) => n + (x === "pass" ? 0 : cards(x).length), 0); round = []; }
+    round.push([s, a]);
+  }
+  return { earlier, round };
 }
 
-function renderSeat(el, s) {
-  const lord = s === view.landlord, mate = s === view.teammate, n = view.cards_left[s], last = lastAction(s);
-  el.classList.toggle("turn", view.status === "ongoing" && view.turn === s);
-  el.setAttribute("aria-label", `Seat ${s}, ${roleOf(s)}${mate ? ", your teammate" : ""}`);
-  el.innerHTML = `
-    <div class="who"><span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
-      <div><div class="name">Seat ${s}</div><div class="role">${lord ? "Landlord" : "Peasant"}${mate ? " · teammate" : ""}</div></div></div>
-    <div class="stack"><span class="slot"></span><span class="count ${n <= 2 ? "low" : ""}">${n}<small>${n === 1 ? "card" : "cards"}</small></span></div>
-    <div class="last">${last === null ? "No move yet" : last === "pass" ? "Last: <b>pass</b>" : `Played <b>${last}</b>`}</div>`;
-  el.querySelector(".slot").append(cardEl("back"));
+/* ---------- your hand: stable ids so drag order and picks survive each move ---------- */
+function syncHand(text) {
+  const want = {};
+  for (const r of cards(text)) want[r] = (want[r] || 0) + 1;
+  const kept = S.hand.filter((c) => (want[c.r] > 0 ? (want[c.r]--, true) : false));
+  const added = Object.entries(want).flatMap(([r, n]) => Array.from({ length: n }, () => ({ id: S.nextId++, r })));
+  added.sort((a, b) => rankIdx(a.r) - rankIdx(b.r));
+  S.hand = kept.length ? [...kept, ...added] : added;
+  const ids = new Set(S.hand.map((c) => c.id));
+  for (const id of [...S.sel]) if (!ids.has(id)) S.sel.delete(id);
+}
+const picked = () => S.hand.filter((c) => S.sel.has(c.id)).map((c) => c.r).sort((a, b) => rankIdx(a) - rankIdx(b)).join(" ");
+const myTurn = () => S.mode === "play" && S.view.status === "ongoing" && S.view.turn === me() && !S.busy;
+
+/* ---------- render ---------- */
+function lastInRound(round, s) { for (let i = round.length - 1; i >= 0; i--) if (round[i][0] === s) return round[i][1]; return null; }
+
+function seatHTML(el, s, round) {
+  const v = S.view, lord = s === v.landlord, mate = s === v.teammate, n = v.cards_left[s];
+  const turn = v.status === "ongoing" && v.turn === s;
+  el.classList.toggle("turn", turn);
+  el.setAttribute("aria-label", `${seatName(s)}, ${roleOf(s)}, ${n} cards${turn ? ", their turn" : ""}`);
+  const last = lastInRound(round, s);
+  const bubble = S.thinking === s ? `<div class="bubble think">Thinking<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>`
+    : last === "pass" ? `<div class="bubble pass">Pass</div>` : "";
+  el.innerHTML = `<div class="who"><span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
+      <div><div class="name">${seatName(s)}</div><div class="role">${lord ? "Landlord" : "Peasant"}${mate ? " · teammate" : ""}</div></div>
+      <span class="turnflag">Turn</span></div>
+    <div class="backs"></div>
+    <div class="count ${n <= 2 ? "low" : ""}">${n}<small>${n === 1 ? "card left" : "cards left"}</small></div>${bubble}`;
+  el.querySelector(".backs").append(...Array.from({ length: Math.min(n, 10) }, () => cardEl("back")));
 }
 
 function render() {
-  const v = view, me = v.seat;
-  renderSeat($("sR"), (me + 1) % 3);  // next to play sits on your right
-  renderSeat($("sL"), (me + 2) % 3);
+  const v = S.view, m = me(), { earlier, round } = rounds(v.history);
+  seatHTML($("sR"), (m + 1) % 3, round);   // next to play sits on your right
+  seatHTML($("sL"), (m + 2) % 3, round);
   $("kitty").replaceChildren(...cards(v.kitty).map((r) => cardEl(r, "sm")));
+  const bombs = v.history.filter(([, a]) => a !== "pass" && isBomb(a)).length;
+  $("stakes").hidden = !bombs; $("stakes").textContent = `Stakes ×${2 ** bombs} · ${bombs} bomb${bombs > 1 ? "s" : ""}`;
 
-  const tb = v.to_beat;
-  const lastPlay = [...v.history].reverse().find((h) => h[1] !== "pass");
-  if (tb) {
-    $("tblabel").textContent = `To beat · ${tb.seat === me ? "your play" : `Seat ${tb.seat} (${roleOf(tb.seat)})`}`;
-    $("tobeat").replaceChildren(...cards(tb.cards).map((r) => cardEl(r)));
-  } else if (lastPlay && v.status === "ongoing") {
-    $("tblabel").textContent = `Both passed · ${seatName(v.turn)} ${v.turn === me ? "lead" : "leads"} anything`;
-    $("tobeat").replaceChildren();
-  } else {
-    $("tblabel").textContent = lastPlay ? `Last play · ${seatName(lastPlay[0])}` : `${seatName(v.landlord)} ${v.landlord === me ? "lead" : "leads"} first`;
-    $("tobeat").replaceChildren(...(lastPlay ? cards(lastPlay[1]).map((r) => cardEl(r)) : []));
-  }
+  // Pile: the latest play big, the rest of this round small, earlier rounds face down.
+  const plays = round.filter(([, a]) => a !== "pass"), top = plays.at(-1);
+  $("pilelabel").textContent = top ? `${seatName(top[0])} played${v.to_beat ? "" : " · round over"}` :
+    v.status === "ongoing" ? `${seatName(v.turn)} ${verb(v.turn, "lead", "leads")} · any combination` : "";
+  $("curcards").replaceChildren(...(top ? cards(top[1]).map((r) => cardEl(r)) : []));
+  $("current").classList.toggle("land", S.landed);
+  $("earlier").replaceChildren(...plays.slice(0, -1).map(([s, a]) => {
+    const c = document.createElement("div"); c.className = "chip"; c.append(`${seatName(s)}:`, row(a, "sm")); return c;
+  }));
+  $("discard").replaceChildren(...(earlier ? [cardEl("back"), cardEl("back"), cardEl("back"), `${earlier} cards played in earlier rounds`] : []));
 
-  const mine = v.turn === me && v.status === "ongoing";
+  // Your seat
+  const mine = myTurn(), lord = m === v.landlord;
+  $("me").classList.toggle("turn", v.status === "ongoing" && v.turn === m);
+  const mlast = lastInRound(round, m);
+  $("mewho").innerHTML = `<span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
+    <div><div class="name">${seatName(m)}${S.mode === "ai" ? ` · ${S.ai.player}` : S.mode === "base" ? " · heuristic" : ""}</div>
+    <div class="role">${lord ? "Landlord" : "Peasant"} · ${v.cards_left[m]} cards</div></div>
+    <span class="turnflag">${S.mode === "play" ? "Your turn" : "Turn"}</span>
+    ${S.thinking === m ? `<span class="bubble think">Thinking<span class="dots"><span>.</span><span>.</span><span>.</span></span></span>` : mlast === "pass" ? `<span class="bubble pass">Pass</span>` : ""}`;
+
   $("status").innerHTML = v.status !== "ongoing" ? "Deal over." :
-    mine ? (tb ? `<em>Your turn.</em> Beat ${tb.cards}, or pass.` : "<em>Your turn.</em> Lead any combination.")
-         : `<em>${seatName(v.turn)}</em> is thinking…`;
+    mine ? (v.to_beat ? `<em>Your turn.</em> Beat ${v.to_beat.cards}, or pass.` : "<em>Your turn.</em> Lead any combination.")
+         : `<em>${seatName(v.turn)}</em>'s turn${S.thinking === v.turn ? "…" : "."}`;
 
-  const hand = cards(v.hand);
-  $("hand").replaceChildren(...hand.map((r, i) => {
-    const el = cardEl(r, sel.has(i) ? "sel" : "");
-    el.tabIndex = 0; el.setAttribute("role", "button"); el.setAttribute("aria-pressed", sel.has(i));
-    const toggle = () => { if (!mine || busy) return; sel.has(i) ? sel.delete(i) : sel.add(i); render(); check(); };
-    el.addEventListener("click", toggle);
-    el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+  syncHand(v.hand);
+  $("hand").replaceChildren(...S.hand.map((c) => {
+    const el = cardEl(c.r, S.sel.has(c.id) ? "sel" : "");
+    el.dataset.id = c.id;
+    if (S.mode === "play") { el.tabIndex = 0; el.setAttribute("role", "button"); el.setAttribute("aria-pressed", S.sel.has(c.id)); }
     return el;
   }));
-  $("mine").textContent = `Seat ${me} · you · ${roleOf(me)}${v.teammate !== null ? ` · teammate is Seat ${v.teammate}` : " · playing alone"} · ${hand.length} cards`;
+  const tm = v.teammate !== null ? ` · teammate: Seat ${v.teammate}` : " · plays alone";
+  $("mine").textContent = S.mode === "play" ? `You are Seat ${m}, the ${roleOf(m)}${tm}. Drag cards to reorder.`
+    : `Following Seat ${m} (${roleOf(m)}${tm}). Only this seat's cards are shown.`;
 
-  const can = mine && !busy;
-  $("pass").disabled = !can || !legal.includes("pass");
-  $("hint").disabled = !can;
-  $("clear").disabled = !can || !sel.size;
-  $("play").disabled = !can || !sel.size;
+  const valid = mine && S.sel.size && S.legal.includes(picked());
+  $("pass").disabled = !mine || !S.legal.includes("pass");
+  $("hint").disabled = !mine;
+  $("clear").disabled = !mine || !S.sel.size;
+  $("play").disabled = !valid;
 
-  $("hist").replaceChildren(...v.history.map((h, i) => {
+  $("hist").replaceChildren(...v.history.map(([s, a], i) => {
     const li = document.createElement("li");
-    li.innerHTML = `<span>${i + 1}</span><span>${seatName(h[0])} (${roleOf(h[0])})</span><b>${h[1]}</b>`;
+    li.innerHTML = `<span>${i + 1}</span><span>${seatName(s)} (${roleOf(s)})</span><b>${a}</b>`;
     return li;
   }));
   requestAnimationFrame(fan);
 }
 
-function selectedText() {
-  const hand = cards(view.hand);
-  return [...sel].map((i) => hand[i]).sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b)).join(" ");
-}
-
 function say(text, kind = "") { const m = $("msg"); m.textContent = text; m.className = `msg ${kind}`; }
 
 function check() {
-  if (!sel.size) return say("");
-  const t = selectedText();
-  if (legal.includes(t)) say(`${t} is a legal play.`, "good");
-  else say(view.to_beat ? `${t} does not beat ${view.to_beat.cards}.` : `${t} is not a combination.`, "bad");
+  if (!S.sel.size) return say(S.mode === "play" && myTurn() ? "Pick cards, then Play." : "");
+  const t = picked();
+  if (S.legal.includes(t)) say(`${t} is a legal play.`, "good");
+  else say(S.game.explain(t) || `${t} cannot be played now.`, "bad");
 }
 
-async function apply(reply) {
-  busy = true;
-  sel.clear();
-  for (const frame of reply.frames) { view = frame; legal = []; render(); await wait(650); }
-  view = reply.obs; legal = reply.legal; busy = false;
+/* ---------- pacing: every other player "thinks" before their move lands ---------- */
+const speed = () => (S.mode === "play" ? 1 : +$("speed").value);
+async function wait(ms, run) {
+  let left = ms * speed();
+  while (left > 0 && run === S.run) { await sleep(Math.min(100, left)); if (!S.paused) left -= 100; }
+  while (S.paused && run === S.run) await sleep(100);
+  return run === S.run;
+}
+const thinkMs = (next) => (next[1] === "pass" ? 900 : 1300 + 60 * Math.min(cards(next[1]).length, 10));
+
+async function show(frame, run, meta = null) {
+  const h = frame.history, mover = h.length ? h.at(-1)[0] : null;
+  // your own move lands at once; the live AI already spent its real thinking time on the call
+  if (mover !== null && !(S.mode !== "base" && mover === me()) && h.length > S.view.history.length) {
+    S.thinking = mover; S.landed = false; render();
+    if (!(await wait(thinkMs(h.at(-1)), run))) return false;
+  }
+  S.view = frame; S.thinking = null; S.landed = mover !== null && h.at(-1)[1] !== "pass";
+  if (meta && meta.seat === me()) showReason(meta);
   render();
-  if (reply.outcome.status !== "ongoing") showResult(reply.outcome);
+  return wait(380, run);
 }
 
-function showResult(o) {
-  const me = view.seat, score = o.scores[me];
-  const won = o.winner && (o.winner === "landlord") === (me === view.landlord);
-  const head = o.winner === null ? "Step limit reached, no winner" : won ? "You win" : "You lose";
+function showReason(meta) {
+  const r = $("reason"); r.hidden = false;
+  const tag = { model: "", forced: "Only one legal move.", fallback: "Model failed twice; heuristic move (labeled fallback)." }[meta.source] ?? "";
+  r.innerHTML = "";
+  const b = document.createElement("span"); b.className = "bubble";
+  b.textContent = meta.reason ? `“${meta.reason}”` : tag || `${meta.action}`;
+  r.append(b);
+  if (meta.failed_attempts) { const n = document.createElement("div"); n.className = "note"; n.textContent = `${meta.failed_attempts} failed attempt${meta.failed_attempts > 1 ? "s" : ""} before this move.`; r.append(n); }
+}
+
+/* ---------- screens ---------- */
+function goHome() {
+  S.run++; S.busy = false; S.paused = false;
+  if (S.mode === "ai" && S.ai?.id) fetch("/api/watch/stop", { method: "POST", body: JSON.stringify({ id: S.ai.id }) }).catch(() => {});
+  S.mode = null;
+  $("game").hidden = true; $("home").hidden = false;
+  for (const id of ["p-seed", "b-seed", "a-seed"]) $(id).value = Math.floor(Math.random() * 10000);
+}
+function enterTable(mode) {
+  S.mode = mode; S.run++; S.hand = []; S.sel.clear(); S.thinking = null; S.landed = false; S.paused = false; S.reason = null;
+  $("home").hidden = true; $("game").hidden = false; $("overlay").hidden = true;
+  $("playbar").hidden = mode !== "play"; $("watchbar").hidden = mode === "play";
+  $("reason").hidden = true; $("usage").textContent = ""; $("pause").textContent = "Pause";
+  say("");
+  return S.run;
+}
+const seed = (id) => { const v = Math.max(0, Math.floor(+$(id).value || 0)); $(id).value = v; return v; };
+const seatFor = (sd, role) => (role === "any" ? Math.floor(Math.random() * 3) : (landlordOf(sd) + +role) % 3);
+
+async function startLocal(mode) {
+  const sd = seed(mode === "play" ? "p-seed" : "b-seed");
+  const seat = seatFor(sd, mode === "play" ? $("p-role").value : $("b-role").value);
+  const run = enterTable(mode);
+  if (S.game) S.game.destroy();
+  S.game = Session(sd, seat, mode === "base");
+  S.deal = { seed: sd, seat };
+  await apply(JSON.parse(S.game.start()), run);
+  if (run === S.run && mode === "play" && S.view.status === "ongoing")
+    say(`Deal #${sd}. You are the ${roleOf(seat)}${seat === S.view.landlord ? " and lead first" : ""}. Pick cards, then Play.`);
+}
+
+async function apply(reply, run) {
+  S.busy = true; S.sel.clear();
+  const [first, ...rest] = reply.frames;
+  if (first && first.history.length === 0) { S.view = first; S.legal = []; render(); if (!(await wait(700, run))) return; }
+  else if (first) rest.unshift(first);
+  for (const f of rest) { S.legal = []; if (!(await show(f, run))) return; }
+  S.view = reply.obs; S.legal = reply.legal; S.busy = false;
+  render(); check();
+  if (reply.outcome.status !== "ongoing") finish(reply.outcome);
+}
+
+function finish(o, extra = "") {
+  const m = me(), score = o.scores[m];
+  const won = o.winner && (o.winner === "landlord") === (m === S.view.landlord);
+  const who = S.mode === "play" ? (won ? "You win" : "You lose") : `${S.mode === "ai" ? "The AI" : `Seat ${m}`} (${roleOf(m)}) ${won ? "wins" : "loses"}`;
+  const head = o.forfeit ? `${S.mode === "ai" ? "The AI" : "Agent"} forfeits (${o.reason.replace("_", " ")})` : o.winner === null ? "Step limit reached, no winner" : who;
   const detail = o.winner === null ? "" : `${o.winner === "landlord" ? "The landlord" : "The peasants"} won. Stakes ×${o.multiplier}${o.spring ? " (spring)" : ""}.`;
   $("obox").innerHTML = `<h2>${head}</h2><div class="big ${score > 0 ? "win" : score < 0 ? "loss" : ""}">${score > 0 ? "+" : ""}${score}</div>
-    <p>${detail} Scores by seat: ${o.scores.join(", ")}.</p>
-    <button class="act primary" id="again">Next deal (seed ${+$("seed").value + 1})</button>
-    <button class="act" id="look">See the table</button>`;
+    <p>${detail} Scores by seat: ${o.scores.join(", ")}.</p>${extra}
+    <div class="actions"><button class="act primary" id="again">Another deal</button><button class="act" id="look">See the table</button><button class="act" id="ohome">Home</button></div>`;
   $("overlay").hidden = false;
-  $("again").addEventListener("click", () => { $("seed").value = +$("seed").value + 1; deal(); });
+  $("again").addEventListener("click", () => { const id = { play: "p-seed", base: "b-seed", ai: "a-seed" }[S.mode]; $(id).value = Math.floor(Math.random() * 10000); ({ play: () => startLocal("play"), base: () => startLocal("base"), ai: startAI })[S.mode](); });
   $("look").addEventListener("click", () => { $("overlay").hidden = true; });
+  $("ohome").addEventListener("click", goHome);
   $("again").focus();
 }
 
-async function deal() {
-  if (!Session || busy) return;
-  const seed = Math.max(0, Math.floor(+$("seed").value || 0)), seat = +$("seat").value;
-  $("seed").value = seed;
-  if (game) game.destroy();
-  game = Session(seed, seat);
+/* ---------- 4. live AI: the server runs runner.run_episode and streams the agent seat's view ---------- */
+async function startAI() {
+  const body = { seed: seed("a-seed"), situation: $("a-sit").value, player: $("a-player").value };
+  const run = enterTable("ai");
+  S.ai = { player: body.player };
+  $("obox").innerHTML = `<h2>Starting a live game</h2><p>Model player ${body.player}, deal #${body.seed}.</p>`; $("overlay").hidden = false;
+  let r;
+  try { r = await (await fetch("/api/watch", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })).json(); }
+  catch (e) { r = { error: "The live server is not running. Start it with: python web/serve.py" }; }
+  if (run !== S.run) return;
+  if (r.error) { $("obox").innerHTML = `<h2>Cannot start the AI</h2><p></p><button class="act" id="ohome">Home</button>`; $("obox").querySelector("p").textContent = r.error; $("ohome").addEventListener("click", goHome); return; }
   $("overlay").hidden = true;
-  say(`Seed ${seed}. You are seat ${seat}.`);
-  try { localStorage.setItem("ddz-deal", JSON.stringify({ seed, seat })); } catch (_) {}
-  await apply(JSON.parse(game.start()));
-  if (view.status === "ongoing") say(`Seed ${seed}. You are the ${roleOf(seat)}${seat === view.landlord ? " and lead first" : ""}.`);
+  S.ai = { ...S.ai, id: r.id, model: r.model };
+  S.view = r.start; S.legal = []; render();
+  say(`Live: ${r.model} plays Seat ${r.agent} as ${roleOf(r.agent)}. Deal #${body.seed}.`);
+  let since = 0, queue = [], done = null;
+  while (run === S.run) {
+    if (queue.length) { const f = queue.shift(); if (!(await show(f.obs, run, f))) return; continue; }
+    if (done) break;
+    if (S.view.status === "ongoing" && S.thinking !== S.view.turn) { S.thinking = S.view.turn; render(); }
+    await sleep(500);
+    if (run !== S.run) return;
+    let p;
+    try { p = await (await fetch(`/api/watch?id=${r.id}&since=${since}`)).json(); } catch (e) { continue; }
+    if (p.error && !p.frames) { done = { error: p.error }; break; }
+    since += p.frames.length; queue.push(...p.frames);
+    const u = p.usage, cost = (u.input_tokens * PRICE.input + u.output_tokens * PRICE.output) / 1e6;
+    $("usage").textContent = `${u.calls} calls · ${u.input_tokens.toLocaleString()} in / ${u.output_tokens.toLocaleString()} out tokens · ≈ $${cost.toFixed(3)} at ${PRICE.date} prices`;
+    if (p.done) done = p;
+  }
+  if (run !== S.run) return;
+  S.thinking = null; render();
+  if (done.result) finish(done.result, `<p>${done.result.calls} model calls, ${done.result.invalid} invalid replies. Trace saved in traces/watch/.</p>`);
+  else { $("obox").innerHTML = `<h2>Game stopped</h2><p></p><button class="act" id="ohome">Home</button>`; $("obox").querySelector("p").textContent = done.error; $("overlay").hidden = false; $("ohome").addEventListener("click", goHome); }
 }
 
-$("dealform").addEventListener("submit", (e) => { e.preventDefault(); deal(); });
-$("random").addEventListener("click", () => { $("seed").value = Math.floor(Math.random() * 10000); deal(); });
-$("clear").addEventListener("click", () => { sel.clear(); render(); say(""); });
-$("hint").addEventListener("click", () => {
-  const h = game.hint();
-  sel.clear();
-  if (h && h !== "pass") {
-    const hand = cards(view.hand), want = h.split(" ");
-    for (const r of want) { const i = hand.findIndex((x, j) => x === r && !sel.has(j)); sel.add(i); }
+/* ---------- hand: tap to pick, drag to reorder ---------- */
+function moveCard(id, to) {
+  const from = S.hand.findIndex((c) => c.id === id);
+  const [c] = S.hand.splice(from, 1);
+  S.hand.splice(Math.max(0, Math.min(to > from ? to - 1 : to, S.hand.length)), 0, c);
+}
+function toggle(id) {
+  if (!myTurn()) return;
+  S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id);
+  render(); check();
+}
+let drag = null;
+$("hand").addEventListener("pointerdown", (e) => {
+  const el = e.target.closest(".card"); if (!el || e.button > 0) return;
+  drag = { el, id: +el.dataset.id, x: e.clientX, y: e.clientY, moved: false, target: null };
+  el.setPointerCapture(e.pointerId);
+});
+$("hand").addEventListener("pointermove", (e) => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.moved && Math.hypot(dx, dy) < 8) return;
+  drag.moved = true; drag.el.classList.add("drag");
+  drag.el.style.transform = `translate(${dx}px, ${dy}px)`;
+  let best = null, bd = Infinity;
+  for (const c of $("hand").children) {
+    if (c === drag.el) continue;
+    c.classList.remove("drop-before", "drop-after");
+    const b = c.getBoundingClientRect(), d = Math.hypot(e.clientX - (b.left + b.width / 2), e.clientY - (b.top + b.height / 2));
+    if (d < bd) { bd = d; best = { c, after: e.clientX > b.left + b.width / 2 }; }
   }
+  if (best) { best.c.classList.add(best.after ? "drop-after" : "drop-before"); drag.target = best; }
+});
+function endDrag() {
+  if (!drag) return;
+  const d = drag; drag = null;
+  if (!d.moved) return toggle(d.id);
+  if (d.target) {
+    const i = S.hand.findIndex((c) => c.id === +d.target.c.dataset.id);
+    moveCard(d.id, i + (d.target.after ? 1 : 0));
+  }
+  render();
+}
+$("hand").addEventListener("pointerup", endDrag);
+$("hand").addEventListener("pointercancel", () => { drag = null; render(); });
+$("hand").addEventListener("keydown", (e) => {
+  const el = e.target.closest(".card"); if (!el) return;
+  const id = +el.dataset.id, i = S.hand.findIndex((c) => c.id === id);
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(id); }
+  else if (e.shiftKey && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+    e.preventDefault(); moveCard(id, e.key === "ArrowLeft" ? i - 1 : i + 2); render();
+    $("hand").querySelector(`[data-id="${id}"]`)?.focus();
+  }
+});
+
+/* ---------- buttons ---------- */
+$("sort").addEventListener("click", () => { S.hand.sort((a, b) => rankIdx(a.r) - rankIdx(b.r)); render(); });
+$("clear").addEventListener("click", () => { S.sel.clear(); render(); check(); });
+$("hint").addEventListener("click", () => {
+  const h = S.game.hint(); S.sel.clear();
+  if (h && h !== "pass") for (const r of h.split(" ")) { const c = S.hand.find((x) => x.r === r && !S.sel.has(x.id)); S.sel.add(c.id); }
   render();
   say(h === "pass" ? "Hint: pass." : `Hint: ${h}.`, "good");
 });
-$("pass").addEventListener("click", async () => {
-  const reply = JSON.parse(game.play("pass"));
+async function send(action) {
+  const run = S.run, reply = JSON.parse(S.game.play(action));
   if (!reply.ok) return say(reply.error, "bad");
-  say("You passed.");
-  await apply(reply);
-});
-$("play").addEventListener("click", async () => {
-  const t = selectedText();
-  const reply = JSON.parse(game.play(t));
-  if (!reply.ok) return say(`${t}: ${reply.error.replace(/^'.*?' /, "")}.`, "bad");
-  say(`You played ${t}.`);
-  await apply(reply);
-});
+  say(action === "pass" ? "You passed." : `You played ${action}.`);
+  await apply(reply, run);
+}
+$("pass").addEventListener("click", () => send("pass"));
+$("play").addEventListener("click", () => send(picked()));
+$("pause").addEventListener("click", () => { S.paused = !S.paused; $("pause").textContent = S.paused ? "Resume" : "Pause"; });
+$("homebtn").addEventListener("click", goHome);
+const openBook = () => $("book").showModal();
+$("bookbtn").addEventListener("click", openBook);
+$("go-book").addEventListener("click", openBook);
+$("bookclose").addEventListener("click", () => $("book").close());
+$("book").addEventListener("click", (e) => { if (e.target === $("book")) $("book").close(); });
+$("go-play").addEventListener("click", () => startLocal("play"));
+$("go-base").addEventListener("click", () => startLocal("base"));
+$("go-ai").addEventListener("click", startAI);
 new ResizeObserver(fan).observe($("hand"));
 
-try { const d = JSON.parse(localStorage.getItem("ddz-deal") || "null"); if (d) { $("seed").value = d.seed; $("seat").value = d.seat; } } catch (_) {}
+/* ---------- handbook pictures ---------- */
+(() => {
+  const rr = $("rankrow");
+  ORDER.forEach((r, i) => { if (i) { const a = document.createElement("span"); a.className = "arrow"; a.textContent = "‹"; rr.append(a); } rr.append(cardEl(r, "sm")); });
+  const C = [
+    ["Single", "any one card", "7"],
+    ["Pair", "two of a rank; BJ BJ and RJ RJ are pairs too", "9 9"],
+    ["Triple", "three of a rank", "Q Q Q"],
+    ["Triple + single", "the single is any other rank", "5 5 5 J"],
+    ["Triple + pair", "", "8 8 8 4 4"],
+    ["Straight", "5 or more in a row, 3 up to A (no 2s or jokers)", "6 7 8 9 10"],
+    ["Pairs in a row", "3 or more pairs in a row, up to A", "4 4 5 5 6 6"],
+    ["Triples in a row (plane)", "2 or more triples in a row, up to A", "7 7 7 8 8 8"],
+    ["Plane + singles", "one single per triple, all different ranks", "7 7 7 8 8 8 3 K"],
+    ["Plane + pairs", "one pair per triple", "7 7 7 8 8 8 3 3 K K"],
+    ["Four + two singles", "two singles of different ranks", "9 9 9 9 3 5"],
+    ["Four + two pairs", "", "9 9 9 9 3 3 5 5"],
+    ["Bomb", "4 to 8 of a rank; beats any non-bomb", "J J J J J J"],
+    ["Rocket", "all four jokers; beats everything", "BJ BJ RJ RJ"],
+  ];
+  $("combos").append(...C.map(([n, d, ex]) => {
+    const div = document.createElement("div"); div.className = "combo";
+    div.innerHTML = `<div><b>${n}</b>${d ? `<small>${d}</small>` : ""}</div>`;
+    div.append(row(ex, "sm"));
+    return div;
+  }));
+})();
+
+/* ---------- boot ---------- */
+for (const id of ["p-seed", "b-seed", "a-seed"]) $(id).value = Math.floor(Math.random() * 10000);
+fetch("/api/status").then((r) => (r.ok ? r.json() : Promise.reject())).then((s) => {
+  $("go-ai").disabled = !s.live_ready;
+  $("go-ai").textContent = s.live_ready ? "Watch the AI" : "Not configured";
+  $("ai-note").className = `note ${s.live_ready ? "warn" : ""}`;
+  $("ai-note").textContent = s.live_ready ? `Live calls to ${s.model} spend cloud credits: about $0.01–0.05 per peasant game, more as landlord (long move lists).`
+    : "Set COURSE_PROVIDER, COURSE_MODEL, GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION (see README), then restart python web/serve.py.";
+}).catch(() => {
+  $("go-ai").textContent = "Needs the local server";
+  $("ai-note").innerHTML = "Run <code>python web/serve.py</code> from <code>midterms/lululizzy8/</code> and open this page from it.";
+});
 
 (async () => {
   try {
@@ -360,18 +736,18 @@ try { const d = JSON.parse(localStorage.getItem("ddz-deal") || "null"); if (d) {
     for (const f of FILES) {
       const res = await fetch(`../${f}`);
       if (!res.ok) throw new Error(`could not load ${f} (${res.status})`);
-      const dir = `/ddz/${f.split("/").slice(0, -1).join("/")}`;
-      py.FS.mkdirTree(dir);
+      py.FS.mkdirTree(`/ddz/${f.split("/").slice(0, -1).join("/")}`);
       py.FS.writeFile(`/ddz/${f}`, await res.text());
     }
-    py.runPython("import sys; sys.path.insert(0, '/ddz')\nfrom web.session import Session");
-    Session = py.globals.get("Session");
-    $("deal").disabled = $("random").disabled = false;
-    await deal();
+    py.runPython("import sys; sys.path.insert(0, '/ddz')\nfrom web.session import Session, landlord_of");
+    Session = py.globals.get("Session"); landlordOf = py.globals.get("landlord_of");
+    for (const [id, t] of [["go-play", "Deal me in"], ["go-base", "Watch the baseline"]]) { $(id).disabled = false; $(id).textContent = t; }
   } catch (err) {
-    $("obox").innerHTML = `<h2>The game could not start</h2>
-      <p>${location.protocol === "file:" ? "Opened as a file, the page cannot read the game code." : String(err.message || err)}</p>
-      <p>From <code>midterms/lululizzy8/</code> run <code>python -m http.server 8000</code>, then open <code>http://localhost:8000/web/</code>. The first load needs internet.</p>`;
+    for (const id of ["go-play", "go-base"]) $(id).textContent = "Could not load";
+    const n = document.createElement("p"); n.className = "note warn";
+    n.textContent = location.protocol === "file:" ? "Opened as a file, the page cannot read the game code. Run python web/serve.py and open http://localhost:8000/web/."
+      : `The game could not start: ${err.message || err}. The first load needs internet.`;
+    $("home").append(n);
   }
 })();
 </script>

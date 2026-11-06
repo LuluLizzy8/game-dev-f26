@@ -43,7 +43,7 @@ only `observe` + `legal_actions` (plus history or its own notes, by variant) and
 | Nov 6 | Freeze the round 2 prompt for the held-out run (implementation agent) | Accepted | [ ] |
 | Nov 6 | My idea: change to two decks. Agent warned: second scope change, ~5× prompts, new suite, no time to tune | Chose two decks, three players | [ ] |
 | Nov 6 | Two-deck review: 1 must-fix, 7 should-fix (stale evaluation, call limit margin, prompt size, missing tests) | Applied all; call limit 120; new held-out seeds 300–329 | [ ] |
-| Nov 6 | Peer playtest findings ([`playtest.txt`](playtest.txt)): rules unclear to newcomers, text table hard to read, other turns too fast, ~200 choices with two decks | [ ] | [ ] |
+| Nov 6 | Peer playtest findings ([`playtest.txt`](playtest.txt)): rules unclear to newcomers, text table hard to read, other turns too fast, ~200 choices with two decks. Agent recommended extending the web page over Pyxel, and replaying traces for Watch the AI | My 9-point card-table list; web page; Watch the AI live through a local server (`web/serve.py`) | [ ] |
 
 ## What I would change
 

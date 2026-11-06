@@ -2,9 +2,9 @@
 import json
 import unittest
 
-from doudizhu.engine import DouDizhu
+from doudizhu.engine import DouDizhu, all_moves
 from players import heuristic
-from web.session import Session
+from web.session import Session, landlord_of
 
 
 def all_heuristic(seed):
@@ -48,6 +48,35 @@ class WebSession(unittest.TestCase):
                 break
         reply = json.loads(s.play(" ".join(reversed(action.split())).lower()))
         self.assertTrue(reply["ok"])
+
+    def test_watch_mode_plays_the_all_heuristic_deal(self):
+        for seed in range(3):
+            reply = json.loads(Session(seed, 1, watch=True).start())
+            outcome, history = all_heuristic(seed)
+            self.assertEqual(reply["outcome"], outcome)
+            self.assertEqual(len(reply["frames"]), len(history) + 1)  # the deal, then one frame per move
+            self.assertEqual(reply["frames"][0]["history"], [])
+            for frame in reply["frames"]:
+                self.assertEqual(frame["seat"], 1)
+
+    def test_refusals_say_why(self):
+        s = Session(7, 0)
+        s.start()
+        self.assertIn("not a combination", s.explain("3 4"))
+        self.assertIn("not cards", s.explain("XX"))
+        self.assertIsNone(s.explain(s.g.legal_actions(s.seat)[0]))
+        refused = json.loads(s.play("3 4"))
+        self.assertIn("not a combination", refused["error"])
+
+    def test_following_explains_kind_and_rank(self):
+        s = Session(0, 0)
+        s.g.turn, s.g.last = 0, (1, "9 9", all_moves([9, 9])["9 9"])  # seat 0 must beat a pair of 9s
+        self.assertIn("To follow a pair", s.explain("3"))
+        self.assertIn("does not rank higher", s.explain("4 4"))
+
+    def test_landlord_of_matches_the_deal(self):
+        for seed in range(5):
+            self.assertEqual(landlord_of(seed), json.loads(Session(seed, 0).start())["obs"]["landlord"])
 
     def test_page_sees_only_its_own_hand(self):
         s = Session(3, 1)

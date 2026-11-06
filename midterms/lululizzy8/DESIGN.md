@@ -482,6 +482,16 @@ recommended, what I decided and why. No agent approves a gate or merges the PR.
   [`playtest.txt`](playtest.txt), anonymized. Findings: the rules are not clear to a new player, the text
   table makes the hand hard to read and other players' turns too fast, and two decks give up to ~200
   legal plays per turn, too many to read as a list.
+- **Changes after the playtest (Nov 6):** the browser version (`web/`) became the main way to play:
+  a home screen (play, handbook, watch the baseline, watch the AI); a card table with three seats where
+  the others show only card backs and counts; a pile in the middle (latest play, the rest of the round,
+  earlier rounds face down); a turn highlight and a "thinking" pause of about 1–2 s before each other
+  player's move, with no timer on yours; a handbook of every combination with pictures; a sorted hand you
+  can reorder by dragging; and play by picking cards, with Play enabled only for a legal move and a
+  plain-words reason otherwise (`Session.explain`). This replaces reading a 200-item list. I chose to
+  extend the web page rather than port to Pyxel (a 42-card hand does not fit its low resolution), and
+  to watch the AI live through a local server (`web/serve.py`, which reuses `runner.run_episode`) rather
+  than replay recorded traces. No rule, observation or legal-action change.
 - **Recording (3–5 min):** 0:00 scope + rules in 30 s → 0:30 human-mode table → 1:15 runner with the
   model as landlord on a held-out seed, trace scrolling, a refused action and retry if one occurs →
   3:00 comparison table → 3:45 limits (small sample, one provider, heuristic opponents, teammate
