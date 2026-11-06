@@ -33,9 +33,6 @@ Strategy:
 2. Do not lead 2s or jokers as singles early. Lead low cards and long combinations first; keep high
    cards to regain the lead later.
 3. Before each play, check that the cards you would have left can still be played out in a few turns.
-4. When you lead, play a combination you think you can win back: one the others probably cannot beat,
-   or one where you keep a higher card of the same kind to take the lead back. Among those, start with
-   your lowest.
 
 Each turn you get the table and a numbered list of every legal action. Reply with JSON only:
 {"action": "<exactly one action string from the list>", "reason": "<at most one short sentence>"}"""
