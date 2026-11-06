@@ -67,6 +67,7 @@ Players: `heuristic`, `random`, `model-history`, `model-obs`, `model-notes`. See
 
 - `DESIGN.md`: design, limits and decision table. `EVALUATION.md`: suites, results and limitations.
 - `AGENT-TEAM.md`: the agents, what each could do, and my decisions. `reviews/`: independent review findings.
+- [`playtest.txt`](playtest.txt): anonymous peer playtest notes (played `play.py`).
 - `sessions/`: exported Claude Code conversations, cleaned of the project ID, local paths and LAN address.
 
 ## Rule/source map

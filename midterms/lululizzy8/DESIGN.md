@@ -394,7 +394,7 @@ midterms/lululizzy8/
   doudizhu/engine.py
   players/heuristic.py  random_player.py  model.py
   runner.py  play.py  report.py  tools/measure.py
-  tests/  traces/  reviews/  sessions/  peer-notes/
+  tests/  traces/  reviews/  sessions/  playtest.txt
   .claude/skills/ddz-rule-change/  .claude/skills/ddz-eval-run/  .claude/agents/ddz-rules-reviewer.md
 ```
 
@@ -478,9 +478,10 @@ recommended, what I decided and why. No agent approves a gate or merges the PR.
   other two are heuristics; shows hand, kitty, counts, play to beat and numbered legal plays (type a
   number or the cards).
 - **Peer playtest (week of Nov 2):** my partner plays one deal as landlord and one as peasant; I record
-  only what I observe: confusions, wrong guesses about rules, time per decision. Notes go in
-  `peer-notes/received.md` and `peer-notes/given.md`, anonymized. If notes have not arrived by Nov 6,
-  the limitations paragraph says so.
+  only what I observe: confusions, wrong guesses about rules, time per decision. Received notes are in
+  [`playtest.txt`](playtest.txt), anonymized. Findings: the rules are not clear to a new player, the text
+  table makes the hand hard to read and other players' turns too fast, and two decks give up to ~200
+  legal plays per turn, too many to read as a list.
 - **Recording (3–5 min):** 0:00 scope + rules in 30 s → 0:30 human-mode table → 1:15 runner with the
   model as landlord on a held-out seed, trace scrolling, a refused action and retry if one occurs →
   3:00 comparison table → 3:45 limits (small sample, one provider, heuristic opponents, teammate

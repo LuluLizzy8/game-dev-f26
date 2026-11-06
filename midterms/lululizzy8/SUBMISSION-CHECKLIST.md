@@ -20,7 +20,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy c
 | `README.md` | setup / play / test / evaluation commands from a fresh clone, working dir for each; scope statement; rule/source map with labels; sources + reuse terms; recording link | 🔨 (scope 👤 in my voice; recording link ⬜) |
 | `EVALUATION.md` | declared suite, comparison table, traces/links, CI evidence for this version, limitations paragraph | 🔨 (limitations 👤) |
 | `AGENT-TEAM.md` | one-page log: each agent, what it could see/do, what it recommended, what I decided, where the evidence is | 🔨 draft from the repo history; rewrite in my voice 👤 |
-| Peer playtest notes, received and given | `peer-notes/` | ⬜ 👤 (playtest week of Nov 2, notes by Nov 6) |
+| Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | 🔨 received ✅ (anonymous; played `play.py`); notes given to my partner 👤 |
 | Recording, 3–5 min, agent playing without manual moves, limits stated | link in README + PR | ⬜ 👤 |
 | Game, executable player, baseline, tests, agent configs, reports, traces | this folder | 🔨 |
 
@@ -59,5 +59,5 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 ## Other dated obligations
 
 - ✅ Week 3 post with the scope change.
-- ⬜ 👤 Book the 15-minute peer playtest (week of Nov 2); send notes to partner by Nov 6.
+- 🔨 Peer playtest done; notes received in [`playtest.txt`](playtest.txt). Send my notes to my partner 👤.
 - ⬜ 👤 Before Nov 16: silent-playtester notes on three assigned recordings (assigned Nov 9).

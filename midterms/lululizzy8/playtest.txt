@@ -1,0 +1,23 @@
+Notes from playtester:
+
+I have some experience with the original game so I understand most of the rules.
+
+Here are some notes that I think are useful:
+
+1. I think many of the rules and how to play would not be apparent to any users 
+unfamiliar with the game. I think there needs to be a more extensive tutorial / 
+explanation of the game.
+
+2. I think the overall UI should not be text based and should use something like
+pypxl (I think it is called this) to render actual cards & a board where you can
+see cards that the AI play. In addition, watching the turns of other players would 
+be a lot more impactful compared to I play a card then instantly I am met with more
+choices for cards to play. It is also important to note that I can't easily 
+understand my current hand with this game being text-based. 
+
+3. I think the modification of playing this game with 2 decks is fun but it needs 
+to be really considered because at one point when it was my turn I had 200 choices of 
+different card combinations to play and my eyes glazed over all of it because it was 
+text based.
+
+
