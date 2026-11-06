@@ -40,7 +40,50 @@ Frozen 2026-11-06, before any two-deck held-out seed was run.
 
 ### Results
 
-TWO_DECK_RESULTS
+#### 2026-11-06: two-deck held-out suite (seeds 300–329)
+
+Full table (every field, every condition): `results/heldout-2deck-2026-11-06.md`; traces:
+`traces/heldout-2deck/` (510 episodes: 310 live, 200 baseline). Live model `gemini-3.5-flash-lite` (id as
+returned by the API), Vertex AI `global`, config hash `9540bd7658e1`, game commit `83c5dcf` in every
+trace header. Live cost ≈ **$6.0** at the dated price (estimate was $2–3; history and notes prompts grew
+with the long two-deck histories). Longest episode 101 s.
+
+**Main comparison, trial 1 only, so every player has the same 30 deals per situation, opponents heuristic.**
+Wins out of 30 and mean agent score.
+
+| Player | S1 (landlord) | S2 (peasant after landlord) | S3 (peasant before landlord) |
+|---|---|---|---|
+| heuristic (baseline) | **19/30, +0.87** | 11/30, −0.43 | 11/30, −0.43 |
+| random | 1/30, −4.73 | **14/30, −0.27** | 8/30, −1.67 |
+| model-history | 3/30, −3.67 | 6/30, −0.93 | 9/30, −0.50 |
+| model-obs (no history) | 5/30, −3.13 | 10/30, −0.90 | 8/30, −1.13 |
+| model-notes (history + own notes) | 5/30, −2.40 | 5/30, −1.57 | 9/30, **−0.40** |
+
+Failures over all 310 live episodes: 0 forfeits, 0 step-limit endings. 15 failed API calls: 13 ended
+after 28–29 s (the 30 s call timeout) on landlord turns with very long legal lists, 2 failed quickly.
+**4 fallback moves** (heuristic move, labeled `fallback`), each after both tries of one turn failed, all
+in S1: `model-history` s306 t1, `model-notes` s300, `model-obs` s300 and s308. Fallback-free figures are in
+the full table. Invalid replies: 8 (each corrected on the retry). Latency median 0.8–0.9 s, p95 ≤ 1.9 s.
+
+Repeated trials: `model-history` ran a second trial on seeds 300–309. The two trials gave the same
+win/loss on 6/10 (S1), 8/10 (S2) and 10/10 (S3) deals.
+
+Random opponents (S1, seeds 300–309): heuristic 9/10, `model-history` 8/10, random 7/10. Mean scores are
+large here (up to +39.6) because random opponents play many bombs and each bomb doubles the stake.
+
+Reading (10 or 30 deals per cell; no statistical certainty implied):
+- Two decks made the model player clearly weaker as landlord. The heuristic wins 19/30; the model players
+  win 3–5/30, close to random (1/30). Paired on the same deals, `model-history` scores −3.85 per deal below
+  the heuristic over all 40 S1 episodes. The landlord must choose from lists of up to ~5,900 moves, and the
+  only timeouts and fallbacks happened there.
+- As a peasant the players are close and partly depend on the heuristic teammate; random even does best
+  in S2 (14/30), which shows how much a peasant's result depends on the teammate and the deal.
+- History vs observation only: no consistent advantage on two decks (S1 3 vs 5, S2 6 vs 10, S3 9 vs 8 wins).
+  Notes give the best mean score of the model players in S1 and S3, but not in S2, and the notes variant
+  differs from history in more than one way (DESIGN §4.3).
+- Compared with the one-deck game (superseded section), the model's landlord wins dropped from 8/30 to
+  3/30 while the heuristic's rose from 17/30 to 19/30. The prompt was not re-tuned for two decks.
+
 
 ## One-deck version (superseded 2026-11-06, game commit `eed053e`)
 

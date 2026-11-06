@@ -43,8 +43,8 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 1a labels | README map, every rule labeled with locator | 🔨 (Pagat locators to verify 👤) |
 | 1b scope | README scope + Week 3 post | 🔨 (Week 3 post ✅; README scope 👤) |
 | 1c sources | README + DESIGN §9 | 🔨 (RLCard/DouZero licences if cited) |
-| 2a core loop | `play.py` start to end; browser version `web/` (same engine via Pyodide, `tests/test_web.py`) | ✅ built (peer playtest 👤) |
-| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; held-out runs ✅ 2026-11-06 (`traces/heldout/`, 310 live, 0 fallbacks) |
+| 2a core loop (two decks since 2026-11-06; Week 3 post 👤) | `play.py` start to end; browser version `web/` (same engine via Pyodide, `tests/test_web.py`) | ✅ built (peer playtest 👤) |
+| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; held-out runs ✅ 2026-11-06, two decks (`traces/heldout-2deck/`, 310 live, 4 labeled fallbacks) |
 | 2c information | `tests/test_game.Information`, `test_view`, `test_runner.Prompt` | ✅ |
 | 3a runs | fresh-clone dry run of README commands | ⬜ |
 | 3b limits | `runner.py` + `tests/test_runner.py` | ✅ |
@@ -52,7 +52,7 @@ Skills are found by Claude Code only when a session is started in `midterms/lulu
 | 3d agent team | table above | 🔨 |
 | 4a choices | DESIGN §11 | ✅ |
 | 4b experiment | heuristic baseline, paired deals, 30 held-out seeds; three memory variants | ✅ run and interpreted in EVALUATION |
-| 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | ✅ held-out 2026-11-06 (`results/heldout-2026-11-06.md`) |
+| 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | ✅ two-deck held-out 2026-11-06 (`results/heldout-2deck-2026-11-06.md`); one-deck kept as superseded |
 | 5b authorship | AGENT-TEAM + limitations in my voice, peer notes used | ⬜ 👤 |
 | 5c recording | 3–5 min | ⬜ 👤 |
 
