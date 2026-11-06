@@ -40,9 +40,12 @@ class WebSession(unittest.TestCase):
         self.assertFalse(reply["ok"])
 
     def test_card_order_and_case_do_not_matter(self):
-        s = Session(7, 0)
-        first = json.loads(s.start())
-        action = next(a for a in first["legal"] if len(a.split()) > 1 and a != "pass")
+        for seat in range(3):  # find a seat whose first turn has a multi-card play
+            s = Session(7, seat)
+            first = json.loads(s.start())
+            action = next((a for a in first["legal"] if len(a.split()) > 1 and a != "pass"), None)
+            if action:
+                break
         reply = json.loads(s.play(" ".join(reversed(action.split())).lower()))
         self.assertTrue(reply["ok"])
 

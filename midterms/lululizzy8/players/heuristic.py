@@ -37,5 +37,5 @@ def choose(obs, legal):
     if normal:
         return min(normal, key=lambda a: (combos[a].rank, sum(parse(a))))
     if bombs and danger:
-        return min(bombs, key=lambda a: (combos[a].kind == "rocket", combos[a].rank))
+        return min(bombs, key=lambda a: (combos[a].kind == "rocket", combos[a].length, combos[a].rank))  # smallest bomb first
     return "pass"

@@ -61,8 +61,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .center { grid-area: center; display: grid; gap: 12px; justify-items: center; align-content: start; text-align: center; }
 .label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .row { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; }
-.row.tight { flex-wrap: nowrap; max-width: 100%; }
-.row.tight .card + .card { margin-left: calc(var(--cw) * -0.5); }
+.row.tight { width: 100%; column-gap: 0; row-gap: 22px; }  /* fan() overlaps these cards to fit */
 .tobeat { display: grid; gap: 6px; justify-items: center; padding: 10px 16px 12px; border-radius: 14px; border: 1px dashed rgba(217,164,65,.5); min-width: 60%; min-height: calc(var(--cw) * 1.4 + 40px); max-width: 100%; }
 .status { font-weight: 600; }
 .status em { font-style: normal; color: var(--brass); }
@@ -71,7 +70,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .msg { min-height: 1.5em; font-size: 13px; color: var(--muted); text-align: center; }
 .msg.bad { color: var(--bad); } .msg.good { color: var(--brass); }
-.hand { display: flex; justify-content: center; width: 100%; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
+.hand { display: flex; flex-wrap: wrap; row-gap: 22px; justify-content: center; width: 100%; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
 .mine { font-size: 12px; color: var(--muted); }
 
 .card { --w: var(--cw); width: var(--w); aspect-ratio: 5 / 7; border-radius: calc(var(--w) * .09); position: relative; flex: none; overflow: hidden;
@@ -130,7 +129,7 @@ summary { cursor: pointer; font-weight: 700; }
   <main class="table" id="table">
     <section class="seat left" id="sL"></section>
     <section class="center" aria-label="Middle of the table">
-      <div><div class="label">Kitty · the landlord's 3 extra cards</div><div class="row" id="kitty"></div></div>
+      <div><div class="label">Kitty · the landlord's 9 extra cards</div><div class="row" id="kitty"></div></div>
       <div class="tobeat"><div class="label" id="tblabel">&nbsp;</div><div class="row tight" id="tobeat"></div></div>
       <div class="status" id="status" aria-live="polite"></div>
     </section>
@@ -159,7 +158,7 @@ summary { cursor: pointer; font-weight: 700; }
     <summary>Play history</summary>
     <ol class="hist" id="hist"></ol>
   </details>
-  <p class="foot">Tap cards to pick them, then Play. Card order does not matter. Ranks low to high: 3 4 5 6 7 8 9 10 J Q K A 2, then 小王 (black joker) and 大王 (red joker). A bomb (four of a kind) or the rocket (both jokers) beats anything. The other two seats are the heuristic player from <code>players/heuristic.py</code>.</p>
+  <p class="foot">Tap cards to pick them, then Play. Card order does not matter. Ranks low to high: 3 4 5 6 7 8 9 10 J Q K A 2, then 小王 (black joker) and 大王 (red joker). Two decks: a bomb (4 to 8 of a kind) or the rocket (all four jokers) beats anything; a longer bomb beats a shorter one. The other two seats are the heuristic player from <code>players/heuristic.py</code>.</p>
 </div>
 
 <script>
@@ -190,12 +189,22 @@ const cards = (text) => (text ? text.split(" ") : []);
 const seatName = (s) => (s === view.seat ? "You" : `Seat ${s}`);
 const roleOf = (s) => (s === view.landlord ? "landlord" : "peasant");
 
-function fan() {
-  const box = $("hand"), els = [...box.children];
+function fan() { fit($("hand")); fit($("tobeat")); }
+
+function fit(box) {
+  const els = [...box.children];
   if (!els.length) return;
   const w = els[0].getBoundingClientRect().width, W = box.clientWidth, n = els.length;
-  const step = Math.min(w * 0.62, n > 1 ? (W - w) / (n - 1) : w);
-  els.forEach((c, i) => { c.style.marginLeft = i ? `${step - w}px` : "0"; });
+  // Two decks deal up to 42 cards: when one row would show less than a third of each card, use more rows.
+  let rows = 1, perRow = n, step;
+  for (;;) {
+    perRow = Math.ceil(n / rows);
+    step = Math.min(w * 0.62, perRow > 1 ? (W - w) / (perRow - 1) : w);
+    if (step >= w * 0.34 || rows === 3) break;
+    rows++;
+  }
+  if (rows > 1) step = (W - w - 1) / (perRow - 1);  // fill each row so the next card wraps exactly at perRow
+  els.forEach((c, i) => { c.style.marginLeft = i % perRow ? `${step - w}px` : "0"; });
 }
 
 function lastAction(s) {

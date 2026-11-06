@@ -1,6 +1,7 @@
 # Dou Dizhu midterm: design document
 
-Status: DRAFT rev 3, 2026-10-28. Rev 1 was reviewed by two independent read-only reviewers
+Status: DRAFT rev 4, 2026-11-06: the game now uses **two decks** (§2.2, which overrides one-deck numbers
+elsewhere in this doc: 54 cards, 17/20-card hands, the 154-step bound, the R10 bomb wording). Rev 3 was 2026-10-28. Rev 1 was reviewed by two independent read-only reviewers
 (`reviews/2026-10-28-design-review.md`); rev 2 by a third (`reviews/2026-10-28-design-review-rev2.md`).
 Accepted findings are applied here.
 Written before the runner, baseline and model player exist.
@@ -46,7 +47,7 @@ the standard library, and only the model player needs a provider SDK.
 **One episode = one deal.** The seed shuffles the deck and picks the landlord. The deal ends when any
 player empties their hand (`hand_empty`) or a runner limit fires (§5).
 
-**Included:** full 54-card deck; all 14 standard combination kinds (R7); bombs and rocket (R10);
+**Included:** two full decks, 108 cards (§2.2); all 14 standard combination kinds (R7); bombs and rocket (R10);
 pass and lead-return (R11); landlord/peasant win (R12); bomb and spring multipliers (R13).
 
 **Excluded, with reason:**
@@ -56,7 +57,7 @@ pass and lead-return (R11); landlord/peasant win (R12); bomb and spring multipli
 | Bidding for landlord | Adds a second phase and more model calls; the seed picks the landlord (R4) and the runner seats the agent relative to it (§6). |
 | Bid stakes (1/2/3) | Follows from no bidding; base stake 1 (R13a). |
 | Multi-deal match / running score | One deal is already a complete win/loss; matches multiply cost without new decisions. |
-| 4-player and 2-deck variants | Different deck, different combos; out of scope. |
+| 4-player variant | Different seats and teams; out of scope (§2.2). |
 | Suits | No combination uses suits, so dropping them changes no legal move (R1a). |
 | Graphics / sound | Optional per brief; a text table is enough to play and to record. |
 
@@ -73,14 +74,14 @@ and tests. Summary:
 
 - **Initial state.** 54 cards shuffled by `random.Random(seed)`; 17 to each seat; the 3-card kitty
   goes to the landlord and is shown to all. Landlord = `rng.randrange(3)`. The landlord leads.
-- **Actions.** A space-separated card list (`3 3 3 4`, `10 J Q K A`, `BJ RJ`) or `pass`. Order does
+- **Actions.** A space-separated card list (`3 3 3 4`, `10 J Q K A`, `BJ BJ RJ RJ`) or `pass`. Order does
   not matter; text is case-insensitive.
 - **Transitions.** A legal play removes cards and becomes the play to beat; a pass passes. After two
   passes in a row the last player to play leads anything. The leader may not pass.
 - **Legality.** Lead: any combination in hand. Follow: same kind and length with a higher main rank,
   or a bomb, or the rocket. Kickers must be distinct ranks from the body and from each other (R8,
   `design`: every card list means exactly one combination). Consequences to state in R8's evidence
-  once checked against Pagat: both jokers may be kickers together (`3 3 3 3 BJ RJ`), and four + a pair
+  once checked against Pagat: both jokers may be kickers together (`3 3 3 3 BJ RJ`, and with two decks the whole rocket as two pairs, `3 3 3 3 BJ BJ RJ RJ`), and four + a pair
   as the "two singles" (`3 3 3 3 5 5`) is rejected.
 - **Scoring.** Stake 1 × 2^(bombs + rockets + spring). Landlord ±2×, each peasant ∓1×. Zero-sum.
 - **Engine termination.** `hand_empty` (winner decided) or `step_limit` (no winner, scores 0).
@@ -102,6 +103,29 @@ and tests. Summary:
 | New scoring tests: landlord win without spring, rocket doubling, two bombs ×4. | — | Regression guards (pass on current engine). |
 
 ---
+
+### 2.2 Two-deck change (2026-11-06, my decision)
+
+The one-deck game was finished and evaluated (EVALUATION.md, superseded section). I then changed it to
+two decks with three players. Rules (all `design`; README rows R1, R3, R7, R10a, R14):
+
+| Item | One deck (before) | Two decks (now) | Why this choice |
+|---|---|---|---|
+| Cards | 54 | 108: eight of each rank, two of each joker | two standard decks |
+| Deal | 17 each, kitty 3, landlord 20 | 33 each, kitty 9, landlord 42 | uses all 108 cards with three equal hands |
+| Bomb | four of a rank | 4 to 8 of a rank; more cards beat fewer, then rank | with eight of a rank, longer bombs exist; size-first is the usual climbing-game rule (as in Guandan) |
+| Rocket | BJ RJ | all four jokers `BJ BJ RJ RJ`; `BJ RJ` is not a play; `BJ BJ` and `RJ RJ` are pairs | keeps the rocket unique and on top |
+| Step limit | 200 (natural max 154) | 400 (the deal ends when one hand empties: at most 106 plays + 2 × 105 passes = 316) | still a backstop only |
+| Call limit | 60 | 120 (measured max non-forced decisions per seat per deal on seeds 0–104: 28 with the heuristic as agent, 20 with random; raised on the 2026-11-06 review so a passive player is not forfeited) | margin for a player that passes more |
+
+Alternatives considered: four players with two decks (the common two-deck form: 25 each, kitty 8)
+would change seats, teams, situations and every runner test; 31 each + 15 kitty would make the landlord
+hand even larger. Rejected for time.
+
+Consequences: the opening legal list grows from median 74 to median 2,425 (max 5,921) moves, so a
+landlord prompt can reach about 54k input tokens (`tools/measure.py`). Heuristic change: it plays its
+smallest bomb first (fewest cards, then lowest rank). The model prompt's rules paragraph now describes
+two decks; the strategy rules are unchanged from the round 2 prompt and were not re-tuned.
 
 ## 3. Machine-playable interface (2b, 2c)
 
@@ -220,10 +244,10 @@ forced? play it : that seat's `choose` → `step`. Limits (values in `agent-conf
 
 | Limit | Value | On breach |
 |---|---|---|
-| Steps (all seats, incl. passes) | 200 (engine R14; backstop, natural max 154) | engine terminal `step_limit`, no winner, scores 0 |
-| Model calls, agent seat | 60; forced moves cost none; re-set from the maximum measured on tuning seeds if needed | runner forfeit `call_limit` |
+| Steps (all seats, incl. passes) | 400 (engine R14; backstop, natural max 316 with two decks) | engine terminal `step_limit`, no winner, scores 0 |
+| Model calls, agent seat | 120 (§2.2); forced moves cost none | runner forfeit `call_limit` |
 | Per-call timeout | 30 s, enforced by the HTTP client | counts as a failed call |
-| Episode wall clock | 30 min (= 60 calls × 30 s, so the call limit normally binds first), checked between calls | runner forfeit `timeout` |
+| Episode wall clock | 30 min, checked between calls (two-deck calls measured at ≤ 3 s, so ≤ 10 min for 120 calls in practice) | runner forfeit `timeout` |
 | Invalid replies | 10 per episode (bad JSON or string not in the list; API errors/timeouts count as calls but not here) | runner forfeit `invalid_limit` |
 
 **Failed call handling.** Every attempt counts as one call. On a bad reply or failed call the model
@@ -268,7 +292,7 @@ seed count below is sized for that.
 
 | Situation | Agent seat | What it tests |
 |---|---|---|
-| S1 Landlord | landlord (20 cards, leads) | solo play, tempo, bomb timing |
+| S1 Landlord | landlord (42 cards, leads) | solo play, tempo, bomb timing |
 | S2 Peasant after landlord | landlord + 1 | blocking the landlord, team passing |
 | S3 Peasant before landlord | landlord + 2 | supporting the teammate, feeding them the lead |
 
@@ -290,10 +314,11 @@ seed count below is sized for that.
 
 Each situation gets ≥ 30 live trials, above the brief's minimum of two.
 
-**Budget.** ~20 non-forced calls per episode; ~1–2k input tokens per call (measured on tuning seeds
-before the held-out run). 310 live episodes (220 + 90 `model-notes`). Measured in tuning: ~5k input and
-~200 output tokens per episode, ~1 s per call; price recorded in EVALUATION.md (2026-10-28) → ≈ $0.65 and
-roughly 1–1.5 h sequential; the three situations can run as parallel processes.
+**Budget (two decks, 2026-11-06).** ~16–18 non-forced calls per episode. Input tokens per call: median
+~850, max ~54k (landlord openings with up to 5,921 legal moves); per episode ~10–35k by situation
+(`tools/measure.py`; live check on tuning seeds 100–101, S1: 37 calls, 167k input tokens, latency
+median 0.9 s, max 3.0 s, output ≤ 49 tokens). 310 live episodes → ≈ $2–3 at the dated price.
+(One-deck budget was ≈ $0.65; the one-deck run actually cost ≈ $1.27.)
 
 **Metrics per player × situation:**
 - wins / losses / no-result, with forfeits by reason (`call_limit`, `timeout`, `invalid_limit`) in

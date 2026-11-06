@@ -14,7 +14,7 @@ Changes to it go in the EVALUATION.md change log with a reason, never silently.
 2. Check the seed range against its purpose:
    - 0–99: heuristic development only;
    - 100–104: prompt tuning;
-   - 200–229: held out. Allowed only after EVALUATION.md records the frozen commit hashes of
+   - 200–229: one-deck held out (used 2026-11-06); 300–329: two-deck held out. Allowed only after EVALUATION.md records the frozen commit hashes of
      `players/model.py`, `players/heuristic.py` and `agent-config.json`. If they are not recorded, stop.
 3. For a live run, confirm LuluLizzy asked for it in this session, and that `COURSE_PROVIDER`,
    `COURSE_MODEL`, `GOOGLE_CLOUD_PROJECT`, `GOOGLE_CLOUD_LOCATION` are set. Never fall back to fixtures.

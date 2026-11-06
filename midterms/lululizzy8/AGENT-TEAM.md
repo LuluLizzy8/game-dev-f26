@@ -15,7 +15,7 @@ in the session.
 | Claude Code with `CLAUDE.md` | Implementation (programmer, producer) | Read and edit this folder and its workflow file; run tests; run live episodes when I said so; commit locally | Push, open a PR, edit other folders, review its own changes, write my student-voice sections | `CLAUDE.md`; commits on `lululizzy8/midterm`; `sessions/` [TODO: export] |
 | `ddz-rule-change` skill | Reusable skill (rules process) | Steps for any rule change: README map row, failing test first, engine, reviewer | — | `.claude/skills/ddz-rule-change/SKILL.md`; used for R18–R23 and the three regression fixes |
 | `ddz-eval-run` skill | Reusable skill (QA / evaluation) | Steps for running episodes: seed ranges, freeze before held-out seeds, live vs fixture labels | — | `.claude/skills/ddz-eval-run/SKILL.md`; tuning rounds 1–3 and the held-out run |
-| `ddz-rules-reviewer` subagent | Independent review (QA) | Read, Grep, Glob only; reviewed changes it did not write; never asked to approve | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/2026-10-28-runner-review.md` (18 findings), `reviews/2026-10-29-notes-review.md` (13) |
+| `ddz-rules-reviewer` subagent | Independent review (QA) | Read, Grep, Glob only; reviewed changes it did not write; never asked to approve | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/2026-10-28-runner-review.md` (18 findings), `reviews/2026-10-29-notes-review.md` (13), `reviews/2026-11-06-two-deck-review.md` (14) |
 | Design reviewers (rules reviewer + strict-TA rubric reviewer, then a fresh re-reviewer) | Independent design review (design, production) | Read-only: Assignment.md, DESIGN.md, README, engine, tests | Edit, approve | `reviews/2026-10-28-design-review.md` (two reviewers, rev 1), `reviews/2026-10-28-design-review-rev2.md` |
 | UI research + mockup (implementation agent, web search) | Art direction | Searched for CC0 card art and Dou Dizhu table layouts; built a 4-style mockup | Publish anything without my choice | Mockup artifact (private); `web/`; README sources |
 
@@ -41,6 +41,8 @@ only `observe` + `legal_actions` (plus history or its own notes, by variant) and
 | Oct 29 | My idea: a third player that keeps its own short notes between turns | Added `model-notes` (R23); reviewer found 6 should-fix issues, all fixed | [ ] |
 | Oct 29 | Card art: draw cards in code rather than use CC0 decks (implementation agent) | Chose drawn cards; browser version in `web/` | [ ] |
 | Nov 6 | Freeze the round 2 prompt for the held-out run (implementation agent) | Accepted | [ ] |
+| Nov 6 | My idea: change to two decks. Agent warned: second scope change, ~5× prompts, new suite, no time to tune | Chose two decks, three players | [ ] |
+| Nov 6 | Two-deck review: 1 must-fix, 7 should-fix (stale evaluation, call limit margin, prompt size, missing tests) | Applied all; call limit 120; new held-out seeds 300–329 | [ ] |
 | [ ] | Peer playtest findings | [ ] | [ ] |
 
 ## What I would change

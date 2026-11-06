@@ -29,7 +29,11 @@ class Lead(unittest.TestCase):
         ("3 3 3 3 8 9", "four+2"),
         ("3 3 3 3 8 8 9 9", "four+2pairs"),
         ("3 3 3 3", "bomb"),
-        ("BJ RJ", "rocket"),
+        ("3 3 3 3 3", "bomb"),                  # R10a: two decks, bombs of 4-8
+        ("2 2 2 2 2 2 2 2", "bomb"),
+        ("BJ BJ", "pair"),                      # R7: two of each joker
+        ("RJ RJ", "pair"),
+        ("BJ BJ RJ RJ", "rocket"),               # R10a: the rocket is all four jokers
     ]
 
     def test_each_kind(self):
@@ -51,6 +55,9 @@ class Rejected(unittest.TestCase):
         ("3 3 3 4 4 4 4 5", "3 3 3 4 4 4 4 5"),  # R8: kicker shares a triple's rank
         ("3 3 3 3 5 5", "3 3 3 3 5 5"),          # R8: four + two singles of one rank
         ("3 5", "3 5"),
+        ("BJ RJ", "BJ RJ"),                      # R10a: one of each joker is not a rocket
+        ("BJ BJ RJ", "BJ BJ RJ"),
+        ("3 3 3 3 3 8 9", "3 3 3 3 3 8"),        # five of a rank takes no kicker
     ]
 
     def test_not_combinations(self):
@@ -58,8 +65,9 @@ class Rejected(unittest.TestCase):
             with self.subTest(play=play):
                 self.assertIsNone(kind_of(hand, play))
 
-    def test_jokers_are_a_rocket_not_a_pair(self):
-        self.assertEqual(kind_of("BJ RJ", "BJ RJ"), "rocket")
+    def test_bomb_length_is_its_card_count(self):
+        moves = all_moves(parse("3 3 3 3 3 3 3"))
+        self.assertEqual([moves[" ".join(["3"] * n)].length for n in (4, 5, 6, 7)], [4, 5, 6, 7])
 
 
 class Beats(unittest.TestCase):
@@ -83,25 +91,34 @@ class Beats(unittest.TestCase):
         self.assertFalse(beats(moves["3 3 3 A"], moves["3 4 4 4"]))
 
     def test_bombs_and_rocket(self):
-        bomb4, bomb5, rocket = Combo("bomb", 4, 1), Combo("bomb", 5, 1), Combo("rocket", 16, 1)
+        """R10a: a longer bomb beats a shorter one; same length, higher rank; the rocket beats all."""
+        bomb4, bomb5, rocket = Combo("bomb", 4, 4), Combo("bomb", 5, 4), Combo("rocket", 16, 4)
         self.assertTrue(beats(bomb4, Combo("straight", 10, 5)))
         self.assertTrue(beats(bomb4, Combo("single", 17, 1)))
         self.assertTrue(beats(bomb5, bomb4))
         self.assertFalse(beats(bomb4, bomb5))
-        self.assertTrue(beats(rocket, Combo("bomb", 15, 1)))
-        self.assertFalse(beats(Combo("bomb", 15, 1), rocket))
+        self.assertTrue(beats(Combo("bomb", 3, 5), Combo("bomb", 15, 4)))  # five 3s beat four 2s
+        self.assertFalse(beats(Combo("bomb", 15, 4), Combo("bomb", 3, 5)))
+        self.assertTrue(beats(Combo("bomb", 3, 8), Combo("bomb", 15, 7)))
+        self.assertTrue(beats(rocket, Combo("bomb", 15, 8)))
+        self.assertFalse(beats(Combo("bomb", 15, 8), rocket))
 
 
 class Invariants(unittest.TestCase):
     """R8: on random hands every move string names one combination drawn from the hand."""
 
     def test_random_hands(self):
-        deck = [r for r in range(3, 16) for _ in range(4)] + [16, 17]
+        deck = [r for r in range(3, 16) for _ in range(8)] + [16, 17] * 2  # R1: two decks
         for seed in range(200):
-            hand = random.Random(seed).sample(deck, 20)
+            hand = random.Random(seed).sample(deck, (33, 42)[seed % 2])
             have = Counter(hand)
             for move in all_moves(hand):  # all_moves asserts no label maps to two combos
                 self.assertFalse(Counter(parse(move)) - have, move)
+
+    def test_rocket_spent_as_kickers_has_one_reading(self):
+        moves = all_moves(parse("3 3 3 3 3 3 BJ BJ RJ RJ 5 5"))  # setdefault in all_moves asserts uniqueness
+        self.assertEqual(moves["3 3 3 3 BJ BJ RJ RJ"].kind, "four+2pairs")
+        self.assertEqual(moves["BJ BJ RJ RJ"].kind, "rocket")
 
 
 if __name__ == "__main__":

@@ -1,8 +1,46 @@
 # Evaluation
 
-Status: held-out suite run 2026-11-06. Tables are filled with the `ddz-eval-run` skill.
+Status: the game changed to **two decks** on 2026-11-06 (DESIGN.md §2.2). The two-deck suite below is the
+evaluation of the submitted game. The one-deck evaluation further down is kept as history: it is
+superseded, and its numbers do not describe the current game. Tables are filled with the `ddz-eval-run` skill.
 
-## Declared suite (frozen before tuning)
+## Two-deck game (current version)
+
+### Declared suite (2026-11-06, before any two-deck evaluation episode)
+
+- Same structure as the one-deck suite: situations S1–S3; players `heuristic`, `random`,
+  `model-history`, `model-obs`, `model-notes`; opponents heuristic, plus a random-opponent condition
+  (S1, 10 seeds); `model-history` gets a second trial on the first 10 seeds. **310 live episodes.**
+- **Held-out seeds 300–329** (new; never run on either version before this suite). Development seeds
+  0–99 and tuning seeds 100–104 as before.
+- No prompt tuning on two decks. The prompt is the frozen round 2 prompt with its rules paragraph
+  rewritten for two decks. The only two-deck model episodes before this suite are 2 latency/size checks on
+  tuning seeds 100–101, S1 (`traces/tuning-2deck/`), run before the prompt and config were frozen.
+
+### Measurements (2026-11-06, `python tools/measure.py`, seeds 0–104, all seats heuristic)
+
+- opening legal-list size: median 2,425, max 5,921 (one deck: median 67, max 215)
+- steps per deal: median 59, max 94 (step limit 400 is a backstop; bound 316)
+- non-forced decisions per seat per deal: median 17, max 28; with a random agent max 20 (call limit 120)
+- estimated input tokens per call: `model-history` median ~850, max ~54k; `model-obs` median ~590, max ~54k
+- live check, tuning seeds 100–101, S1, `model-history`: 37 calls, latency median 0.9 s, max 3.0 s,
+  max output 49 tokens (cap 256), 167k input tokens; 2 invalid replies (a straight not in the list),
+  both corrected on the retry.
+
+### Frozen versions
+
+TWO_DECK_FROZEN
+
+### Results
+
+TWO_DECK_RESULTS
+
+## One-deck version (superseded 2026-11-06, game commit `eed053e`)
+
+Everything from here to "Traces" is the one-deck game: 54 cards, 17/20-card hands, held-out seeds 200–229.
+
+
+### Declared suite (frozen before tuning)
 
 Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted in my Week 3 thread.
 
@@ -15,7 +53,7 @@ Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted
   `model-notes` 3 × 30 (added 2026-10-29); random-opponent condition 10 = **310 live episodes**.
   Baselines once per (situation, seed).
 
-## Frozen versions before the held-out run
+### Frozen versions before the held-out run
 
 Frozen 2026-11-06, before any held-out seed was run.
 
@@ -26,7 +64,7 @@ Frozen 2026-11-06, before any held-out seed was run.
 | `agent-config.json` (config hash in every trace) | `cb6d27a`, config hash `13e067d04638` |
 | Game commit | the commit recorded in each held-out trace header (`game_commit`) |
 
-## Measurements on non-held-out seeds (2026-10-28, `python tools/measure.py`)
+### Measurements on non-held-out seeds (2026-10-28, `python tools/measure.py`)
 
 Seeds 0–104, all seats heuristic:
 - opening legal-list size: median 67, max 215
@@ -37,7 +75,7 @@ Seeds 0–104, all seats heuristic:
 Baseline strength on development seeds 0–99 (agent seat heuristic vs random, opponents heuristic), wins out
 of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 
-## Known bounds of the runner (from the 2026-10-28 runner review)
+### Known bounds of the runner (from the 2026-10-28 runner review)
 
 - The wall clock is checked before each model call, so one call can overrun the limit by up to the
   30 s HTTP timeout, and an episode whose clock runs out after the agent's last decision ends normally.
@@ -45,9 +83,9 @@ of 100: S1 58 vs 4; S2 42 vs 30; S3 42 vs 36.
 - `model-notes` output tokens against the same 256-token cap: checked 2026-11-06 on tuning seeds 100–101
   (S1, 10 calls, `traces/notes-check/`): median 68, max 76, so notes are not truncated.
 
-## Results
+### Results
 
-### 2026-10-28: first live episode (tuning seed 100, S1), checkpoint evidence
+#### 2026-10-28: first live episode (tuning seed 100, S1), checkpoint evidence
 
 Table: `results/tuning-2026-10-28.md`; traces: `traces/tuning/`. One live episode, so this shows the
 pipeline working, not which player is better.
@@ -63,7 +101,7 @@ real bug, now a regression test (`test_regressions.FoundInFirstLiveRun20261028`,
 fix `8379355`). The engine and players are identical between the two labels; the pair above is matched
 by hand. Output tokens (~30 per reply) are far under the 256 cap, so thinking tokens did not truncate replies.
 
-### 2026-10-28: tuning round 1 (seeds 100–104, all situations, prompt as of `eeb053f`)
+#### 2026-10-28: tuning round 1 (seeds 100–104, all situations, prompt as of `eeb053f`)
 
 Full table: `results/tuning-r1-2026-10-28.md`; traces: `traces/tuning-r1/`. 5 deals per cell, so these
 are tuning observations, not results. Live cost ≈ $0.075 for 30 episodes.
@@ -84,7 +122,7 @@ Observations:
 - No invalid replies or fallbacks in 30 episodes; one slow call (p95 24 s in model-obs S1) stayed under
   the 30 s timeout.
 
-### 2026-10-29: tuning round 2 (same seeds, prompt `27e56eb`: three strategy rules added)
+#### 2026-10-29: tuning round 2 (same seeds, prompt `27e56eb`: three strategy rules added)
 
 Change: the system prompt gained a "Strategy" section: (1) never play a bomb or rocket when you already
 have the lead; (2) don't lead 2s or jokers as singles early; (3) check the rest of the hand can still be
@@ -104,7 +142,7 @@ Observations:
   may be partly noise; the held-out suite is what tests it.
 - Calls per episode rose (S1: 44 → 56 total over 5 deals), still far under the 60-per-episode limit.
 
-### 2026-10-29: tuning round 3 (same seeds, prompt `2257ca7`: rule 4 added)
+#### 2026-10-29: tuning round 3 (same seeds, prompt `2257ca7`: rule 4 added)
 
 Change: rule 4, "When you lead, play a combination you think you can win back ... Among those, start with
 your lowest." Full table: `results/tuning-r3-2026-10-29.md`; traces: `traces/tuning-r3/`. Live cost ≈ $0.107.
@@ -119,9 +157,9 @@ Observation: worse than round 2 everywhere. Seed 104 S1 shows why: in round 2 th
 15-card plane; in round 3 it led a single 3 ("lead a low single card"), then played singles one at a time,
 broke up its hand and lost. "Start with your lowest" seems to override "lead long combinations first".
 
-### Held-out results
+#### Held-out results
 
-### 2026-11-06: held-out suite (seeds 200–229), frozen versions
+#### 2026-11-06: held-out suite (seeds 200–229), frozen versions
 
 Full table (every field, every condition): `results/heldout-2026-11-06.md`; traces: `traces/heldout/`
 (510 episodes: 310 live, 200 baseline). Live model `gemini-3.5-flash-lite` (id as returned by the API),
@@ -174,7 +212,7 @@ Budget estimate for the rest of the suite at ~5k in / ~200 out tokens per episod
 
 ## Traces
 
-`traces/heldout/` (held-out suite), `traces/tuning*/` (tuning rounds), `traces/notes-check/`. One JSON object per line: header, steps (with every model attempt, raw reply, latency, tokens, source `model`/`forced`/`fallback`), result.
+`traces/heldout-2deck/` (two-deck held-out suite), `traces/tuning-2deck/`, `traces/heldout/` (one-deck held-out suite), `traces/tuning*/` (tuning rounds), `traces/notes-check/`. One JSON object per line: header, steps (with every model attempt, raw reply, latency, tokens, source `model`/`forced`/`fallback`), result.
 
 ## CI evidence
 
@@ -194,6 +232,8 @@ TODO: link to the green Actions run for the submitted commit. Locally:
 
 - 2026-10-28: none.
 - 2026-11-06: prompt frozen at the round 2 version (see the frozen-versions table).
+- 2026-11-06: game changed to two decks at my request (DESIGN.md §2.2), after the one-deck held-out run.
+  New suite declared above with new held-out seeds 300–329; call limit 60 → 120, step limit 200 → 400.
 - 2026-10-29: added the `model-notes` player (R23) at my request, before any held-out seed was run.
   Reason: every model call is independent, so `model-history` cannot remember its own plan; this tests
   whether its own notes help beyond the public history. Adds 90 held-out episodes (≈ $0.2).

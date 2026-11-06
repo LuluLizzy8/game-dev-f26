@@ -33,7 +33,7 @@ class Session:
         return self._reply(self._bots(), ok=True)
 
     def play(self, action):
-        """Your move as card text in any order ("3 3", "bj rj") or "pass". A refused move changes nothing."""
+        """Your move as card text in any order ("3 3", "bj bj rj rj") or "pass". A refused move changes nothing."""
         result = self.g.step(self.seat, action)
         if not result["ok"]:
             return self._reply([], ok=False, error=result["error"])

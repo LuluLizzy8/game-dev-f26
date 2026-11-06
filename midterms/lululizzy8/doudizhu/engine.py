@@ -1,4 +1,4 @@
-"""Dou Dizhu, one deal, landlord chosen by seed. Rule numbers (R1...) refer to the README map."""
+"""Dou Dizhu with two decks (108 cards), three players, one deal, landlord chosen by seed. Rule numbers (R1...) refer to the README map."""
 import random
 from collections import Counter, namedtuple
 from itertools import combinations
@@ -43,14 +43,15 @@ def all_moves(hand):
                 add("triple+1", r, 1, [r] * 3 + [k])
                 if count[k] >= 2:
                     add("triple+2", r, 1, [r] * 3 + [k] * 2)
-        if count[r] == 4:
-            add("bomb", r, 1, [r] * 4)
+        for n in range(4, count[r] + 1):  # R10a: two decks, so a bomb is 4 to 8 of a rank
+            add("bomb", r, n, [r] * n)
+        if count[r] >= 4:
             for a, b in combinations(others, 2):
                 add("four+2", r, 1, [r] * 4 + [a, b])
                 if count[a] >= 2 and count[b] >= 2:
                     add("four+2pairs", r, 1, [r] * 4 + [a] * 2 + [b] * 2)
-    if count[BLACK_JOKER] and count[RED_JOKER]:
-        add("rocket", BLACK_JOKER, 1, [BLACK_JOKER, RED_JOKER])
+    if count[BLACK_JOKER] == 2 and count[RED_JOKER] == 2:  # R10a: the rocket is all four jokers
+        add("rocket", BLACK_JOKER, 4, [BLACK_JOKER] * 2 + [RED_JOKER] * 2)
 
     for kind, width, min_len in (("straight", 1, 5), ("pair_seq", 2, 3), ("plane", 3, 2)):
         for start in range(3, ACE + 1):
@@ -72,26 +73,26 @@ def all_moves(hand):
 
 
 def beats(a, b):
-    """R9, R10: does combination a beat combination b?"""
+    """R9, R10, R10a: does combination a beat combination b?"""
     if a.kind == "rocket":
         return True
     if b.kind == "rocket":
         return False
-    if a.kind == "bomb":
-        return b.kind != "bomb" or a.rank > b.rank
+    if a.kind == "bomb":  # more cards first, then rank
+        return b.kind != "bomb" or (a.length, a.rank) > (b.length, b.rank)
     return a.kind == b.kind and a.length == b.length and a.rank > b.rank
 
 
 class DouDizhu:
     """Authoritative state behind reset / observe / legal_actions / step / outcome."""
 
-    def reset(self, seed, max_steps=200):
+    def reset(self, seed, max_steps=400):
         rng = random.Random(seed)
-        deck = [r for r in range(3, TWO + 1) for _ in range(4)] + [BLACK_JOKER, RED_JOKER]
+        deck = [r for r in range(3, TWO + 1) for _ in range(8)] + [BLACK_JOKER, RED_JOKER] * 2  # R1: two decks
         rng.shuffle(deck)
         self.landlord = rng.randrange(3)  # R4
-        self.kitty = sorted(deck[51:])  # R3, R5
-        self.hands = [sorted(deck[i * 17:(i + 1) * 17]) for i in range(3)]
+        self.kitty = sorted(deck[99:])  # R3, R5: 33 each, 9 in the kitty
+        self.hands = [sorted(deck[i * 33:(i + 1) * 33]) for i in range(3)]
         self.hands[self.landlord] = sorted(self.hands[self.landlord] + self.kitty)
         self.turn = self.landlord  # R6
         self.last = None  # (seat, label, Combo) to beat; None means the turn player leads

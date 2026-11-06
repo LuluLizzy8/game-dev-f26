@@ -12,16 +12,17 @@ import time
 from doudizhu.engine import label, parse
 from doudizhu.view import render
 
-SYSTEM_PROMPT = """You are playing one seat of Dou Dizhu, a three-player climbing card game.
-One landlord (20 cards, leads first) plays alone against two peasants who are a team. The first player
-to empty their hand wins for their side.
+SYSTEM_PROMPT = """You are playing one seat of Dou Dizhu, a three-player climbing card game, played with two decks
+(108 cards: eight of each rank and two of each joker). One landlord (42 cards, leads first) plays alone
+against two peasants (33 cards each) who are a team. The first player to empty their hand wins for their side.
 
 Ranks low to high: 3 4 5 6 7 8 9 10 J Q K A 2 BJ RJ (BJ/RJ = black/red joker). Suits do not matter.
 Combinations: single; pair; triple; triple+single; triple+pair; straight of 5+ (3 to A); 3+ consecutive
 pairs; 2+ consecutive triples ("plane"), optionally with one single or one pair per triple; four+two
-singles; four+two pairs; bomb (four of a rank); rocket (BJ RJ). To follow, play the same kind and length
-with a higher main rank, or a bomb, or the rocket; or pass. When both others pass, the last player to
-play leads anything. Each bomb or rocket doubles the stakes.
+singles; four+two pairs; bomb (4 to 8 cards of one rank); rocket (all four jokers: BJ BJ RJ RJ). To follow,
+play the same kind and length with a higher main rank, or a bomb, or the rocket; or pass. A bomb with more
+cards beats one with fewer; bombs of the same size compare by rank; the rocket beats everything.
+When both others pass, the last player to play leads anything. Each bomb or rocket doubles the stakes.
 
 Your teammate (if you are a peasant) is a scripted player with these habits: it leads its lowest
 combination, shedding as many cards as it can; it plays the cheapest card set that beats; it does not
