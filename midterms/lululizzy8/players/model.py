@@ -1,4 +1,4 @@
-"""Model-driven player (DESIGN.md §4.2). The prompt is built only from the seat's observation and legal list.
+"""Model-driven player (GAME-DESIGN.md §4.2). The prompt is built only from the seat's observation and legal list.
 
 The Vertex call follows the course starter's pattern (course_game/narrator.py @ 66f051b): explicit provider,
 env-var settings, HTTP timeout, no automatic retries, no tools.
@@ -22,15 +22,19 @@ pairs; 2+ consecutive triples ("plane"), optionally with one single or one pair 
 singles; four+two pairs; bomb (4 to 8 cards of one rank); rocket (all four jokers: BJ BJ RJ RJ). To follow,
 play the same kind and length with a higher main rank, or a bomb, or the rocket; or pass. A bomb with more
 cards beats one with fewer; bombs of the same size compare by rank; the rocket beats everything.
+Revolution: a bomb of 6 or more cards reverses the order of 3 through 2 (3 becomes highest, 2 lowest; jokers
+stay highest) until another bomb of 6 or more reverses it back. The table says REVOLUTION while it is on.
 When both others pass, the last player to play leads anything. Each bomb or rocket doubles the stakes.
 
 Your teammate (if you are a peasant) is a scripted player with these habits: it leads its lowest
 combination, shedding as many cards as it can; it plays the cheapest card set that beats; it does not
-beat your plays unless it can go out; it bombs only when an opponent has 4 or fewer cards.
+beat your plays unless it can go out; it bombs only when an opponent has 4 or fewer cards, except that
+it may play a bomb of 6+ at any time to start or end a revolution when most of its remaining cards gain from it.
 
 Strategy:
 1. Never play a bomb or the rocket when "To beat" is nothing (you already have the lead): it wins
-   nothing. Save bombs and the rocket to take the lead back, or to go out.
+   nothing. Save bombs and the rocket to take the lead back, or to go out. The exception is a bomb of 6+
+   played to start or end a revolution because most of your remaining cards are stronger in the other order.
 2. Do not lead 2s or jokers as singles early. Lead low cards and long combinations first; keep high
    cards to regain the lead later.
 3. Before each play, check that the cards you would have left can still be played out in a few turns.

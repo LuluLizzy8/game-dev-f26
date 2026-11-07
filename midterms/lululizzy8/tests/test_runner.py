@@ -50,13 +50,16 @@ class Limits(unittest.TestCase):
         header, steps, result = run_episode(0, "S1", "model-history", model=FixtureModel([BAD] * 50),
                                             config=config(invalid_limit=3))
         self.assertEqual((result["reason"], result["invalid"]), ("invalid_limit", 3))
-        self.assertEqual((result["winner"], result["agent_score"]), ("peasants", -2))
+        # seed 0: a heuristic peasant plays a 6-card revolution bomb (R10b) before the forfeit, so x2 (R18)
+        self.assertEqual((result["winner"], result["multiplier"], result["agent_score"]), ("peasants", 2, -4))
 
     def test_wall_clock_timeout(self):
         ticks = iter(range(0, 10_000, 100))  # each clock read advances 100 s
         header, steps, result = run_episode(0, "S1", "model-history", model=FixtureModel(),
                                             config=config(wall_clock_seconds=250), clock=lambda: next(ticks))
-        self.assertEqual((result["reason"], result["winner"], result["agent_score"]), ("timeout", "peasants", -2))
+        # R18: the landlord loses 2x the stake at the current bomb multiplier (seed 0 has a revolution bomb, R10b)
+        self.assertEqual((result["reason"], result["winner"], result["multiplier"], result["agent_score"]),
+                         ("timeout", "peasants", 2, -4))
 
     def test_forfeit_keeps_the_bomb_multiplier(self):
         g = DouDizhu()

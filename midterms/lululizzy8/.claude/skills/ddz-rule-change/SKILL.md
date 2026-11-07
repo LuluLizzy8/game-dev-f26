@@ -15,7 +15,7 @@ three things together: the code, its test and the rule/source map in `README.md`
 
 1. Find the rule in the `README.md` map. Quote its row and label. If it is missing, add a row first
    with the strongest label you have: `code`, `manual`, `observed`, `assumed`, or `design` for a
-   rule LuluLizzy chose (point to `DESIGN.md` and give the reason). Never promote a label without
+   rule LuluLizzy chose (point to `GAME-DESIGN.md` and give the reason). Never promote a label without
    new evidence.
 2. Write the test first (`tests/`). Run it and confirm it fails for the reason you expect. If the
    change is a regression for a real bug, put it in `tests/test_regressions.py` with the date and

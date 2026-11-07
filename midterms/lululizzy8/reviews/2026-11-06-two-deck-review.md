@@ -18,7 +18,7 @@ Player boundary: no change found.
 | 5 | should fix | refused-action test used "BJ BJ", now a legal pair for some hands. | yes: uses "BJ RJ" |
 | 6 | should fix | heuristic's smallest-bomb choice untested. | yes: `test_heuristic_spends_its_smallest_bomb` |
 | 7 | should fix | R7 (`manual`) carried the `design` joker-pair rule. | yes: moved to R10a |
-| 8 | should fix | one-deck text left in DESIGN.md (54-card deck, 2-deck exclusion, `BJ RJ` example, step limit 200, landlord 20 cards, budget). | yes |
+| 8 | should fix | one-deck text left in GAME-DESIGN.md (54-card deck, 2-deck exclusion, `BJ RJ` example, step limit 200, landlord 20 cards, budget). | yes |
 | 9 | note | R10 wording vs size-first bombs. | yes: points to R10a |
 | 10 | note | R8: whole rocket as kicker pairs not stated. | yes |
 | 11 | note | web/session.py docstring used "bj rj". | yes |

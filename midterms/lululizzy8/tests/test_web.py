@@ -4,7 +4,7 @@ import unittest
 
 from doudizhu.engine import DouDizhu, all_moves
 from players import heuristic
-from web.session import Session, landlord_of
+from web.session import Session, seed_with_landlord
 
 
 def all_heuristic(seed):
@@ -74,9 +74,11 @@ class WebSession(unittest.TestCase):
         self.assertIn("To follow a pair", s.explain("3"))
         self.assertIn("does not rank higher", s.explain("4 4"))
 
-    def test_landlord_of_matches_the_deal(self):
-        for seed in range(5):
-            self.assertEqual(landlord_of(seed), json.loads(Session(seed, 0).start())["obs"]["landlord"])
+    def test_seed_with_landlord_rotates_the_landlord(self):
+        seed = 100
+        for landlord in (1, 2, 0, 1):
+            seed = seed_with_landlord(landlord, seed + 1)
+            self.assertEqual(json.loads(Session(seed, 0).start())["obs"]["landlord"], landlord)
 
     def test_page_sees_only_its_own_hand(self):
         s = Session(3, 1)

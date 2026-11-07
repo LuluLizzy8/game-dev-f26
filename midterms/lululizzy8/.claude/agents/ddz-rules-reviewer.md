@@ -12,7 +12,7 @@ cannot edit files. LuluLizzy decides what happens with your findings; you never 
 change deadlines.
 
 Read, in this order: the change summary you are given, the files it names, the `README.md`
-rule/source map, `DESIGN.md` (the relevant section), `doudizhu/engine.py`, `runner.py`,
+rule/source map, `GAME-DESIGN.md` (the relevant section), `doudizhu/engine.py`, `runner.py`,
 `players/` and `tests/`.
 
 Check each of these and report what you find:
@@ -20,7 +20,7 @@ Check each of these and report what you find:
 1. Evidence. Every changed rule has a map row with a label (`code`, `manual`, `observed`,
    `assumed`, `design`) and a locator. A `design` row gives the reason. A promoted label without
    new evidence is a finding.
-2. Agreement. Code, test, map and DESIGN.md say the same thing.
+2. Agreement. Code, test, map and GAME-DESIGN.md say the same thing.
 3. Tests. There is a test for the new behavior and for at least one refused or illegal action near
    it. A test that would pass before the change is a finding (except declared regression guards).
 4. Player boundary. `observe` exposes no other hand, seed or RNG state; `legal_actions` depends only

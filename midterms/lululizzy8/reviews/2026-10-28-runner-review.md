@@ -26,7 +26,7 @@ The reviewer could not run tests or git. Findings as returned, condensed.
 | 17 | note | README / DESIGN §0 | stale "TODO, not built" line; stale status table. | README already fixed in `c458036`; DESIGN §0 updated |
 | 18 | note | runner.py / report.py | random-opponent RNG depends on trial, so trial-1 runs don't pair with trial-0 baselines. | not needed: the suite runs random opponents at trial 0 only; noted |
 
-Files read by the reviewer: `.claude/agents/ddz-rules-reviewer.md`, CLAUDE.md, README.md, DESIGN.md,
+Files read by the reviewer: `.claude/agents/ddz-rules-reviewer.md`, CLAUDE.md, README.md, GAME-DESIGN.md,
 agent-config.json, doudizhu/engine.py, doudizhu/view.py, runner.py, players/*, report.py, play.py,
 tools/measure.py, tests/test_runner.py, tests/test_game.py, tests/test_regressions.py.
 

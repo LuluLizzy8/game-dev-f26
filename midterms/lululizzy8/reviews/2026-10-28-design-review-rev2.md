@@ -1,7 +1,7 @@
 # Design re-review (rev 2), 2026-10-28
 
-Target: `DESIGN.md` rev 2. One fresh independent read-only reviewer (Plan agent, strict-TA instructions),
-not the session that wrote the doc, not asked to approve. It read Assignment.md, DESIGN.md, README.md,
+Target: `GAME-DESIGN.md` rev 2. One fresh independent read-only reviewer (Plan agent, strict-TA instructions),
+not the session that wrote the doc, not asked to approve. It read Assignment.md, GAME-DESIGN.md, README.md,
 engine.py, tests, .gitignore, the rev 1 review, the folder workflow and git state, and ran the 21 existing
 tests (pass). No network. Findings condensed as returned; decisions are mine (last section).
 

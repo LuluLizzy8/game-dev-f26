@@ -28,11 +28,15 @@ def combo_of(cards):
     return all_moves(ranks).get(label(ranks))
 
 
-def landlord_of(seed):
-    """Which seat the deal makes landlord, so the page can seat you by role."""
-    g = DouDizhu()
-    g.reset(seed)
-    return g.landlord
+def seed_with_landlord(seat, start):
+    """The first seed from start whose deal makes this seat landlord (R4: the seed picks the landlord).
+
+    The page uses it to rotate the landlord between deals without changing the rules.
+    """
+    g, seed = DouDizhu(), start
+    while g.reset(seed) and g.landlord != seat:
+        seed += 1
+    return seed
 
 
 class Session:
@@ -94,8 +98,9 @@ class Session:
         tb = combo_of(obs["to_beat"]["cards"])
         if tb.kind == "rocket":
             return "Nothing beats the rocket. Pass."
+        flipped = " In a revolution the order is reversed: 3 is highest, 2 lowest." if obs["revolution"] else ""
         if mine.kind == "bomb" and tb.kind == "bomb":
-            return f"Your {describe(mine)} must have more cards than {describe(tb)}, or as many cards of a higher rank."
+            return f"Your {describe(mine)} must have more cards than {describe(tb)}, or as many cards of a higher rank.{flipped}"
         if (mine.kind, mine.length) != (tb.kind, tb.length):
             return f"You chose {describe(mine)}. To follow {describe(tb)}, play {describe(tb)} that ranks higher, a bomb, or the rocket."
-        return f"Your {describe(mine)} does not rank higher than {obs['to_beat']['cards']}."
+        return f"Your {describe(mine)} does not rank higher than {obs['to_beat']['cards']}.{flipped}"

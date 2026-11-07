@@ -16,12 +16,12 @@ in the session.
 | `ddz-rule-change` skill | Reusable skill (rules process) | Steps for any rule change: README map row, failing test first, engine, reviewer | — | `.claude/skills/ddz-rule-change/SKILL.md`; used for R18–R23 and the three regression fixes |
 | `ddz-eval-run` skill | Reusable skill (QA / evaluation) | Steps for running episodes: seed ranges, freeze before held-out seeds, live vs fixture labels | — | `.claude/skills/ddz-eval-run/SKILL.md`; tuning rounds 1–3 and the held-out run |
 | `ddz-rules-reviewer` subagent | Independent review (QA) | Read, Grep, Glob only; reviewed changes it did not write; never asked to approve | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/2026-10-28-runner-review.md` (18 findings), `reviews/2026-10-29-notes-review.md` (13), `reviews/2026-11-06-two-deck-review.md` (14) |
-| Design reviewers (rules reviewer + strict-TA rubric reviewer, then a fresh re-reviewer) | Independent design review (design, production) | Read-only: Assignment.md, DESIGN.md, README, engine, tests | Edit, approve | `reviews/2026-10-28-design-review.md` (two reviewers, rev 1), `reviews/2026-10-28-design-review-rev2.md` |
+| Design reviewers (rules reviewer + strict-TA rubric reviewer, then a fresh re-reviewer) | Independent design review (design, production) | Read-only: Assignment.md, GAME-DESIGN.md, README, engine, tests | Edit, approve | `reviews/2026-10-28-design-review.md` (two reviewers, rev 1), `reviews/2026-10-28-design-review-rev2.md` |
 | UI research + mockup (implementation agent, web search) | Art direction | Searched for CC0 card art and Dou Dizhu table layouts; built a 4-style mockup | Publish anything without my choice | Mockup artifact (private); `web/`; README sources |
 
 The game-playing agent (`gemini-3.5-flash-lite` on Vertex AI) is not part of the building team. It sees
 only `observe` + `legal_actions` (plus history or its own notes, by variant) and has no tools; see
-`EVALUATION.md` and `DESIGN.md` §4.
+`EVALUATION.md` and `GAME-DESIGN.md` §4.
 
 ## What they recommended and what I decided
 

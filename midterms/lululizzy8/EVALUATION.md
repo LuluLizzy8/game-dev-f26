@@ -1,8 +1,12 @@
 # Evaluation
 
-Status: the game changed to **two decks** on 2026-11-06 (DESIGN.md §2.2). The two-deck suite below is the
+Status: the game changed to **two decks** on 2026-11-06 (GAME-DESIGN.md §2.2). The two-deck suite below is the
 evaluation of the submitted game. The one-deck evaluation further down is kept as history: it is
 superseded, and its numbers do not describe the current game. Tables are filled with the `ddz-eval-run` skill.
+
+**Revolution (R10b) was added on 2026-11-07, after the two-deck held-out run.** The two-deck results below were
+measured without it (game commit `e9fb2d8`). Revolution changes the heuristic baseline and adds one rules sentence
+to the model prompt, so they do not describe the game with revolution. Whether to re-run is my decision: TODO.
 
 ## Two-deck game (current version)
 
@@ -92,7 +96,7 @@ Everything from here to "Traces" is the one-deck game: 54 cards, 17/20-card hand
 
 ### Declared suite (frozen before tuning)
 
-Declared in `DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted in my Week 3 thread.
+Declared in `GAME-DESIGN.md` §6, frozen by commit `6795857` on 2026-10-28 and posted in my Week 3 thread.
 
 - Situations: **S1** agent is landlord; **S2** peasant after the landlord; **S3** peasant before the landlord.
 - Opponents: heuristic (all runs); random (held-out opponent condition, S1, seeds 200–209).
@@ -282,7 +286,7 @@ TODO: link to the green Actions run for the submitted commit. Locally:
 
 - 2026-10-28: none.
 - 2026-11-06: prompt frozen at the round 2 version (see the frozen-versions table).
-- 2026-11-06: game changed to two decks at my request (DESIGN.md §2.2), after the one-deck held-out run.
+- 2026-11-06: game changed to two decks at my request (GAME-DESIGN.md §2.2), after the one-deck held-out run.
   New suite declared above with new held-out seeds 300–329; call limit 60 → 120, step limit 200 → 400.
 - 2026-10-29: added the `model-notes` player (R23) at my request, before any held-out seed was run.
   Reason: every model call is independent, so `model-history` cannot remember its own plan; this tests

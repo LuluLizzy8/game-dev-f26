@@ -28,6 +28,35 @@ MODEL_PLAYERS = [p for p in PLAYERS if p.startswith("model")]
 REASON_LIMIT = 200
 
 
+def fill_settings(config, gcloud=None):
+    """Fill missing live settings: provider, model and location from agent-config.json, project from gcloud.
+
+    Values already in the environment win. Returns the names filled in (never the values: the project ID
+    must not reach logs or transcripts).
+    """
+    import os
+    import shutil
+    import subprocess
+    choice = config["model_choice"]
+    filled = []
+    for name, value in (("COURSE_PROVIDER", choice["provider"]), ("COURSE_MODEL", choice["model"]),
+                        ("GOOGLE_CLOUD_LOCATION", choice["location"])):
+        if not os.environ.get(name, "").strip():
+            os.environ[name] = value
+            filled.append(name)
+    if not os.environ.get("GOOGLE_CLOUD_PROJECT", "").strip():
+        path = gcloud or shutil.which("gcloud")
+        try:
+            project = subprocess.run([path, "config", "get-value", "project"], capture_output=True,
+                                     text=True, timeout=30).stdout.strip() if path else ""
+        except (OSError, subprocess.SubprocessError):
+            project = ""
+        if project and "(unset)" not in project:
+            os.environ["GOOGLE_CLOUD_PROJECT"] = project
+            filled.append("GOOGLE_CLOUD_PROJECT")
+    return filled
+
+
 class Cancelled(Exception):
     pass
 
@@ -180,6 +209,11 @@ class Handler(SimpleHTTPRequestHandler):
             return self._json(*self.live.stop(str(body.get("id", ""))))
         return self._json(404, {"error": "not found"})
 
+    def end_headers(self):
+        if not self.path.startswith("/api/"):
+            self.send_header("Cache-Control", "no-cache")  # always revalidate, so an edited page or engine file shows up
+        super().end_headers()
+
     def log_message(self, fmt, *args):
         if "/api/watch?" not in self.path:  # polling every half second would flood the console
             super().log_message(fmt, *args)
@@ -192,6 +226,9 @@ def main(argv=None):
                    help="127.0.0.1 (default) keeps live games to this computer; 0.0.0.0 lets a phone on your Wi-Fi in")
     args = p.parse_args(argv)
     Handler.live = Live(HERE / "traces" / "watch")
+    filled = fill_settings(Handler.live.config)
+    if filled:
+        print(f"Live AI settings filled in: {', '.join(filled)} (agent-config.json; project from gcloud).")
     if args.host != "127.0.0.1":
         print("Warning: anyone on this network can open the page and start live games on your credits.")
     server = ThreadingHTTPServer((args.host, args.port), partial(Handler, directory=str(HERE)))

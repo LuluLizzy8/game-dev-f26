@@ -47,10 +47,6 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .tile h2 { margin: 0; font: 400 1.35rem/1.2 var(--f-rank); display: flex; gap: 10px; align-items: center; }
 .tile h2 .n { font: 700 13px/1 var(--f-ui); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--brass); color: var(--ink); flex: none; }
 .tile p { margin: 0; color: var(--muted); font-size: 14px; }
-.opts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.opts label { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); display: flex; gap: 6px; align-items: center; }
-.opts input, .opts select { font: 600 14px var(--f-ui); color: var(--text); background: var(--felt-deep); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; min-height: 36px; }
-.opts input { width: 6.5em; font-variant-numeric: tabular-nums; }
 .note { font-size: 13px; color: var(--muted); }
 .note code { color: var(--text); background: rgba(0,0,0,.35); padding: 1px 5px; border-radius: 5px; overflow-wrap: anywhere; }
 .note.warn { color: var(--brass); }
@@ -62,7 +58,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
   --cw: 72px; --cs: 40px; --cb: 30px; min-height: 480px; }
 .seat { display: grid; gap: 8px; align-content: start; justify-items: start; padding: 12px; border-radius: 16px; background: rgba(0,0,0,.18); border: 2px solid transparent; transition: box-shadow .25s, border-color .25s; position: relative; }
 .seat.left { grid-area: left; } .seat.right { grid-area: right; justify-items: end; text-align: right; }
-.seat.turn, .mezone.turn { border-color: var(--brass); box-shadow: 0 0 0 4px rgba(217,164,65,.22), 0 0 28px rgba(217,164,65,.25); }
+.seat.turn, .mezone.turn { border-color: var(--brass); box-shadow: 0 0 0 4px rgba(217,164,65,.22); }
 .turnflag { display: none; font: 700 11px/1 var(--f-ui); letter-spacing: .08em; text-transform: uppercase; background: var(--brass); color: var(--ink); padding: 5px 9px; border-radius: 999px; }
 .turn > .who .turnflag, .mezone.turn .turnflag { display: inline-block; }
 .who { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -87,9 +83,11 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .center { grid-area: center; display: grid; gap: 10px; justify-items: center; align-content: start; text-align: center; }
 .label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .row { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; }
-.row.tight { width: 100%; column-gap: 0; row-gap: 22px; }  /* fit() overlaps these cards */
+.row.tight { gap: 0; justify-content: flex-start; }  /* fit() overlaps these cards and sets the width */
 .kitty .card { margin-left: calc(var(--cs) * -0.45); } .kitty .card:first-child { margin-left: 0; }
 .stakes { font: 700 12px var(--f-ui); color: var(--ink); background: var(--brass); padding: 3px 10px; border-radius: 999px; }
+.revo { font: 700 13px/1.3 var(--f-ui); color: var(--ivory); background: var(--seal); padding: 6px 14px; border-radius: 12px; border: 2px solid var(--ivory); text-align: center; }
+.revo b { font: 400 18px/1 var(--f-han); margin-right: 6px; }
 .pile { width: 100%; display: grid; gap: 8px; justify-items: center; padding: 12px; border-radius: 16px; border: 1px dashed rgba(217,164,65,.45); min-height: calc(var(--cw) * 1.4 + 70px); }
 .current { display: grid; gap: 6px; justify-items: center; width: 100%; }
 .current.land .card { animation: land .35s ease-out; }
@@ -108,7 +106,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
 .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .msg { min-height: 1.5em; font-size: 14px; color: var(--muted); text-align: center; max-width: 70ch; }
 .msg.bad { color: var(--bad); } .msg.good { color: var(--good); }
-.hand { display: flex; flex-wrap: wrap; row-gap: 22px; justify-content: center; width: 100%; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
+.hand { display: flex; flex-wrap: wrap; justify-content: flex-start; padding-top: 18px; min-height: calc(var(--cw) * 1.4 + 18px); }
 .mine { font-size: 12px; color: var(--muted); text-align: center; }
 .watchbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; align-items: center; }
 .usage { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -118,7 +116,12 @@ button:focus-visible, input:focus-visible, select:focus-visible, .card:focus-vis
   box-shadow: 0 1px 0 rgba(0,0,0,.25), 0 4px 10px rgba(0,0,0,.28); transition: transform .14s ease; user-select: none; -webkit-user-select: none; }
 .card.sm { --w: var(--cs); } .card.back { --w: var(--cb); }
 .hand .card { cursor: grab; touch-action: none; }
-.hand .card.sel { transform: translateY(-18px); box-shadow: 0 0 0 3px var(--brass), 0 8px 16px rgba(0,0,0,.35); }
+.hand .card.sel { transform: translateY(-18px); background: #fbe7b5; box-shadow: 0 0 0 3px var(--brass), 0 8px 16px rgba(0,0,0,.35); }
+.hand .card.sel.lower, .hand .card.lower:hover { transform: none !important; }
+/* mouse: lift the card under the pointer so the one you will click stands out of the overlap */
+@media (hover: hover) and (pointer: fine) {
+  .hand .card:hover:not(.sel):not(.drag) { transform: translateY(-8px); z-index: 5; box-shadow: 0 0 0 2px rgba(217,164,65,.6), 0 8px 16px rgba(0,0,0,.35); }
+}
 .hand .card.drag { cursor: grabbing; z-index: 10; transition: none; opacity: .92; box-shadow: 0 12px 24px rgba(0,0,0,.5); }
 .hand .card.drop-before { box-shadow: -4px 0 0 0 var(--brass), 0 4px 10px rgba(0,0,0,.28); }
 .hand .card.drop-after { box-shadow: 4px 0 0 0 var(--brass), 0 4px 10px rgba(0,0,0,.28); }
@@ -188,11 +191,7 @@ dialog.book::backdrop { background: rgba(0,0,0,.6); }
     <div class="tiles">
       <div class="tile">
         <h2><span class="n">1</span>Play the game</h2>
-        <p>You take one seat; the other two are the heuristic player.</p>
-        <div class="opts">
-          <label>Play as <select id="p-role"><option value="any">Any seat</option><option value="0">Landlord</option><option value="1">Peasant</option></select></label>
-          <label>Deal # <input id="p-seed" type="number" min="0" step="1" inputmode="numeric"></label>
-        </div>
+        <p>A random deal and seat: landlord or peasant. The other two seats are the heuristic player.</p>
         <button class="act primary" id="go-play" disabled>Loading…</button>
       </div>
       <div class="tile">
@@ -202,21 +201,12 @@ dialog.book::backdrop { background: rgba(0,0,0,.6); }
       </div>
       <div class="tile">
         <h2><span class="n">3</span>Watch the baseline</h2>
-        <p>Three copies of the rule-based heuristic play a deal. You follow one seat and see only that seat's cards.</p>
-        <div class="opts">
-          <label>Follow <select id="b-role"><option value="0">Landlord</option><option value="1">Peasant</option></select></label>
-          <label>Deal # <input id="b-seed" type="number" min="0" step="1" inputmode="numeric"></label>
-        </div>
+        <p>Three copies of the rule-based heuristic play a random deal. You follow one seat and see only that seat's cards.</p>
         <button class="act primary" id="go-base" disabled>Loading…</button>
       </div>
       <div class="tile">
         <h2><span class="n">4</span>Watch the AI</h2>
-        <p>The language model plays one seat live against two heuristic players, with the evaluation's limits and labels. Its one-line reason shows on each move.</p>
-        <div class="opts">
-          <label>Player <select id="a-player"><option value="model-history">model-history</option><option value="model-obs">model-obs</option><option value="model-notes">model-notes</option></select></label>
-          <label>AI is <select id="a-sit"><option value="S2">Peasant (S2)</option><option value="S3">Peasant (S3)</option><option value="S1">Landlord (S1)</option></select></label>
-          <label>Deal # <input id="a-seed" type="number" min="0" step="1" inputmode="numeric"></label>
-        </div>
+        <p>The language model (model-history, the main evaluated player) plays a random seat live against two heuristic players, with the evaluation's limits and labels. Its one-line reason shows on each move.</p>
         <button class="act primary" id="go-ai" disabled>Checking…</button>
         <div class="note" id="ai-note"></div>
       </div>
@@ -230,6 +220,7 @@ dialog.book::backdrop { background: rgba(0,0,0,.6); }
       <section class="center" aria-label="Middle of the table">
         <div><div class="label">Landlord's 9 extra cards</div><div class="row kitty" id="kitty"></div></div>
         <span class="stakes" id="stakes" hidden></span>
+        <div class="revo" id="revo" role="status" hidden><b>革命</b>Revolution: order reversed, 3 is highest and 2 lowest (jokers stay on top)</div>
         <div class="pile" aria-label="Played cards">
           <div class="label" id="pilelabel">&nbsp;</div>
           <div class="current" id="current"><div class="row tight" id="curcards"></div></div>
@@ -274,6 +265,7 @@ dialog.book::backdrop { background: rgba(0,0,0,.6); }
     <ul>
       <li>108 cards: eight of each rank and two of each joker. Suits do not matter.</li>
       <li>Each player gets 33 cards. The 9 left over go face up to the landlord, who starts with 42.</li>
+      <li>Standard Dou Dizhu decides the landlord by bidding. This version has no bidding: the first deal's landlord is random, and the role then passes to the next seat each deal.</li>
       <li>The landlord plays first.</li>
     </ul>
     <h3>Card order, low to high</h3>
@@ -288,6 +280,13 @@ dialog.book::backdrop { background: rgba(0,0,0,.6); }
     </ul>
     <h3>Combinations</h3>
     <div class="combos" id="combos"></div>
+    <h3>Revolution (this version's twist)</h3>
+    <ul>
+      <li>Playing a bomb of <b>6 or more cards</b> starts a revolution: the order of 3 through 2 is reversed, so 3 becomes the highest rank and 2 the lowest. The jokers stay on top.</li>
+      <li>It applies to every comparison, bombs included (a longer bomb still beats a shorter one). A red "革命 Revolution" banner shows on the table while it is on.</li>
+      <li>Another bomb of 6 or more reverses the order back. A revolution bomb doubles the stakes like any bomb.</li>
+      <li>Strategy: with a hand full of low cards, a big bomb can turn it into a strong hand. Someone holds a 6+ bomb in about half of all deals.</li>
+    </ul>
     <h3>Bombs and the rocket</h3>
     <ul>
       <li>A bomb beats any play that is not a bomb.</li>
@@ -319,7 +318,7 @@ const $ = (id) => document.getElementById(id);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const rankIdx = (r) => ORDER.indexOf(r);
 
-let py, Session, landlordOf;
+let py, Session, seedWithLandlord;
 const S = { mode: null, run: 0, game: null, view: null, legal: [], hand: [], sel: new Set(), nextId: 0,
             busy: false, thinking: null, landed: false, paused: false, ai: null, reason: null };
 
@@ -342,30 +341,35 @@ const cards = (text) => (text ? text.split(" ") : []);
 const row = (text, cls = "") => { const d = document.createElement("div"); d.className = "row"; d.append(...cards(text).map((r) => cardEl(r, cls))); return d; };
 const isBomb = (t) => { const c = cards(t); return (c.length >= 4 && c.every((x) => x === c[0])) || t === "BJ BJ RJ RJ"; };
 
+const STEP = 0.42;  // share of a card's width left showing: its top-left rank index
 function fit(box) {
   const els = [...box.children];
   if (!els.length) return;
-  const w = els[0].getBoundingClientRect().width, W = box.clientWidth, n = els.length;
-  // Two decks deal up to 42 cards: when one row would show less than a third of each card, use more rows.
-  let rows = 1, perRow = n, step;
-  for (;;) {
-    perRow = Math.ceil(n / rows);
-    step = Math.min(w * 0.62, perRow > 1 ? (W - w) / (perRow - 1) : w);
-    if (step >= w * 0.34 || rows === 3) break;
-    rows++;
-  }
-  if (rows > 1) step = (W - w - 1) / (perRow - 1);
-  els.forEach((c, i) => { c.style.marginLeft = i % perRow ? `${step - w}px` : "0"; });
+  const w = els[0].offsetWidth, h = w * 1.4, n = els.length, ps = getComputedStyle(box.parentElement);
+  const W = box.parentElement.clientWidth - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
+  // Overlap like a held hand; when one row is too wide, stack balanced rows that overlap too.
+  const step = w * STEP, rows = Math.ceil(n / Math.max(1, Math.floor((W - w) / step) + 1)), perRow = Math.ceil(n / rows);
+  box.style.width = `${w + (Math.min(perRow, n) - 1) * step + 1}px`;  // exact width so each row wraps after perRow cards
+  els.forEach((c, i) => {
+    c.style.marginLeft = i % perRow ? `${step - w}px` : "0";
+    c.style.marginTop = i >= perRow ? `${-h * 0.6}px` : "0";
+    c.classList.toggle("lower", i >= perRow);  // lower rows must not lift over the ranks of the row above
+  });
 }
 const fan = () => { fit($("hand")); fit($("curcards")); };
 
 /* ---------- names ---------- */
 const me = () => S.view.seat;
 const roleOf = (s) => (s === S.view.landlord ? "landlord" : "peasant");
+// Players are named by who they are to you (role and side), not by seat number.
 function seatName(s) {
-  if (s !== me()) return `Seat ${s}`;
-  return S.mode === "play" ? "You" : S.mode === "ai" ? "The AI" : `Seat ${s}`;
+  const v = S.view, m = me();
+  if (s === m) return S.mode === "play" ? "You" : S.mode === "ai" ? "The AI" : s === v.landlord ? "Landlord" : "Peasant";
+  if (s === v.landlord) return "Landlord";
+  if (s === v.teammate) return S.mode === "play" ? "Your teammate" : "Teammate";
+  return s === (m + 1) % 3 ? "Right peasant" : "Left peasant";  // the landlord's view: both peasants are opponents
 }
+const side = (s) => (s === me() ? "" : roleOf(s) === roleOf(me()) ? (S.mode === "play" ? "On your side" : "Same side") : (S.mode === "play" ? "Against you" : "Opponent"));
 const verb = (s, you, other) => (s === me() && S.mode === "play" ? you : other);
 
 /* ---------- the pile: the current round's plays, earlier rounds face down ---------- */
@@ -397,7 +401,7 @@ const myTurn = () => S.mode === "play" && S.view.status === "ongoing" && S.view.
 function lastInRound(round, s) { for (let i = round.length - 1; i >= 0; i--) if (round[i][0] === s) return round[i][1]; return null; }
 
 function seatHTML(el, s, round) {
-  const v = S.view, lord = s === v.landlord, mate = s === v.teammate, n = v.cards_left[s];
+  const v = S.view, lord = s === v.landlord, n = v.cards_left[s];
   const turn = v.status === "ongoing" && v.turn === s;
   el.classList.toggle("turn", turn);
   el.setAttribute("aria-label", `${seatName(s)}, ${roleOf(s)}, ${n} cards${turn ? ", their turn" : ""}`);
@@ -405,7 +409,7 @@ function seatHTML(el, s, round) {
   const bubble = S.thinking === s ? `<div class="bubble think">Thinking<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>`
     : last === "pass" ? `<div class="bubble pass">Pass</div>` : "";
   el.innerHTML = `<div class="who"><span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
-      <div><div class="name">${seatName(s)}</div><div class="role">${lord ? "Landlord" : "Peasant"}${mate ? " · teammate" : ""}</div></div>
+      <div><div class="name">${seatName(s)}</div><div class="role">${side(s)}</div></div>
       <span class="turnflag">Turn</span></div>
     <div class="backs"></div>
     <div class="count ${n <= 2 ? "low" : ""}">${n}<small>${n === 1 ? "card left" : "cards left"}</small></div>${bubble}`;
@@ -418,6 +422,7 @@ function render() {
   seatHTML($("sL"), (m + 2) % 3, round);
   $("kitty").replaceChildren(...cards(v.kitty).map((r) => cardEl(r, "sm")));
   const bombs = v.history.filter(([, a]) => a !== "pass" && isBomb(a)).length;
+  $("revo").hidden = !v.revolution;
   $("stakes").hidden = !bombs; $("stakes").textContent = `Stakes ×${2 ** bombs} · ${bombs} bomb${bombs > 1 ? "s" : ""}`;
 
   // Pile: the latest play big, the rest of this round small, earlier rounds face down.
@@ -437,13 +442,13 @@ function render() {
   const mlast = lastInRound(round, m);
   $("mewho").innerHTML = `<span class="badge ${lord ? "lord" : ""}">${lord ? "地" : "农"}</span>
     <div><div class="name">${seatName(m)}${S.mode === "ai" ? ` · ${S.ai.player}` : S.mode === "base" ? " · heuristic" : ""}</div>
-    <div class="role">${lord ? "Landlord" : "Peasant"} · ${v.cards_left[m]} cards</div></div>
+    <div class="role">${lord ? "Landlord" : "Peasant"} · ${v.cards_left[m]} card${v.cards_left[m] === 1 ? "" : "s"}</div></div>
     <span class="turnflag">${S.mode === "play" ? "Your turn" : "Turn"}</span>
     ${S.thinking === m ? `<span class="bubble think">Thinking<span class="dots"><span>.</span><span>.</span><span>.</span></span></span>` : mlast === "pass" ? `<span class="bubble pass">Pass</span>` : ""}`;
 
-  $("status").innerHTML = v.status !== "ongoing" ? "Deal over." :
+  $("status").innerHTML = v.status !== "ongoing" ? `Deal over. <button class="act primary" id="reshow">Show result</button>` :
     mine ? (v.to_beat ? `<em>Your turn.</em> Beat ${v.to_beat.cards}, or pass.` : "<em>Your turn.</em> Lead any combination.")
-         : `<em>${seatName(v.turn)}</em>'s turn${S.thinking === v.turn ? "…" : "."}`;
+         : `<em>${seatName(v.turn) === "You" ? "Your" : `${seatName(v.turn)}'s`}</em> turn${S.thinking === v.turn ? "…" : "."}`;
 
   syncHand(v.hand);
   $("hand").replaceChildren(...S.hand.map((c) => {
@@ -452,9 +457,9 @@ function render() {
     if (S.mode === "play") { el.tabIndex = 0; el.setAttribute("role", "button"); el.setAttribute("aria-pressed", S.sel.has(c.id)); }
     return el;
   }));
-  const tm = v.teammate !== null ? ` · teammate: Seat ${v.teammate}` : " · plays alone";
-  $("mine").textContent = S.mode === "play" ? `You are Seat ${m}, the ${roleOf(m)}${tm}. Drag cards to reorder.`
-    : `Following Seat ${m} (${roleOf(m)}${tm}). Only this seat's cards are shown.`;
+  const team = v.teammate !== null ? `your teammate sits on the ${v.teammate === (m + 1) % 3 ? "right" : "left"}` : "you play alone against both peasants";
+  $("mine").textContent = S.mode === "play" ? `You are the ${roleOf(m)}; ${team}. Drag cards to reorder.`
+    : `Following ${S.mode === "ai" ? `the AI, the ${roleOf(m)}` : `the ${roleOf(m)}`}. Only this player's cards are shown.`;
 
   const valid = mine && S.sel.size && S.legal.includes(picked());
   $("pass").disabled = !mine || !S.legal.includes("pass");
@@ -464,7 +469,7 @@ function render() {
 
   $("hist").replaceChildren(...v.history.map(([s, a], i) => {
     const li = document.createElement("li");
-    li.innerHTML = `<span>${i + 1}</span><span>${seatName(s)} (${roleOf(s)})</span><b>${a}</b>`;
+    li.innerHTML = `<span>${i + 1}</span><span>${seatName(s)}</span><b>${a}</b>`;
     return li;
   }));
   requestAnimationFrame(fan);
@@ -518,7 +523,6 @@ function goHome() {
   if (S.mode === "ai" && S.ai?.id) fetch("/api/watch/stop", { method: "POST", body: JSON.stringify({ id: S.ai.id }) }).catch(() => {});
   S.mode = null;
   $("game").hidden = true; $("home").hidden = false;
-  for (const id of ["p-seed", "b-seed", "a-seed"]) $(id).value = Math.floor(Math.random() * 10000);
 }
 function enterTable(mode) {
   S.mode = mode; S.run++; S.hand = []; S.sel.clear(); S.thinking = null; S.landed = false; S.paused = false; S.reason = null;
@@ -528,19 +532,22 @@ function enterTable(mode) {
   say("");
   return S.run;
 }
-const seed = (id) => { const v = Math.max(0, Math.floor(+$(id).value || 0)); $(id).value = v; return v; };
-const seatFor = (sd, role) => (role === "any" ? Math.floor(Math.random() * 3) : (landlordOf(sd) + +role) % 3);
+const rand = (n) => Math.floor(Math.random() * n);
 
-async function startLocal(mode) {
-  const sd = seed(mode === "play" ? "p-seed" : "b-seed");
-  const seat = seatFor(sd, mode === "play" ? $("p-role").value : $("b-role").value);
+// No bidding (R4): the first deal's landlord is random, then the role passes to the next seat each deal.
+async function startLocal(mode, next = false) {
+  const prev = next && S.series?.mode === mode ? S.series : null;
+  const seat = prev ? prev.seat : rand(3);
+  const sd = prev ? seedWithLandlord((prev.landlord + 1) % 3, rand(1e6)) : rand(1e6);
   const run = enterTable(mode);
   if (S.game) S.game.destroy();
   S.game = Session(sd, seat, mode === "base");
   S.deal = { seed: sd, seat };
+  S.series = { mode, seat, landlord: S.game.g.landlord, n: prev ? prev.n + 1 : 1 };
+  const deal = `Deal ${S.series.n}${prev ? ", the landlord passed to the next seat" : ""}.`;
   await apply(JSON.parse(S.game.start()), run);
   if (run === S.run && mode === "play" && S.view.status === "ongoing")
-    say(`Deal #${sd}. You are the ${roleOf(seat)}${seat === S.view.landlord ? " and lead first" : ""}. Pick cards, then Play.`);
+    say(`${deal} You are the ${roleOf(seat)}${seat === S.view.landlord ? " and lead first" : ""}. Pick cards, then Play.`);
 }
 
 async function apply(reply, run) {
@@ -557,22 +564,24 @@ async function apply(reply, run) {
 function finish(o, extra = "") {
   const m = me(), score = o.scores[m];
   const won = o.winner && (o.winner === "landlord") === (m === S.view.landlord);
-  const who = S.mode === "play" ? (won ? "You win" : "You lose") : `${S.mode === "ai" ? "The AI" : `Seat ${m}`} (${roleOf(m)}) ${won ? "wins" : "loses"}`;
+  const who = S.mode === "play" ? (won ? "You win" : "You lose") : `The ${S.mode === "ai" ? "AI" : "followed player"} (${roleOf(m)}) ${won ? "wins" : "loses"}`;
   const head = o.forfeit ? `${S.mode === "ai" ? "The AI" : "Agent"} forfeits (${o.reason.replace("_", " ")})` : o.winner === null ? "Step limit reached, no winner" : who;
   const detail = o.winner === null ? "" : `${o.winner === "landlord" ? "The landlord" : "The peasants"} won. Stakes ×${o.multiplier}${o.spring ? " (spring)" : ""}.`;
   $("obox").innerHTML = `<h2>${head}</h2><div class="big ${score > 0 ? "win" : score < 0 ? "loss" : ""}">${score > 0 ? "+" : ""}${score}</div>
-    <p>${detail} Scores by seat: ${o.scores.join(", ")}.</p>${extra}
+    <p>${detail} Scores: ${[m, (m + 1) % 3, (m + 2) % 3].map((s) => `${seatName(s)} ${o.scores[s] > 0 ? "+" : ""}${o.scores[s]}`).join(", ")}.</p>${extra}
     <div class="actions"><button class="act primary" id="again">Another deal</button><button class="act" id="look">See the table</button><button class="act" id="ohome">Home</button></div>`;
   $("overlay").hidden = false;
-  $("again").addEventListener("click", () => { const id = { play: "p-seed", base: "b-seed", ai: "a-seed" }[S.mode]; $(id).value = Math.floor(Math.random() * 10000); ({ play: () => startLocal("play"), base: () => startLocal("base"), ai: startAI })[S.mode](); });
+  $("again").addEventListener("click", () => { ({ play: () => startLocal("play", true), base: () => startLocal("base", true), ai: () => startAI(true) })[S.mode](); });
   $("look").addEventListener("click", () => { $("overlay").hidden = true; });
   $("ohome").addEventListener("click", goHome);
   $("again").focus();
 }
 
 /* ---------- 4. live AI: the server runs runner.run_episode and streams the agent seat's view ---------- */
-async function startAI() {
-  const body = { seed: seed("a-seed"), situation: $("a-sit").value, player: $("a-player").value };
+async function startAI(next = false) {
+  // next deal: the landlord moves one seat on, so the AI's situation goes S1 -> S3 -> S2 -> S1
+  S.aiSit = next && S.aiSit !== undefined ? (S.aiSit + 2) % 3 : rand(3);
+  const body = { seed: rand(1e6), situation: ["S1", "S2", "S3"][S.aiSit], player: "model-history" };
   const run = enterTable("ai");
   S.ai = { player: body.player };
   $("obox").innerHTML = `<h2>Starting a live game</h2><p>Model player ${body.player}, deal #${body.seed}.</p>`; $("overlay").hidden = false;
@@ -584,7 +593,7 @@ async function startAI() {
   $("overlay").hidden = true;
   S.ai = { ...S.ai, id: r.id, model: r.model };
   S.view = r.start; S.legal = []; render();
-  say(`Live: ${r.model} plays Seat ${r.agent} as ${roleOf(r.agent)}. Deal #${body.seed}.`);
+  say(`Live: ${r.model} plays the ${roleOf(r.agent)}. Deal #${body.seed}.`);
   let since = 0, queue = [], done = null;
   while (run === S.run) {
     if (queue.length) { const f = queue.shift(); if (!(await show(f.obs, run, f))) return; continue; }
@@ -629,14 +638,13 @@ $("hand").addEventListener("pointermove", (e) => {
   if (!drag.moved && Math.hypot(dx, dy) < 8) return;
   drag.moved = true; drag.el.classList.add("drag");
   drag.el.style.transform = `translate(${dx}px, ${dy}px)`;
-  let best = null, bd = Infinity;
-  for (const c of $("hand").children) {
-    if (c === drag.el) continue;
-    c.classList.remove("drop-before", "drop-after");
-    const b = c.getBoundingClientRect(), d = Math.hypot(e.clientX - (b.left + b.width / 2), e.clientY - (b.top + b.height / 2));
-    if (d < bd) { bd = d; best = { c, after: e.clientX > b.left + b.width / 2 }; }
-  }
-  if (best) { best.c.classList.add(best.after ? "drop-after" : "drop-before"); drag.target = best; }
+  // the card under the pointer (cards overlap, so only its left strip is showing)
+  const c = document.elementsFromPoint(e.clientX, e.clientY).find((x) => x.classList?.contains("card") && x !== drag.el && x.parentElement === $("hand"));
+  if (!c) return;
+  for (const x of $("hand").children) x.classList.remove("drop-before", "drop-after");
+  const b = c.getBoundingClientRect(), shown = c.nextElementSibling && c.nextElementSibling !== drag.el ? b.width * STEP : b.width;
+  drag.target = { c, after: e.clientX > b.left + shown / 2 };
+  c.classList.add(drag.target.after ? "drop-after" : "drop-before");
 });
 function endDrag() {
   if (!drag) return;
@@ -677,6 +685,8 @@ async function send(action) {
 }
 $("pass").addEventListener("click", () => send("pass"));
 $("play").addEventListener("click", () => send(picked()));
+// "See the table" hides the result; this brings it back (with Another deal and Home)
+$("status").addEventListener("click", (e) => { if (e.target.id === "reshow") { $("overlay").hidden = false; $("again")?.focus(); } });
 $("pause").addEventListener("click", () => { S.paused = !S.paused; $("pause").textContent = S.paused ? "Resume" : "Pause"; });
 $("homebtn").addEventListener("click", goHome);
 const openBook = () => $("book").showModal();
@@ -687,7 +697,7 @@ $("book").addEventListener("click", (e) => { if (e.target === $("book")) $("book
 $("go-play").addEventListener("click", () => startLocal("play"));
 $("go-base").addEventListener("click", () => startLocal("base"));
 $("go-ai").addEventListener("click", startAI);
-new ResizeObserver(fan).observe($("hand"));
+new ResizeObserver(fan).observe($("me"));  // not the hand itself: fit() sets the hand's width
 
 /* ---------- handbook pictures ---------- */
 (() => {
@@ -718,7 +728,6 @@ new ResizeObserver(fan).observe($("hand"));
 })();
 
 /* ---------- boot ---------- */
-for (const id of ["p-seed", "b-seed", "a-seed"]) $(id).value = Math.floor(Math.random() * 10000);
 fetch("/api/status").then((r) => (r.ok ? r.json() : Promise.reject())).then((s) => {
   $("go-ai").disabled = !s.live_ready;
   $("go-ai").textContent = s.live_ready ? "Watch the AI" : "Not configured";
@@ -739,9 +748,9 @@ fetch("/api/status").then((r) => (r.ok ? r.json() : Promise.reject())).then((s) 
       py.FS.mkdirTree(`/ddz/${f.split("/").slice(0, -1).join("/")}`);
       py.FS.writeFile(`/ddz/${f}`, await res.text());
     }
-    py.runPython("import sys; sys.path.insert(0, '/ddz')\nfrom web.session import Session, landlord_of");
-    Session = py.globals.get("Session"); landlordOf = py.globals.get("landlord_of");
-    for (const [id, t] of [["go-play", "Deal me in"], ["go-base", "Watch the baseline"]]) { $(id).disabled = false; $(id).textContent = t; }
+    py.runPython("import sys; sys.path.insert(0, '/ddz')\nfrom web.session import Session, seed_with_landlord");
+    Session = py.globals.get("Session"); seedWithLandlord = py.globals.get("seed_with_landlord");
+    for (const [id, t] of [["go-play", "Start game"], ["go-base", "Watch the baseline"]]) { $(id).disabled = false; $(id).textContent = t; }
   } catch (err) {
     for (const id of ["go-play", "go-base"]) $(id).textContent = "Could not load";
     const n = document.createElement("p"); n.className = "note warn";

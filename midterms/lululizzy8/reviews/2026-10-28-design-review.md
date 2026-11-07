@@ -1,6 +1,6 @@
 # Design review, 2026-10-28
 
-Target: `DESIGN.md` draft of 2026-10-28 (before runner, baseline and model player exist).
+Target: `GAME-DESIGN.md` draft of 2026-10-28 (before runner, baseline and model player exist).
 Two independent read-only reviewers, run from a Claude Code session; neither wrote the design,
 neither was asked to approve. Findings are recorded as returned (lightly condensed); decisions are mine
 and go in the last section.
@@ -70,5 +70,5 @@ needing their own reporting.
 
 For each finding: accept / reject / defer, and why.
 
-Record: on 2026-10-28 I accepted all findings from both reviewers; they are applied in DESIGN.md rev 2.
+Record: on 2026-10-28 I accepted all findings from both reviewers; they are applied in GAME-DESIGN.md rev 2.
 Reasons per finding: TODO (my words).

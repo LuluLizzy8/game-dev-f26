@@ -24,6 +24,8 @@ def render(obs):
             line += f", last action: {last.get(seat, '-')}"
         lines.append(line)
     lines.append(f"Kitty (given to the landlord, public): {obs['kitty']}")
+    if obs.get("revolution"):
+        lines.append("REVOLUTION: the order of 3 through 2 is reversed (3 is highest, 2 lowest); jokers stay highest.")
     if obs["status"] == "terminal":
         lines.append("The deal is over.")
     else:

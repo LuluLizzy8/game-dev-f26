@@ -12,7 +12,7 @@ Creative Director and makes every decision; you propose and build.
 
 ## Design sources
 
-- `DESIGN.md` is the plan; `README.md` holds the rule/source map (single source of truth for rules).
+- `GAME-DESIGN.md` is the plan; `README.md` holds the rule/source map (single source of truth for rules).
 - `SUBMISSION-CHECKLIST.md` tracks every deliverable; update it when you finish or start one.
 
 ## Rules of the build

@@ -1,4 +1,4 @@
-"""Episode runner (DESIGN.md §5). Holds the only DouDizhu instance; players get observe/legal_actions output.
+"""Episode runner (GAME-DESIGN.md §5). Holds the only DouDizhu instance; players get observe/legal_actions output.
 
     python runner.py --player heuristic --situation S1 --seeds 0-9 --out traces/dev
 """

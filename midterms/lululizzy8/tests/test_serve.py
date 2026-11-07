@@ -78,6 +78,29 @@ class LiveStart(unittest.TestCase):
         self.assertIsNone(live.model)
 
 
+class FillSettings(unittest.TestCase):
+    NAMES = ("COURSE_PROVIDER", "COURSE_MODEL", "GOOGLE_CLOUD_PROJECT", "GOOGLE_CLOUD_LOCATION")
+
+    def test_fills_missing_from_config_and_gcloud_but_keeps_what_is_set(self):
+        config, _ = load_config()
+        empty = {n: "" for n in self.NAMES}
+        done = mock.Mock(stdout="example-project\n")
+        with mock.patch.dict(os.environ, dict(empty, COURSE_MODEL="my-model")), \
+                mock.patch("subprocess.run", return_value=done):
+            filled = serve.fill_settings(config, gcloud="gcloud")
+            self.assertEqual(os.environ["COURSE_MODEL"], "my-model")  # set by the user: kept
+            self.assertEqual(os.environ["COURSE_PROVIDER"], config["model_choice"]["provider"])
+            self.assertEqual(os.environ["GOOGLE_CLOUD_PROJECT"], "example-project")
+        self.assertNotIn("COURSE_MODEL", filled)
+
+    def test_no_gcloud_project_leaves_it_missing(self):
+        config, _ = load_config()
+        with mock.patch.dict(os.environ, {n: "" for n in self.NAMES}), \
+                mock.patch("subprocess.run", return_value=mock.Mock(stdout="(unset)\n")):
+            serve.fill_settings(config, gcloud="gcloud")
+            self.assertFalse(serve.Live(tempfile.gettempdir()).status()["live_ready"])
+
+
 class Http(unittest.TestCase):
     def setUp(self):
         serve.Handler.live = serve.Live(tempfile.gettempdir())

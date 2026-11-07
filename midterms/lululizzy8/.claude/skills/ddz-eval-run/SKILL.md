@@ -5,7 +5,7 @@ description: "Use when running Dou Dizhu evaluation episodes (baseline, model-hi
 
 # Run the Dou Dizhu evaluation suite
 
-The suite is declared in `DESIGN.md` §6 and frozen by commit `6795857` (2026-10-28).
+The suite is declared in `GAME-DESIGN.md` §6 and frozen by commit `6795857` (2026-10-28).
 Changes to it go in the EVALUATION.md change log with a reason, never silently.
 
 ## Before running

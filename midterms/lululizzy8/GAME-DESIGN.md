@@ -127,6 +127,27 @@ landlord prompt can reach about 54k input tokens (`tools/measure.py`). Heuristic
 smallest bomb first (fewest cards, then lowest rank). The model prompt's rules paragraph now describes
 two decks; the strategy rules are unchanged from the round 2 prompt and were not re-tuned.
 
+### 2.3 Revolution (2026-11-07, my decision; README R10b)
+
+The twist, borrowed from the revolution in Daifugō: a bomb of 6 or more cards reverses the order of 3
+through 2 (3 highest, 2 lowest) for every comparison, bombs included; jokers stay highest. Another 6+ bomb
+reverses it back. It is public (`observe()["revolution"]`, a REVOLUTION line in the table text) and the
+bomb doubles the stakes like any bomb.
+
+| Choice | Alternatives | Why |
+|---|---|---|
+| Trigger: bomb of 6+ | 4+ (every bomb), 5+, 7+ | On 1,000 two-deck deals (seeds 1000–1999, away from every evaluation seed) someone holds a 6+ bomb in 54% (5+: 98%, 7+: 9%): a real threat that still feels special |
+| Jokers stay on top | flip jokers too | keeps the rocket and joker pairs unambiguous |
+| Lasts until the next 6+ bomb | until the round ends | the swing is the strategy: holding a second big bomb matters |
+| Bombs compare by size, then flipped rank | flip bombs only by rank | size-first stays as R10a |
+
+Heuristic: it plays its smallest 6+ bomb to start (or end) a revolution when most of the 3–2 cards it
+would keep are 3–9 (or, in a revolution, 10–2), never over its teammate's play; otherwise it ranks every
+choice in the current order. Without this habit it would almost never play a 6+ bomb (0% of heuristic
+self-play deals before the change); after it, a revolution happens in 44% of heuristic self-play deals
+(development seeds 0–99; the review on 2026-11-07 had it re-measured there, since a first count used seeds 0–299). The model prompt gained one rules sentence; strategy rules unchanged.
+The evaluation in EVALUATION.md predates this rule.
+
 ## 3. Machine-playable interface (2b, 2c)
 
 The engine already provides the five operations:
@@ -178,10 +199,13 @@ Deterministic, no model calls, developed and debugged on **seeds 0–99 only** (
 held-out seeds). Its commit hash is recorded before any held-out run.
 
 - **Lead:** play the combination that sheds the most cards at the lowest main rank, preferring
-  straights/planes/pair-sequences over singles; never lead a bomb or rocket unless it empties the hand.
+  straights/planes/pair-sequences over singles; never lead a bomb or rocket unless it empties the hand,
+  except a 6+ revolution bomb (below).
 - **Follow:** play the cheapest beating move of the same kind.
 - **Teamwork:** a peasant passes on its teammate's play unless it can go out.
 - **Bombs:** use a bomb/rocket only when an opponent has ≤ 4 cards or it empties the hand.
+- **Revolution (R10b, since 2026-11-07):** play the smallest 6+ bomb, leading or following (never over the
+  teammate), when most of the remaining 3–2 cards gain from the flipped order; rank everything in the current order.
 - **Endgame:** if one legal play empties the hand, play it.
 
 `players/random_player.py` (uniform over legal actions) is a floor, showing whether the heuristic is
@@ -389,7 +413,7 @@ bash: the same with `export NAME=value`.
 
 ```
 midterms/lululizzy8/
-  README.md  DESIGN.md  EVALUATION.md  AGENT-TEAM.md  CLAUDE.md  .gitignore
+  README.md  GAME-DESIGN.md  EVALUATION.md  AGENT-TEAM.md  CLAUDE.md  .gitignore
   agent-config.json  requirements.txt
   doudizhu/engine.py
   players/heuristic.py  random_player.py  model.py

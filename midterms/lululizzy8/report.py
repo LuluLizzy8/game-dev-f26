@@ -1,4 +1,4 @@
-"""Comparison table from trace files (DESIGN.md §6 metrics).
+"""Comparison table from trace files (GAME-DESIGN.md §6 metrics).
 
     python report.py traces/heldout --out results/heldout.md
 """

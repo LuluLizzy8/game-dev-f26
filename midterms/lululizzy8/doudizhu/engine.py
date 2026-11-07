@@ -72,15 +72,24 @@ def all_moves(hand):
     return moves
 
 
-def beats(a, b):
-    """R9, R10, R10a: does combination a beat combination b?"""
+REVOLUTION_BOMB = 6  # R10b: a bomb of at least this many cards flips the order
+
+
+def strength(rank, revolution=False):
+    """R10b: in a revolution 3 through 2 run the other way (3 is highest); the jokers stay on top."""
+    return -rank if revolution and rank <= TWO else rank
+
+
+def beats(a, b, revolution=False):
+    """R9, R10, R10a, R10b: does combination a beat combination b?"""
     if a.kind == "rocket":
         return True
     if b.kind == "rocket":
         return False
+    sa, sb = strength(a.rank, revolution), strength(b.rank, revolution)
     if a.kind == "bomb":  # more cards first, then rank
-        return b.kind != "bomb" or (a.length, a.rank) > (b.length, b.rank)
-    return a.kind == b.kind and a.length == b.length and a.rank > b.rank
+        return b.kind != "bomb" or (a.length, sa) > (b.length, sb)
+    return a.kind == b.kind and a.length == b.length and sa > sb
 
 
 class DouDizhu:
@@ -99,6 +108,7 @@ class DouDizhu:
         self.passes = 0
         self.history = []  # public (seat, label or "pass")
         self.bombs = 0
+        self.revolution = False  # R10b
         self.steps = 0
         self.max_steps = max_steps
         self.winner = None
@@ -120,6 +130,7 @@ class DouDizhu:
             "turn": self.turn,
             "to_beat": self.last and {"seat": self.last[0], "cards": self.last[1]},
             "history": [list(h) for h in self.history],
+            "revolution": self.revolution,  # R10b: public, everyone saw the bomb
             "status": "terminal" if self.reason else "ongoing",
         }
 
@@ -128,7 +139,7 @@ class DouDizhu:
             return {}
         moves = all_moves(self.hands[seat])
         if self.last:
-            moves = {k: m for k, m in moves.items() if beats(m, self.last[2])}
+            moves = {k: m for k, m in moves.items() if beats(m, self.last[2], self.revolution)}
         return moves
 
     def legal_actions(self, seat):
@@ -170,6 +181,8 @@ class DouDizhu:
                 self.hands[seat].remove(card)
             self.last, self.passes = (seat, action, combo), 0
             self.bombs += combo.kind in ("bomb", "rocket")
+            if combo.kind == "bomb" and combo.length >= REVOLUTION_BOMB:
+                self.revolution = not self.revolution  # R10b
             if not self.hands[seat]:
                 self.winner, self.reason = seat, "hand_empty"  # R12
         self.turn = (seat + 1) % 3
