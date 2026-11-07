@@ -26,4 +26,14 @@ Player boundary: no change found.
 | 13 | note | random hands rarely test rocket-as-kickers. | yes: fixed-hand test in `test_combos.Invariants` |
 | 14 | note | measurement figures not recorded where a reader can check. | yes: EVALUATION two-deck measurements |
 
-## My decisions **[student voice — TODO]**
+## My decisions
+
+I accepted all 14 findings on the two-deck change.
+
+- 1 (the shipped game had no evaluation): accepted. It was the must-fix. I ran a new suite on new held-out
+  seeds 300-329 and marked the one-deck results as superseded.
+- 2 (call limit margin): accepted. Raised to 120 after measuring a random agent.
+- 3 (huge prompts): accepted the live check. I agreed not to cap the legal list, because that would change
+  what the player sees.
+- 4 to 7 (bomb tests, refused-action test, the joker-pair rule in the wrong row): accepted.
+- 8 to 14 (leftover one-deck text, wording, a rocket-as-kickers test, recorded measurements): accepted.

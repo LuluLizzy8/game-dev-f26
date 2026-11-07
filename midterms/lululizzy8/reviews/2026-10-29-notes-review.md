@@ -23,4 +23,16 @@ suite change logged, totals not updated.
 | 12 | note | `notes` written after `action`, so it plans later moves only. | yes: stated in DESIGN §4.3 |
 | 13 | note | stale doc lines (DESIGN §4.3 "only the history field", broken list; EVALUATION test count). | yes |
 
-## My decisions **[student voice — TODO]**
+## My decisions
+
+I accepted all findings on the `model-notes` change.
+
+- 1 (notes change more than one thing): accepted. GAME-DESIGN.md §4.3 lists every difference, and I read
+  the notes results as "notes plus a different prompt", not a clean memory test.
+- 2 (truncation): checked on tuning seeds 100-101. Replies used at most 76 tokens, well under 256.
+- 3, 6 to 9 (notes from rejected replies, stale notes, weak tests): accepted. The note shown is the last
+  accepted reply's note, and it's tested.
+- 4 (agent-config): accepted.
+- 5 (suite totals, untuned player): accepted. Totals include the 90 episodes and EVALUATION.md says
+  `model-notes` was never tuned.
+- 10 to 13 (one-line notes, notes in the trace, doc fixes): accepted.

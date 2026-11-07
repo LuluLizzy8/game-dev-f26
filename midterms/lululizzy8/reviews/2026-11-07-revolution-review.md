@@ -25,6 +25,15 @@ Verdict: the rule is implemented correctly, is public, and a refused bomb change
 
 Tests after fixes: 102, all pass.
 
-## My decisions [student voice — TODO]
+## My decisions
 
-[Accept or change each applied fix; decide #11; decide whether to re-run the evaluation with revolution.]
+I accepted the fixes for findings 1 to 10 and 12.
+
+- 1 and 2 were the important ones: the prompt and the design doc still described the teammate before
+  Revolution, so the model would have been told something false. Fixed before the evaluation run.
+- 3 (a loosened test): accepted. The forfeit tests check the exact stakes on seed 0 again.
+- 5 (stats measured on held-out seeds): accepted. Re-measured on seeds 1000-1999 and 0-99; the numbers
+  barely changed and the 6+ trigger stays.
+- 11 (move-list order during a revolution): no change. The order doesn't change which moves are legal, and
+  changing it would make the prompt differ from the frozen one.
+- Re-running the evaluation: yes. I ran the full suite on new held-out seeds 400-429 (EVALUATION.md).

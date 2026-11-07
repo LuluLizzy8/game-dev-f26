@@ -30,6 +30,17 @@ Files read by the reviewer: `.claude/agents/ddz-rules-reviewer.md`, CLAUDE.md, R
 agent-config.json, doudizhu/engine.py, doudizhu/view.py, runner.py, players/*, report.py, play.py,
 tools/measure.py, tests/test_runner.py, tests/test_game.py, tests/test_regressions.py.
 
-## My decisions **[student voice — TODO]**
+## My decisions
 
-The implementation agent applied the fixes above while building; accept, reject or change each, in my words.
+I accepted the fixes the implementation agent applied for findings 1 to 11, 13, 15, 16 and 17.
+
+- 1 was the most important one: an API error message could put my project ID into public traces. Logging
+  only the error type and status code is enough to debug.
+- 2 to 5 (report.py): accepted. Forfeits shouldn't count twice, and pairs should only match runs of the
+  same code and config.
+- 6 to 9 (runner and tests): accepted. A refused move must stop the run instead of looping, and the leak
+  test has to check the prompts the runner actually sends.
+- 12 (one call can overrun the wall clock by up to 30 s): accepted as a known limit, written in EVALUATION.md.
+- 14 (thinking tokens vs the 256-token cap): checked on the first live episode. Replies used about 30
+  tokens, so nothing to change.
+- 18 (random-opponent pairing across trials): no change. The suite only runs random opponents at trial 0.

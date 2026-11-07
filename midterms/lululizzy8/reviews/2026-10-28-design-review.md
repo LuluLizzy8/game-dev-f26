@@ -66,9 +66,27 @@ Not checked: tests/workflow not run; Pagat and licence pages not opened; token/c
 Both independently flagged: R17 unnecessary; forced passes burning the call budget; forfeit outcomes
 needing their own reporting.
 
-## My decisions **[student voice — TODO]**
+## My decisions
 
-For each finding: accept / reject / defer, and why.
+I accepted every finding from both reviewers on 2026-10-28 and applied them in GAME-DESIGN.md rev 2.
 
-Record: on 2026-10-28 I accepted all findings from both reviewers; they are applied in GAME-DESIGN.md rev 2.
-Reasons per finding: TODO (my words).
+- Rules reviewer 1 to 3 (reset leaking the landlord's hand, which limits score 0, the forfeit outcome):
+  accepted. A leak or a vague forfeit would make the results wrong, so the runner always uses
+  `observe(agent)` and forfeits are counted on their own.
+- 4 (drop R17): accepted. Seating the agent relative to the seeded landlord does the same job with no new rule.
+- 5 (forced passes using model calls): accepted. A turn with one option isn't a decision, so it shouldn't
+  cost a call (R20).
+- 6 and 7 (what the boundary really is, fallback inputs): accepted. The prompt is the boundary, so the test
+  compares prompts before and after reshuffling the hidden hands.
+- 8 to 16 (engine edge cases, wording, missing tests): accepted. 9 and 10 became my regression tests.
+- Rubric reviewer 1, 6, 9 (nothing committed, no real regression, heuristic tuned on held-out deals):
+  accepted. I froze the suite in a commit and only developed the heuristic on seeds 0-99.
+- 2 and 10 (too few seeds): accepted. 30 held-out seeds per situation, with paired differences reported.
+- 3 (the baseline's teammate is a copy of itself): accepted. The prompt describes the teammate's habits,
+  and the limitations mention it.
+- 4 (model-obs is required, not optional): accepted. It runs on the same seeds.
+- 5, 11, 12, 13 (skills, locators, licences, setup docs): accepted. Adapted `ddz-` copies, checked Pagat
+  locators, credits in the README, PowerShell and fixture commands.
+- 7 and 8 (limits and fallback reporting): accepted. Fallbacks are labeled and the report has
+  fallback-free columns.
+- 14 to 16 (hand-in boundary, schedule, my own sections): accepted.

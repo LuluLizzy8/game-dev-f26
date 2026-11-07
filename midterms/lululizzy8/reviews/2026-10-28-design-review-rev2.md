@@ -56,4 +56,24 @@ per trace step; re-record fixtures after the freeze.
 
 Not checked: Pagat and licence pages, real token/latency figures, nested `.claude/` loading behavior.
 
-## My decisions **[student voice — TODO]**
+## My decisions
+
+I accepted the rev 2 findings.
+
+- C1 (freeze not committed): accepted. The suite is frozen in commit `6795857`.
+- C2 (measuring on held-out seeds): accepted. `tools/measure.py` only runs on seeds 0-104 and refuses
+  anything at 200 or above.
+- C3 (real regressions): accepted. `observe(-1)` and non-text actions have failing-first tests in
+  `tests/test_regressions.py`.
+- C4 (credits): accepted. The README credits the course skill and reviewer, the provider-call pattern and
+  google-genai.
+- C5 (name clash with the root skill and agent): accepted. Renamed to `ddz-rule-change` and `ddz-rules-reviewer`.
+- C6, C7 (step bound, README wording): accepted and fixed.
+- C8 (sampling not recorded): accepted. Temperature, top-p and the output cap are in `agent-config.json`
+  and every trace header.
+- C9 (wall clock vs latency): accepted. I measured latency on tuning seeds and raised the wall clock to
+  1800 s; running out counts as a forfeit.
+- C10 (push timing): changed. I kept everything local until the work was done and push once before the
+  deadline, so CI runs on the final version.
+- C11 (schedule): accepted. The peer playtest happened before Nov 6 (`playtest.txt`).
+- C12 (transcripts): accepted. Every export in `sessions/` is cleaned before it's committed.
