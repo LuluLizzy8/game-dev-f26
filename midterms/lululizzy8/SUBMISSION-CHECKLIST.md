@@ -44,7 +44,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it
 | 2a core loop | `play.py`; browser card table `web/` (Pyodide; home screen, handbook, watch baseline, watch AI via `web/serve.py`; `tests/test_web.py`, `tests/test_serve.py`) | ✅ reworked after the [playtest](playtest.txt) |
 | 2b model player | `players/model.py` via `runner.py`; traces show choices; fallbacks labeled | ✅ revolution held-out run 2026-11-07 (`traces/heldout-revolution/`, 310 live, 1 labeled fallback) |
 | 2c information | `test_game.Information`, `test_view`, `test_runner.Prompt`, `test_web`, `test_serve` | ✅ |
-| 3a runs | fresh-clone dry run of the README commands | ⬜ before the push |
+| 3a runs | fresh-clone dry run of the README commands | ✅ 2026-11-07: clean clone, tests, runner, fixture, report, measure, play.py |
 | 3b limits | `runner.py` and `tests/test_runner.py` | ✅ |
 | 3c CI | all five kinds, 102 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after the push |
 | 3d agent team | table above | ✅ |
