@@ -1,0 +1,37 @@
+{"type": "header", "seed": 406, "situation": "S2", "trial": 0, "player": "heuristic", "opponents": "heuristic", "agent_seat": 1, "landlord": 0, "live": false, "model_requested": null, "config_hash": "9540bd7658e1", "game_commit": "deb95b1", "limits": {"max_steps": 400, "call_limit": 120, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 0, "action": "7 7 7 7 7 7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 3, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 4, "seat": 0, "action": "A A 2 2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 1, "action": "A A A 2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 6, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 7, "seat": 0, "action": "K K K A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 1, "action": "Q Q Q K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 9, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 0, "action": "J J J Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 1, "action": "10 10 10 Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 12, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 0, "action": "8 8 9 9 9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 1, "action": "8 8 8 J J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 15, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 0, "action": "6 6 6 8 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 1, "action": "4 4 4 10 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 18, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 1, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 21, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 1, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 24, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 25, "seat": 0, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 1, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 27, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 28, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 1, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 30, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 1, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 33, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 34, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 35, "seat": 1, "action": "3 3 3 6", "source": "heuristic", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [-4, 2, 2], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [-4, 2, 2]}, "steps": 35, "calls": 0, "invalid": 0, "models_returned": [], "agent_score": 2, "elapsed": 0.078}

@@ -1,63 +1,62 @@
-# Submission checklist (Assignment.md "What you submit" + rubric)
+# Submission checklist (Assignment.md "What you submit" and the rubric)
 
-Due **Sat 2026-11-07 11:59 p.m.** Graded version = last push to the PR branch before the deadline.
-Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only LuluLizzy can do it.
+Due Sat 2026-11-07 11:59 p.m. The graded version is the last push to the PR branch before the deadline.
+Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it.
 
 ## Hand-in
 
 | Item | Where | Status |
 |---|---|---|
-| One PR to `columbia-university-ai-games/game-dev-f26` `main`, only this folder + one workflow | branch `lululizzy8/midterm` | ⬜ (local only until done; push and open by Nov 6) |
-| PR description: GitHub login, project title, links to README, EVALUATION, AGENT-TEAM, peer notes, recording | PR | ⬜ 👤 |
+| One PR to `columbia-university-ai-games/game-dev-f26` `main`, only this folder and one workflow | branch `lululizzy8/midterm` | ⬜ local commits only so far; push and open the PR tonight |
+| PR description: GitHub login, project title, links to README, EVALUATION, AGENT-TEAM, playtest notes, recording | PR | ⬜ 👤 |
 | PR URL submitted on CourseWorks | CourseWorks | ⬜ 👤 |
-| Workflow runs this folder's checks on PRs, no secrets | `.github/workflows/midterm-lululizzy8.yml` | ✅ (green run link: ⬜ after push) |
-| No caches, credentials, personal data, large generated files in the diff | `.gitignore`, review before push | 🔨 |
+| Workflow runs this folder's checks on PRs, no secrets | `.github/workflows/midterm-lululizzy8.yml` | ✅ (green run link ⬜ after the push) |
+| No caches, credentials, personal data or large generated files in the diff | `.gitignore`; session exports cleaned | 🔨 final check before the push |
 
 ## Required files in this folder
 
 | File | Contents required | Status |
 |---|---|---|
-| `README.md` | setup / play / test / evaluation commands from a fresh clone, working dir for each; scope statement; rule/source map with labels; sources + reuse terms; recording link | 🔨 (scope 👤 in my voice; recording link ⬜) |
-| `EVALUATION.md` | declared suite, comparison table, traces/links, CI evidence for this version, limitations paragraph | 🔨 (limitations 👤) |
-| `AGENT-TEAM.md` | one-page log: each agent, what it could see/do, what it recommended, what I decided, where the evidence is | 🔨 draft from the repo history; rewrite in my voice 👤 |
-| Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | 🔨 received ✅ (anonymous; played `play.py`); notes given to my partner 👤 |
-| Recording, 3–5 min, agent playing without manual moves, limits stated | link in README + PR | ⬜ 👤 |
-| Game, executable player, baseline, tests, agent configs, reports, traces | this folder | 🔨 |
+| `README.md` | commands from a fresh clone, scope statement, rule/source map with labels, sources and reuse terms, recording link | 🔨 recording link ⬜ 👤 |
+| `EVALUATION.md` | declared suite, comparison table, traces, CI evidence, limitations | ✅ revolution suite written up; CI link ⬜ after the push |
+| `AGENT-TEAM.md` | each agent, what it could see and do, what it recommended, what I decided, evidence | 🔨 "why" column and "What I would change" 👤 |
+| Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | 🔨 received ✅; notes to my partner 👤 |
+| Recording, 3 to 5 min, agent playing without manual moves, limits stated | link in README and PR | ⬜ 👤 |
+| Game, model player, baseline, tests, agent config, reports, traces | this folder | ✅ |
 
 ## Agent-team evidence (check 3d)
 
 | Role | Artifact | Evidence of use | Status |
 |---|---|---|---|
-| Implementation agent | `CLAUDE.md` | exported session transcripts in `sessions/` (cleaned) | ✅ `sessions/2026-11-game-creation.txt` (project ID, LAN IP and local paths removed); other sessions optional 👤 |
-| Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change; invoked by name in ≥ 2 sessions | 🔨 (steps followed for R19 + regressions in this session; named invocations 👤 in folder sessions) |
-| Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | invoked by name in ≥ 2 sessions | 🔨 (steps followed for tuning and held-out runs; named invocations need a session started in this folder 👤) |
-| Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` (`2026-10-28-runner-review.md`) | ✅ first run (decisions 👤) |
-| Design reviews | `reviews/2026-10-28-design-review*.md` | 3 reviewers on rev 1–2 | ✅ (my decisions 👤) |
-
-Skills are found by Claude Code only when a session is started in `midterms/lululizzy8/`.
+| Implementation agent | `CLAUDE.md` | cleaned session exports in `sessions/` | ✅ three exports (email, project ID, local paths and LAN address removed) |
+| Reusable skill | `.claude/skills/ddz-rule-change/SKILL.md` | used for each rule change, called by name | ✅ called by name for Revolution (Nov 7, in `sessions/`) |
+| Reusable skill | `.claude/skills/ddz-eval-run/SKILL.md` | called by name | ✅ called by name for the revolution held-out run (Nov 7) |
+| Independent review | `.claude/agents/ddz-rules-reviewer.md` | findings in `reviews/` | ✅ runner, notes, two-deck and revolution reviews ("My decisions" 👤) |
+| Design reviews | `reviews/2026-10-28-design-review*.md` | 3 reviewers on rev 1 and 2 | ✅ ("My decisions" 👤) |
 
 ## Rubric checks
 
 | Check | Evidence | Status |
 |---|---|---|
-| 1a labels | README map, every rule labeled with locator | 🔨 (Pagat locators to verify 👤) |
-| 1b scope | README scope + Week 3 post | 🔨 (Week 3 post ✅; README scope 👤) |
-| 1c sources | README + DESIGN §9 | 🔨 (RLCard/DouZero licences if cited) |
-| 2a core loop (two decks since 2026-11-06; revolution R10b since 2026-11-07; Week 3 posts 👤) | `play.py` start to end; browser card table `web/` (same engine via Pyodide; home screen, handbook, watch baseline, watch AI live via `web/serve.py`; `tests/test_web.py`, `tests/test_serve.py`) | ✅ built; reworked after the [playtest](playtest.txt) |
-| 2b model player | `players/model.py` via `runner.py`, trace shows choices, fallbacks labeled | 🔨 built; held-out runs ✅ 2026-11-06, two decks (`traces/heldout-2deck/`, 310 live, 4 labeled fallbacks) |
-| 2c information | `tests/test_game.Information`, `test_view`, `test_runner.Prompt` | ✅ |
-| 3a runs | fresh-clone dry run of README commands | ⬜ |
-| 3b limits | `runner.py` + `tests/test_runner.py` | ✅ |
-| 3c CI | all five kinds present, 55 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after push |
-| 3d agent team | table above | 🔨 |
-| 4a choices | DESIGN §11 | ✅ |
-| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds; three memory variants | ✅ run and interpreted in EVALUATION |
-| 5a comparison | EVALUATION table with all fields, dated suite (`6795857`), held-out | ✅ two-deck held-out 2026-11-06 (`results/heldout-2deck-2026-11-06.md`); one-deck kept as superseded |
-| 5b authorship | AGENT-TEAM + limitations in my voice, peer notes used | ⬜ 👤 |
-| 5c recording | 3–5 min | ⬜ 👤 |
+| 1a labels | README map, every rule labeled with a locator | ✅ Pagat locators checked against the page headings (2026-11-07) |
+| 1b scope | README scope and Week 3 posts | 🔨 Week 3 posts for two decks and Revolution 👤 |
+| 1c sources | README sources and reuse terms | ✅ |
+| 2a core loop | `play.py`; browser card table `web/` (Pyodide; home screen, handbook, watch baseline, watch AI via `web/serve.py`; `tests/test_web.py`, `tests/test_serve.py`) | ✅ reworked after the [playtest](playtest.txt) |
+| 2b model player | `players/model.py` via `runner.py`; traces show choices; fallbacks labeled | ✅ revolution held-out run 2026-11-07 (`traces/heldout-revolution/`, 310 live, 1 labeled fallback) |
+| 2c information | `test_game.Information`, `test_view`, `test_runner.Prompt`, `test_web`, `test_serve` | ✅ |
+| 3a runs | fresh-clone dry run of the README commands | ⬜ before the push |
+| 3b limits | `runner.py` and `tests/test_runner.py` | ✅ |
+| 3c CI | all five kinds, 102 tests (map in EVALUATION.md) | 🔨 green run on GitHub ⬜ after the push |
+| 3d agent team | table above | ✅ |
+| 4a choices | GAME-DESIGN.md §11 | ✅ |
+| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds, three memory variants | ✅ |
+| 5a comparison | EVALUATION table with all fields, dated suite, held-out | ✅ revolution held-out 2026-11-07 (`results/heldout-revolution-2026-11-07.md`); older suites kept as superseded |
+| 5b authorship | AGENT-TEAM and limitations in my voice, playtest notes used | 🔨 limitations ✅; AGENT-TEAM "why" column 👤 |
+| 5c recording | 3 to 5 min | ⬜ 👤 |
 
 ## Other dated obligations
 
-- ✅ Week 3 post with the scope change.
+- ✅ Week 3 post with the scope change from Guandan.
+- ⬜ 👤 Week 3 posts for two decks (Nov 6) and Revolution (Nov 7).
 - 🔨 Peer playtest done; notes received in [`playtest.txt`](playtest.txt). Send my notes to my partner 👤.
 - ⬜ 👤 Before Nov 16: silent-playtester notes on three assigned recordings (assigned Nov 9).

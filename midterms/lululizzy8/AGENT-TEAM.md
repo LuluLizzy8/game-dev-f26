@@ -1,51 +1,41 @@
 # Agent team log
 
-> **DRAFT written by the implementation agent from the repo history. Rewrite every sentence in your own
-> words before submitting (rubric 5b treats an agent-voiced log as missing).** Facts and evidence links
-> are checked; the "why" in brackets is for you to fill in or correct.
-
-I (LuluLizzy) acted as Executive Producer and Creative Director: agents proposed and built, I decided.
-No agent could push, open a PR, merge, approve its own work, or spend cloud credit without my go-ahead
-in the session.
+I was Executive Producer and Creative Director. The agents proposed and built; I decided. None of them
+could push, open a PR, merge, approve its own work, or spend cloud credit unless I said so in the session.
 
 ## The agents
 
-| Agent | Role | Could see / do | Could not | Evidence |
+| Agent | Role | Could | Couldn't | Evidence |
 |---|---|---|---|---|
-| Claude Code with `CLAUDE.md` | Implementation (programmer, producer) | Read and edit this folder and its workflow file; run tests; run live episodes when I said so; commit locally | Push, open a PR, edit other folders, review its own changes, write my student-voice sections | `CLAUDE.md`; commits on `lululizzy8/midterm`; `sessions/2026-11-game-creation.txt` |
-| `ddz-rule-change` skill | Reusable skill (rules process) | Steps for any rule change: README map row, failing test first, engine, reviewer | — | `.claude/skills/ddz-rule-change/SKILL.md`; used for R18–R23 and the three regression fixes |
-| `ddz-eval-run` skill | Reusable skill (QA / evaluation) | Steps for running episodes: seed ranges, freeze before held-out seeds, live vs fixture labels | — | `.claude/skills/ddz-eval-run/SKILL.md`; tuning rounds 1–3 and the held-out run |
-| `ddz-rules-reviewer` subagent | Independent review (QA) | Read, Grep, Glob only; reviewed changes it did not write; never asked to approve | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/2026-10-28-runner-review.md` (18 findings), `reviews/2026-10-29-notes-review.md` (13), `reviews/2026-11-06-two-deck-review.md` (14) |
-| Design reviewers (rules reviewer + strict-TA rubric reviewer, then a fresh re-reviewer) | Independent design review (design, production) | Read-only: Assignment.md, GAME-DESIGN.md, README, engine, tests | Edit, approve | `reviews/2026-10-28-design-review.md` (two reviewers, rev 1), `reviews/2026-10-28-design-review-rev2.md` |
-| UI research + mockup (implementation agent, web search) | Art direction | Searched for CC0 card art and Dou Dizhu table layouts; built a 4-style mockup | Publish anything without my choice | Mockup artifact (private); `web/`; README sources |
+| Claude Code with `CLAUDE.md` | Implementation (programmer, producer) | Edit this folder and its workflow file, run tests, run live episodes when I asked, commit locally | Push, open a PR, edit other folders, review its own changes, write my sections | `CLAUDE.md`; commits on `lululizzy8/midterm`; `sessions/` |
+| `ddz-rule-change` skill | Rules process | Walk any rule change through a README map row, a failing test, the engine and the reviewer | n/a | `.claude/skills/ddz-rule-change/SKILL.md`; R18 to R23, three regression fixes, and Revolution (R10b, called by name on Nov 7) |
+| `ddz-eval-run` skill | QA and evaluation | Run episodes with the seed ranges, freeze versions before held-out seeds, label live vs fixture | n/a | `.claude/skills/ddz-eval-run/SKILL.md`; tuning rounds 1 to 3 and the three held-out runs (the revolution run called it by name on Nov 7) |
+| `ddz-rules-reviewer` subagent | Independent review (QA) | Read and search only, on changes it didn't write | Edit, run code, approve | `.claude/agents/ddz-rules-reviewer.md`; `reviews/` runner (18 findings), notes (13), two-deck (14), revolution (12) |
+| Design reviewers | Independent design review | Read the assignment, design doc, README, engine and tests | Edit, approve | `reviews/2026-10-28-design-review.md` (two reviewers on rev 1), `reviews/2026-10-28-design-review-rev2.md` |
+| UI research and mockups (implementation agent) | Art direction | Search for free card art and table layouts; build a 4-style mockup | Publish anything I hadn't chosen | `web/`; README sources |
+| Impeccable design skill | Product and UX direction | Interview me for `PRODUCT.md`; flag design problems after UI edits | Write my design doc or choose for me | `PRODUCT.md`; my design doc became `GAME-DESIGN.md` so the tool's `DESIGN.md` can't overwrite it |
+| Browser testing (implementation agent in Chrome) | QA for the UI | Click through full deals, time the bot pauses, check phone width | Spend credits on Watch the AI | The Nov 7 bug fixes below |
 
-The game-playing agent (`gemini-3.5-flash-lite` on Vertex AI) is not part of the building team. It sees
-only `observe` + `legal_actions` (plus history or its own notes, by variant) and has no tools; see
-`EVALUATION.md` and `GAME-DESIGN.md` §4.
+The agent that plays the game (`gemini-3.5-flash-lite` on Vertex AI) isn't part of this team. It only sees
+`observe` and `legal_actions` (plus the history or its own notes, depending on the variant) and has no
+tools. See `EVALUATION.md` and `GAME-DESIGN.md` §4.
 
 ## What they recommended and what I decided
 
 | Date | Recommendation (who) | My decision | Why [your words] |
 |---|---|---|---|
-| Oct 28 | Guandan is too big for one bounded episode (implementation agent) | Switched to Dou Dizhu; posted in Week 3 | [ ] |
-| Oct 28 | 16 rules findings + 16 rubric findings on design rev 1 (two reviewers) | Accepted all; DESIGN rev 2 | [ ] |
-| Oct 28 | Drop the forced-landlord rule R17; seat the agent relative to the seeded landlord (rules reviewer) | Accepted | [ ] |
-| Oct 28 | Auto-play single-option turns as `forced` so passes don't use model calls (rules reviewer) | Accepted (R20) | [ ] |
-| Oct 28 | Fix `observe(-1)` leaking seat 2's hand, and non-string actions crashing, failing tests first (rev 2 reviewer) | Accepted; these became my CI regressions | [ ] |
-| Oct 28 | API error text could leak the project ID into traces (runner review) | Accepted: only error type + status logged | [ ] |
-| Oct 28 | Use Vertex `gemini-3.5-flash-lite`, temperature 0 | Accepted | [ ] |
-| Oct 28 | Show the player whose turn it is, the play to beat and who made it | My request; built in `doudizhu/view.py` | [ ] |
-| Oct 29 | After round 1 the model wasted its rocket as landlord: add strategy rules to the prompt | Tried it (round 2): best result | [ ] |
-| Oct 29 | My idea: "lead what you can win back, lowest first" (round 3) | Tried it; it made play worse | [ ] |
-| Oct 29 | Use DouZero as the opponent/baseline? | Asked; kept my own heuristic baseline | [ ] |
-| Oct 29 | My idea: a third player that keeps its own short notes between turns | Added `model-notes` (R23); reviewer found 6 should-fix issues, all fixed | [ ] |
-| Oct 29 | Card art: draw cards in code rather than use CC0 decks (implementation agent) | Chose drawn cards; browser version in `web/` | [ ] |
-| Nov 6 | Freeze the round 2 prompt for the held-out run (implementation agent) | Accepted | [ ] |
-| Nov 6 | My idea: change to two decks. Agent warned: second scope change, ~5× prompts, new suite, no time to tune | Chose two decks, three players | [ ] |
-| Nov 6 | Two-deck review: 1 must-fix, 7 should-fix (stale evaluation, call limit margin, prompt size, missing tests) | Applied all; call limit 120; new held-out seeds 300–329 | [ ] |
-| Nov 6 | Peer playtest findings ([`playtest.txt`](playtest.txt)): rules unclear to newcomers, text table hard to read, other turns too fast, ~200 choices with two decks. Agent recommended extending the web page over Pyxel, and replaying traces for Watch the AI | My 9-point card-table list; web page; Watch the AI live through a local server (`web/serve.py`) | [ ] |
+| Oct 28 | Guandan is too big for one bounded episode (implementation agent) | Switched to Dou Dizhu; posted in Week 3 | [Basically the same game, easier to implement 2 bots than 3 and less worried about team dynamics] |
+| Oct 28 | Drop the forced-landlord rule R17 and seat the agent relative to the seeded landlord (rules reviewer) | Accepted | [Landlord bidding is complicated and not that important to the game] |
+| Oct 28 | Use Vertex `gemini-3.5-flash-lite` at temperature 0 | Accepted | [assignment requirement] |
+| Oct 28 | Show whose turn it is, the play to beat and who made it | My request; built in `doudizhu/view.py` | [visual indicators] |
+| Oct 29 | The model wasted its rocket as landlord in round 1: add strategy rules to the prompt | Tried in round 2: best result | [better prompting for performance reasons] |
+| Nov 6 | My idea: two decks. The agent warned it was a second scope change with about 5× bigger prompts, a new suite and no time to tune | Two decks, three players | [two decks makes it more fun because you can play bigger / weirder chains of hands] |
+| Nov 6 | Playtest ([`playtest.txt`](playtest.txt)): rules unclear to newcomers, text table hard to read, other turns too fast, about 200 choices with two decks. The agent suggested extending the web page instead of Pyxel, and replaying traces for Watch the AI | My 9-point card-table list; the web page; Watch the AI live through a local server (`web/serve.py`) | [playtest pointed out the text-based game was very hard to play so emphasized a UI through web browser] |
+| Nov 7 | My playtest: after "See the table" there was no way to keep playing | Fixed with a "Show result" button | [bug after testing] |
+| Nov 7 | My request: replace "Seat 0/1/2". The agent proposed names by role and side (You, Landlord, Your teammate, Left/Right peasant) | Accepted for the browser; `play.py`, prompts and traces keep seat numbers | [numbers are harder to read and less immersive] |
+| Nov 7 | My request: a home screen without seat or deal pickers | Start game, Watch the baseline, Watch the AI | [abstract away seat picking and seed choosing] |
+| Nov 7 | A bigger twist. The agent listed Revolution, wild cards, a secret partner, tribute and one-time powers, recommended Revolution, and measured how often each trigger size is held (6+: 54% of deals, 5+: 98%, 7+: 9%) | Revolution with a 6+ trigger (R10b) | [2 decks didn't feel like enough of an innovative change, revolution adds more complexity] |
 
 ## What I would change
 
-[Your words: e.g. what the review process caught that you would have missed, what you would delegate
-differently, where an agent was wrong.]
+I think there are smaller things that can be changed to enhance a players experience like UI design, flow design, gameplay decisions, etc. The big thing that I did change after getting feedback from playtesting notes was that the text-based game is almost entirely unplayable.

@@ -1,0 +1,107 @@
+{"type": "header", "seed": 405, "situation": "S2", "trial": 0, "player": "model-notes", "opponents": "heuristic", "agent_seat": 1, "landlord": 0, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "9540bd7658e1", "game_commit": "deb95b1-dirty", "limits": {"max_steps": 400, "call_limit": 120, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 0, "action": "3 4 5 6 7 8 9 10 J Q K A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 1, "notes_in": null, "attempts": [{"prompt_hash": "5a50b9c25050", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord played a large straight. I must save my bombs and high cards for later.\",\n  \"reason\": \"I cannot beat a 12-card straight with my available options.\"\n}", "error": null, "api_error": false, "latency": 0.781, "input_tokens": 1083, "output_tokens": 56, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 3, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 4, "seat": 0, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 1, "notes_in": "Landlord played a large straight. I must save my bombs and high cards for later.", "attempts": [{"prompt_hash": "7aa04f00ca94", "raw": "{\n  \"action\": \"4\",\n  \"notes\": \"Landlord led a single 3. I will play a low single to respond without wasting good cards.\",\n  \"reason\": \"Play a low single 4 to beat the landlord's 3.\"\n}", "error": null, "api_error": false, "latency": 0.843, "input_tokens": 1182, "output_tokens": 59, "model": "gemini-3.5-flash-lite"}], "action": "4", "source": "model", "accepted": true}
+{"type": "step", "step": 6, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 7, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 1, "notes_in": "Landlord led a single 3. I will play a low single to respond without wasting good cards.", "attempts": [{"prompt_hash": "02d145858046", "raw": "{\n  \"action\": \"6\",\n  \"notes\": \"Played a low single 6 to beat the landlord's 5. Keeping high cards and triples/bombs for later.\",\n  \"reason\": \"Play the next higher single to beat the landlord's 5.\"\n}", "error": null, "api_error": false, "latency": 0.906, "input_tokens": 1212, "output_tokens": 63, "model": "gemini-3.5-flash-lite"}], "action": "6", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 0, "action": "7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 1, "notes_in": "Played a low single 6 to beat the landlord's 5. Keeping high cards and triples/bombs for later.", "attempts": [{"prompt_hash": "cae79c9a1167", "raw": "{\n  \"action\": \"8\",\n  \"notes\": \"Played 8 to beat landlord's 7. Saving high cards and multiples for later.\",\n  \"reason\": \"Play a higher single to beat the landlord.\"\n}", "error": null, "api_error": false, "latency": 0.781, "input_tokens": 1231, "output_tokens": 51, "model": "gemini-3.5-flash-lite"}], "action": "8", "source": "model", "accepted": true}
+{"type": "step", "step": 12, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 0, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 1, "notes_in": "Played 8 to beat landlord's 7. Saving high cards and multiples for later.", "attempts": [{"prompt_hash": "f75c24160945", "raw": "{\n  \"action\": \"10\",\n  \"notes\": \"Played 10 to beat landlord's 9. Retain control and save stronger cards.\",\n  \"reason\": \"Play a higher single 10 to beat the landlord's 9.\"\n}", "error": null, "api_error": false, "latency": 0.953, "input_tokens": 1253, "output_tokens": 60, "model": "gemini-3.5-flash-lite"}], "action": "10", "source": "model", "accepted": true}
+{"type": "step", "step": 15, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 0, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 1, "notes_in": "Played 10 to beat landlord's 9. Retain control and save stronger cards.", "attempts": [{"prompt_hash": "8c6570839900", "raw": "{\"action\": \"Q\", \"notes\": \"Played Q to beat the landlord's single J. Keeping high 2s and RJ for later.\", \"reason\": \"I can beat the single J with a higher single Q.\"}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1283, "output_tokens": 48, "model": "gemini-3.5-flash-lite"}], "action": "Q", "source": "model", "accepted": true}
+{"type": "step", "step": 18, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 0, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 1, "notes_in": "Played Q to beat the landlord's single J. Keeping high 2s and RJ for later.", "attempts": [{"prompt_hash": "8db22480374f", "raw": "{\n  \"action\": \"A\",\n  \"notes\": \"Played A to beat landlord's K. Keeping 2s and RJ for later.\",\n  \"reason\": \"I will beat the landlord's K with an A to contest the lead.\"\n}", "error": null, "api_error": false, "latency": 0.765, "input_tokens": 1314, "output_tokens": 57, "model": "gemini-3.5-flash-lite"}], "action": "A", "source": "model", "accepted": true}
+{"type": "step", "step": 21, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 1, "notes_in": "Played A to beat landlord's K. Keeping 2s and RJ for later.", "attempts": [{"prompt_hash": "cabf15f658e4", "raw": "{\n  \"action\": \"2 2 2 2\",\n  \"notes\": \"Used a 4-bomb to beat landlord's 2. Keeping RJ and remaining 2s.\",\n  \"reason\": \"I use my 4-bomb to beat the landlord's 2 and regain the lead.\"\n}", "error": null, "api_error": false, "latency": 0.969, "input_tokens": 1345, "output_tokens": 71, "model": "gemini-3.5-flash-lite"}], "action": "2 2 2 2", "source": "model", "accepted": true}
+{"type": "step", "step": 24, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 25, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 1, "notes_in": "Used a 4-bomb to beat landlord's 2. Keeping RJ and remaining 2s.", "attempts": [{"prompt_hash": "96cca8ccff80", "raw": "{\n  \"action\": \"3\",\n  \"notes\": \"Led smallest single. Saving high cards, RJ and remaining pairs/triples.\",\n  \"reason\": \"Lead lowest single to shed cards and retain control.\"\n}", "error": null, "api_error": false, "latency": 0.953, "input_tokens": 6422, "output_tokens": 49, "model": "gemini-3.5-flash-lite"}], "action": "3", "source": "model", "accepted": true}
+{"type": "step", "step": 27, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 28, "seat": 0, "action": "4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 1, "notes_in": "Led smallest single. Saving high cards, RJ and remaining pairs/triples.", "attempts": [{"prompt_hash": "1c3253a5a9af", "raw": "{\n  \"action\": \"5\",\n  \"notes\": \"Responding with 5 to landlord's 4. Continue trading singles to drain landlord.\",\n  \"reason\": \"Play a slightly higher single to beat the 4.\"\n}", "error": null, "api_error": false, "latency": 0.844, "input_tokens": 1470, "output_tokens": 52, "model": "gemini-3.5-flash-lite"}], "action": "5", "source": "model", "accepted": true}
+{"type": "step", "step": 30, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 0, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 1, "notes_in": "Responding with 5 to landlord's 4. Continue trading singles to drain landlord.", "attempts": [{"prompt_hash": "a817540694c5", "raw": "{\n  \"action\": \"9\",\n  \"notes\": \"Played 9 to beat landlord's 8. Keep trading singles up to drain landlord.\",\n  \"reason\": \"Beat the landlord's 8 with a 9 to continue trading singles.\"\n}", "error": null, "api_error": false, "latency": 0.891, "input_tokens": 1496, "output_tokens": 58, "model": "gemini-3.5-flash-lite"}], "action": "9", "source": "model", "accepted": true}
+{"type": "step", "step": 33, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 34, "seat": 0, "action": "10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 35, "seat": 1, "notes_in": "Played 9 to beat landlord's 8. Keep trading singles up to drain landlord.", "attempts": [{"prompt_hash": "95359cadd9d4", "raw": "{\n  \"action\": \"J\",\n  \"notes\": \"Played J to beat landlord's 10 single. Keep trading singles to drain landlord.\",\n  \"reason\": \"Play J to beat the landlord's 10.\"\n}", "error": null, "api_error": false, "latency": 0.844, "input_tokens": 1529, "output_tokens": 54, "model": "gemini-3.5-flash-lite"}], "action": "J", "source": "model", "accepted": true}
+{"type": "step", "step": 36, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 37, "seat": 0, "action": "Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 1, "notes_in": "Played J to beat landlord's 10 single. Keep trading singles to drain landlord.", "attempts": [{"prompt_hash": "ecd343325662", "raw": "{\n  \"action\": \"K\",\n  \"notes\": \"Played K to beat landlord's Q single. Continue trading singles to drain landlord.\",\n  \"reason\": \"Play K to beat the landlord's Q and maintain pressure.\"\n}", "error": null, "api_error": false, "latency": 0.812, "input_tokens": 1556, "output_tokens": 53, "model": "gemini-3.5-flash-lite"}], "action": "K", "source": "model", "accepted": true}
+{"type": "step", "step": 39, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 40, "seat": 0, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 41, "seat": 1, "notes_in": "Played K to beat landlord's Q single. Continue trading singles to drain landlord.", "attempts": [{"prompt_hash": "08732b72b26b", "raw": "{\n  \"action\": \"RJ\",\n  \"notes\": \"Played red joker to beat landlord's A single. Keep control and lead low pairs next.\",\n  \"reason\": \"I use the red joker to beat the A single and take the lead back.\"\n}", "error": null, "api_error": false, "latency": 1.766, "input_tokens": 1586, "output_tokens": 58, "model": "gemini-3.5-flash-lite"}], "action": "RJ", "source": "model", "accepted": true}
+{"type": "step", "step": 42, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 43, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 44, "seat": 1, "notes_in": "Played red joker to beat landlord's A single. Keep control and lead low pairs next.", "attempts": [{"prompt_hash": "f04839f5f1b8", "raw": "{\n  \"action\": \"3 3\",\n  \"notes\": \"Lead low pairs to shed cards and retain control.\",\n  \"reason\": \"Leading a low pair to start shedding from my hand.\"\n}", "error": null, "api_error": false, "latency": 0.828, "input_tokens": 2689, "output_tokens": 46, "model": "gemini-3.5-flash-lite"}], "action": "3 3", "source": "model", "accepted": true}
+{"type": "step", "step": 45, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 46, "seat": 0, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 47, "seat": 1, "notes_in": "Lead low pairs to shed cards and retain control.", "attempts": [{"prompt_hash": "97b3a124f905", "raw": "{\"action\": \"5 5\", \"notes\": \"Play pairs to match landlord's pair leads and keep shedding hand.\", \"reason\": \"Beat 4 4 with 5 5.\"}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1706, "output_tokens": 42, "model": "gemini-3.5-flash-lite"}], "action": "5 5", "source": "model", "accepted": true}
+{"type": "step", "step": 48, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 49, "seat": 0, "action": "8 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 50, "seat": 1, "notes_in": "Play pairs to match landlord's pair leads and keep shedding hand.", "attempts": [{"prompt_hash": "cccb38054032", "raw": "{\n  \"action\": \"Q Q\",\n  \"notes\": \"Played QQ to beat the landlord's pair, retaining triples and remaining high pairs to shed next.\",\n  \"reason\": \"Play QQ to beat the pair of 8s.\"\n}", "error": null, "api_error": false, "latency": 0.844, "input_tokens": 1731, "output_tokens": 55, "model": "gemini-3.5-flash-lite"}], "action": "Q Q", "source": "model", "accepted": true}
+{"type": "step", "step": 51, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 52, "seat": 0, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 53, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 54, "seat": 2, "action": "2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 55, "seat": 0, "action": "BJ BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 56, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 57, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 58, "seat": 0, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 59, "seat": 1, "notes_in": "Played QQ to beat the landlord's pair, retaining triples and remaining high pairs to shed next.", "attempts": [{"prompt_hash": "04dd716035f2", "raw": "{\n  \"action\": \"7 7\",\n  \"notes\": \"Played 77 to beat landlord's pair, keeping trips and remaining pairs.\",\n  \"reason\": \"Beat the pair with a higher pair to contest the landlord's lead.\"\n}", "error": null, "api_error": false, "latency": 0.906, "input_tokens": 1879, "output_tokens": 57, "model": "gemini-3.5-flash-lite"}], "action": "7 7", "source": "model", "accepted": true}
+{"type": "step", "step": 60, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 61, "seat": 0, "action": "10 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 62, "seat": 1, "notes_in": "Played 77 to beat landlord's pair, keeping trips and remaining pairs.", "attempts": [{"prompt_hash": "093a3c44167b", "raw": "{\n  \"action\": \"K K\",\n  \"notes\": \"Used KK to beat landlord's 1010 pair, keeping the 666 triple and single 9, 10, A.\",\n  \"reason\": \"Play higher pair KK to beat the landlord's 10 10.\"\n}", "error": null, "api_error": false, "latency": 0.891, "input_tokens": 1913, "output_tokens": 73, "model": "gemini-3.5-flash-lite"}], "action": "K K", "source": "model", "accepted": true}
+{"type": "step", "step": 63, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 64, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 65, "seat": 1, "notes_in": "Used KK to beat landlord's 1010 pair, keeping the 666 triple and single 9, 10, A.", "attempts": [{"prompt_hash": "e9dd25a93461", "raw": "{\n  \"action\": \"6 6 6 7\",\n  \"notes\": \"I have 6667 left in hand, leading the triple with a kicker.\",\n  \"reason\": \"Leading my triple with a single to shed cards.\"\n}", "error": null, "api_error": false, "latency": 0.766, "input_tokens": 2043, "output_tokens": 57, "model": "gemini-3.5-flash-lite"}], "action": "6 6 6 7", "source": "model", "accepted": true}
+{"type": "step", "step": 66, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 67, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 68, "seat": 1, "notes_in": "I have 6667 left in hand, leading the triple with a kicker.", "attempts": [{"prompt_hash": "49bc56e48893", "raw": "{\n  \"action\": \"9\",\n  \"notes\": \"Leading my lowest single card (9) to shed cards.\",\n  \"reason\": \"Lead my lowest single card.\"\n}", "error": null, "api_error": false, "latency": 0.875, "input_tokens": 1997, "output_tokens": 41, "model": "gemini-3.5-flash-lite"}], "action": "9", "source": "model", "accepted": true}
+{"type": "step", "step": 69, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 70, "seat": 0, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 71, "seat": 1, "notes_in": "Leading my lowest single card (9) to shed cards.", "attempts": [{"prompt_hash": "9f5752b1c148", "raw": "{\n  \"action\": \"A\",\n  \"notes\": \"Playing my A to beat the landlord's single J and trying to go out.\",\n  \"reason\": \"I can beat the J with my A.\"\n}", "error": null, "api_error": false, "latency": 0.704, "input_tokens": 2021, "output_tokens": 49, "model": "gemini-3.5-flash-lite"}], "action": "A", "source": "model", "accepted": true}
+{"type": "step", "step": 72, "seat": 2, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 73, "seat": 0, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 74, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 75, "seat": 2, "action": "9 9 9 9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 76, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 77, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 78, "seat": 2, "action": "3 4 5 6 7 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 79, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 80, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 81, "seat": 2, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 82, "seat": 0, "action": "5 5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 83, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 84, "seat": 2, "action": "6 6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 85, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 86, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 87, "seat": 2, "action": "7 7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 88, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 89, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 90, "seat": 2, "action": "8 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 91, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 92, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 93, "seat": 2, "action": "10 10 J J Q Q K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 94, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 95, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 96, "seat": 2, "action": "J J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 97, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 98, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 99, "seat": 2, "action": "K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 100, "seat": 0, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 101, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 102, "seat": 2, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 103, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 104, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 105, "seat": 2, "action": "A", "source": "forced", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 4, "scores": [-8, 4, 4], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 4, "scores": [-8, 4, 4]}, "steps": 105, "calls": 22, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": 4, "elapsed": 19.953}

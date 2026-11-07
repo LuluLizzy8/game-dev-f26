@@ -1,0 +1,43 @@
+{"type": "header", "seed": 401, "situation": "S3", "trial": 1, "player": "model-history", "opponents": "heuristic", "agent_seat": 1, "landlord": 2, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "9540bd7658e1", "game_commit": "deb95b1-dirty", "limits": {"max_steps": 400, "call_limit": 120, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 2, "action": "3 4 5 6 7 8 9 10 J Q K A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 0, "action": "Q Q Q Q Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 3, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 4, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 5, "seat": 0, "action": "2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 6, "seat": 1, "attempts": [{"prompt_hash": "574345421541", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Teammate played a pair of 2s which is lowest in revolution; I should not beat my teammate.\"\n}", "error": null, "api_error": false, "latency": 0.797, "input_tokens": 1133, "output_tokens": 40, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 7, "seat": 2, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 0, "action": "K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 9, "seat": 1, "attempts": [{"prompt_hash": "cbd7946607e8", "raw": "{\"action\": \"pass\", \"reason\": \"My teammate played pairs, and I should preserve my cards.\"}", "error": null, "api_error": false, "latency": 0.844, "input_tokens": 1158, "output_tokens": 23, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 10, "seat": 2, "action": "10 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 0, "action": "8 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 12, "seat": 1, "attempts": [{"prompt_hash": "51e5dfbdae92", "raw": "{\"action\": \"pass\", \"reason\": \"Do not beat teammate's play.\"}", "error": null, "api_error": false, "latency": 0.641, "input_tokens": 1191, "output_tokens": 19, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 13, "seat": 2, "action": "7 7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 0, "action": "6 6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 15, "seat": 1, "attempts": [{"prompt_hash": "0ccce8f3ea47", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"I should not beat my teammate's pair.\"\n}", "error": null, "api_error": false, "latency": 0.75, "input_tokens": 1222, "output_tokens": 27, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 16, "seat": 2, "action": "5 5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 0, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 18, "seat": 1, "attempts": [{"prompt_hash": "c66398a6781b", "raw": "{\"action\": \"pass\", \"reason\": \"Do not beat teammate's play.\"}", "error": null, "api_error": false, "latency": 0.875, "input_tokens": 1255, "output_tokens": 19, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 19, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 20, "seat": 0, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 21, "seat": 1, "attempts": [{"prompt_hash": "47201367beb0", "raw": "{\"action\": \"pass\", \"reason\": \"My teammate led a pair, and I should not beat my teammate's cards.\"}", "error": null, "api_error": false, "latency": 0.75, "input_tokens": 1356, "output_tokens": 28, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 22, "seat": 2, "action": "K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 23, "seat": 0, "action": "J J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 24, "seat": 1, "attempts": [{"prompt_hash": "3d26d48915f3", "raw": "{\"action\": \"pass\", \"reason\": \"My teammate is leading, so I should not beat their pair.\"}", "error": null, "api_error": false, "latency": 0.797, "input_tokens": 1388, "output_tokens": 24, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 25, "seat": 2, "action": "9 9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 0, "action": "6 6", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 27, "seat": 1, "attempts": [{"prompt_hash": "99434a817e41", "raw": "{\"action\": \"pass\", \"reason\": \"My teammate is leading, so I should let them continue.\"}", "error": null, "api_error": false, "latency": 0.828, "input_tokens": 1409, "output_tokens": 23, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 28, "seat": 2, "action": "4 4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 0, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 30, "seat": 1, "attempts": [{"prompt_hash": "93c813b07a8c", "raw": "{\"action\": \"pass\", \"reason\": \"My teammate led low pairs, and I should not beat my teammate's play.\"}", "error": null, "api_error": false, "latency": 0.922, "input_tokens": 1433, "output_tokens": 28, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 31, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 32, "seat": 0, "action": "5 6 10 10 10 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 33, "seat": 1, "attempts": [{"prompt_hash": "a7ba54d68a55", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Teammate successfully led a four-of-a-kind with singles, and as a peasant I should not interrupt or waste higher combinations.\"\n}", "error": null, "api_error": false, "latency": 0.891, "input_tokens": 3678, "output_tokens": 46, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 34, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 35, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 36, "seat": 1, "attempts": [{"prompt_hash": "e1be66772a87", "raw": "{\"action\": \"pass\", \"reason\": \"Do not beat teammate's play unless necessary.\"}", "error": null, "api_error": false, "latency": 0.656, "input_tokens": 1545, "output_tokens": 21, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 37, "seat": 2, "action": "4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 0, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 39, "seat": 1, "attempts": [{"prompt_hash": "1891596081c3", "raw": "{\n  \"action\": \"pass\",\n  \"reason\": \"Teammate is about to win.\"\n}", "error": null, "api_error": false, "latency": 0.859, "input_tokens": 1579, "output_tokens": 25, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 40, "seat": 2, "action": "BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 41, "seat": 0, "action": "RJ", "source": "heuristic", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [2, 2, -4], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [2, 2, -4]}, "steps": 41, "calls": 12, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": 2, "elapsed": 9.656}

@@ -1,0 +1,56 @@
+{"type": "header", "seed": 421, "situation": "S2", "trial": 0, "player": "model-notes", "opponents": "heuristic", "agent_seat": 2, "landlord": 1, "live": true, "model_requested": "gemini-3.5-flash-lite", "config_hash": "9540bd7658e1", "game_commit": "deb95b1-dirty", "limits": {"max_steps": 400, "call_limit": 120, "call_timeout_seconds": 30, "wall_clock_seconds": 1800, "invalid_limit": 10, "retries_per_turn": 1}, "sampling": {"temperature": 0, "top_p": 1, "max_output_tokens": 256}}
+{"type": "step", "step": 1, "seat": 1, "action": "10 10 10 10 10 10", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 2, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 3, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 4, "seat": 1, "action": "A A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 5, "seat": 2, "notes_in": null, "attempts": [{"prompt_hash": "6d6e1d06bbf2", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord played AA. I can beat with 33 or higher pairs under revolution, but saving pairs for later. Keep hand flow low.\",\n  \"reason\": \"I choose to pass to save my pairs and let the game develop.\"\n}", "error": null, "api_error": false, "latency": 1.141, "input_tokens": 1168, "output_tokens": 66, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 6, "seat": 0, "action": "K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 7, "seat": 1, "action": "Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 8, "seat": 2, "notes_in": "Landlord played AA. I can beat with 33 or higher pairs under revolution, but saving pairs for later. Keep hand flow low.", "attempts": [{"prompt_hash": "1e302108fe35", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Let landlord play high pairs since revolution makes low pairs strong, preserving my pairs.\",\n  \"reason\": \"Saving higher pairs for later.\"\n}", "error": null, "api_error": false, "latency": 1.015, "input_tokens": 1223, "output_tokens": 45, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 9, "seat": 0, "action": "J J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 10, "seat": 1, "action": "9 9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 11, "seat": 2, "notes_in": "Let landlord play high pairs since revolution makes low pairs strong, preserving my pairs.", "attempts": [{"prompt_hash": "5913a556e5e3", "raw": "{\n  \"action\": \"4 4\",\n  \"notes\": \"Used 4 4 to beat 9 9 under revolution. Keep holding higher pairs and low triples for later.\",\n  \"reason\": \"Play 4 4 to beat landlord's 9 9 under revolution.\"\n}", "error": null, "api_error": false, "latency": 0.953, "input_tokens": 1235, "output_tokens": 66, "model": "gemini-3.5-flash-lite"}], "action": "4 4", "source": "model", "accepted": true}
+{"type": "step", "step": 12, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 13, "seat": 1, "action": "3 3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 14, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 15, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 16, "seat": 1, "action": "9 9 J J K K K K", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 17, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 18, "seat": 0, "action": "6 6 6 6 A A 2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 19, "seat": 1, "action": "5 5 5 5 7 7 8 8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 20, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 21, "seat": 0, "action": "4 4 4 4 A A 2 2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 22, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 23, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 24, "seat": 0, "action": "2", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 25, "seat": 1, "action": "J", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 26, "seat": 2, "notes_in": "Used 4 4 to beat 9 9 under revolution. Keep holding higher pairs and low triples for later.", "attempts": [{"prompt_hash": "28a81a00b4b3", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Keep low singles, preserve triples and high cards under revolution.\",\n  \"reason\": \"Saving my high single BJ or stronger cards to beat later.\"\n}", "error": null, "api_error": false, "latency": 1.031, "input_tokens": 1513, "output_tokens": 48, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 27, "seat": 0, "action": "9", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 28, "seat": 1, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 29, "seat": 2, "notes_in": "Keep low singles, preserve triples and high cards under revolution.", "attempts": [{"prompt_hash": "338099d3aaa2", "raw": "{\n  \"action\": \"BJ\",\n  \"notes\": \"Used BJ to beat landlord's single 8 under revolution.\",\n  \"reason\": \"Using joker to take control and stop the landlord.\"\n}", "error": null, "api_error": false, "latency": 1.0, "input_tokens": 1529, "output_tokens": 46, "model": "gemini-3.5-flash-lite"}], "action": "BJ", "source": "model", "accepted": true}
+{"type": "step", "step": 30, "seat": 0, "action": "pass", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 31, "seat": 1, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 32, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 33, "seat": 0, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 34, "seat": 1, "action": "8", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 35, "seat": 2, "notes_in": "Used BJ to beat landlord's single 8 under revolution.", "attempts": [{"prompt_hash": "b56f42903dee", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord played 8. Under revolution, single 3 is higher than 8, but holding triples/pairs and saving low cards. Let landlord play.\",\n  \"reason\": \"Passing to save my higher cards and let landlord continue.\"\n}", "error": null, "api_error": false, "latency": 1.031, "input_tokens": 1609, "output_tokens": 66, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 36, "seat": 0, "action": "5", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 37, "seat": 1, "action": "4", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 38, "seat": 2, "notes_in": "Landlord played 8. Under revolution, single 3 is higher than 8, but holding triples/pairs and saving low cards. Let landlord play.", "attempts": [{"prompt_hash": "8db015fdb7ba", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Landlord playing singles, let teammate or landlord take turns while holding many triples and pairs.\",\n  \"reason\": \"Passing to let the landlord continue playing low singles.\"\n}", "error": null, "api_error": false, "latency": 0.86, "input_tokens": 1656, "output_tokens": 51, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 39, "seat": 0, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 40, "seat": 1, "action": "BJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 41, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 42, "seat": 0, "action": "RJ", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 43, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 44, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 45, "seat": 0, "action": "A", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 46, "seat": 1, "action": "7", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 47, "seat": 2, "notes_in": "Landlord playing singles, let teammate or landlord take turns while holding many triples and pairs.", "attempts": [{"prompt_hash": "42bdd7ba48a2", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Let landlord play singles, save triples and pairs for later.\",\n  \"reason\": \"I will pass to let the landlord lead again since I want to keep my low cards.\"\n}", "error": null, "api_error": false, "latency": 1.046, "input_tokens": 1783, "output_tokens": 53, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 48, "seat": 0, "action": "3", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 49, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 50, "seat": 2, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 51, "seat": 0, "action": "8 8 Q Q Q", "source": "heuristic", "accepted": true}
+{"type": "step", "step": 52, "seat": 1, "action": "pass", "source": "forced", "accepted": true}
+{"type": "step", "step": 53, "seat": 2, "notes_in": "Let landlord play singles, save triples and pairs for later.", "attempts": [{"prompt_hash": "20382ab6d8aa", "raw": "{\n  \"action\": \"pass\",\n  \"notes\": \"Teammate played a full house, letting them win or continue since they have 1 card left. Saving my high cards.\",\n  \"reason\": \"Teammate is leading and almost out of cards; passing lets them finish.\"\n}", "error": null, "api_error": false, "latency": 0.985, "input_tokens": 2617, "output_tokens": 65, "model": "gemini-3.5-flash-lite"}], "action": "pass", "source": "model", "accepted": true}
+{"type": "step", "step": 54, "seat": 0, "action": "8", "source": "forced", "accepted": true}
+{"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [2, -4, 2], "forfeit": false, "type": "result", "engine_outcome": {"status": "terminal", "reason": "hand_empty", "winner": "peasants", "spring": false, "multiplier": 2, "scores": [2, -4, 2]}, "steps": 54, "calls": 9, "invalid": 0, "models_returned": ["gemini-3.5-flash-lite"], "agent_score": 2, "elapsed": 9.141}
