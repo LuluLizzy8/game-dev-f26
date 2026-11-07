@@ -20,21 +20,21 @@ what that means for CI and the dated freeze.
 
 | Check | Where it is met | Status |
 |---|---|---|
-| 1a labels | `README.md` map R1–R16 + new rows in §2.1 (runner rules included) | Pagat locators to verify |
-| 1b scope | §1; README scope statement | needs my voice + Week 3 post |
-| 1c sources | §9: Pagat, course-repo skill/reviewer/narrator pattern, google-genai | Pagat locators and RLCard/DouZero licences to open |
-| 2a core loop | engine + `play.py` human mode (§12) | built (`play.py`) |
-| 2b model player | `players/model.py` called only by `runner.py` (§4–§5) | built; first live episode TODO |
-| 2c information | `observe`/`legal_actions` per seat; reshuffle tests on observation *and* prompt (§3, §7) | built + tested (`test_game`, `test_view`, `test_runner.Prompt`) |
-| 3a runs | README commands for PowerShell and bash, pinned `requirements.txt`, no-credential fixture run (§8) | README done; fresh-clone check TODO |
-| 3b limits | `runner.py` step / call / HTTP-timeout / wall-clock / invalid limits, explicit reasons (§5) | built + tested (`test_runner.Limits`) |
-| 3c CI | five check kinds in the folder workflow (§7) | all five kinds present locally (55 tests); CI first runs at push |
-| 3d agent team | folder-local `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | config + 5 reviews done; first session export in `sessions/` |
-| 4a choices | §11 decision table with the alternative each beat | this doc |
-| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds per situation (§4.1, §6) | baseline built; runs TODO |
-| 5a comparison | `EVALUATION.md`; suite frozen by a dated local commit before tuning (§6) | TODO |
-| 5b authorship | `AGENT-TEAM.md`, limitations, peer notes **[student voice]** | TODO |
-| 5c recording | 3–5 min script (§12) | TODO |
+| 1a labels | `README.md` rule map R1 to R23, every rule labeled with a locator | done; Pagat locators checked 2026-11-07 |
+| 1b scope | §1; README scope statement | done; Week 3 posts for two decks and Revolution are mine to make |
+| 1c sources | §9 and README sources: Pagat, course-repo skill, reviewer and provider pattern, google-genai, Pyodide, fonts | done |
+| 2a core loop | engine, `play.py` and the browser card table `web/` (§12) | done |
+| 2b model player | `players/model.py`, called only by `runner.py` (§4, §5) | done; three held-out runs |
+| 2c information | `observe` and `legal_actions` per seat; reshuffle tests on the observation and the prompt (§3, §7) | done (`test_game`, `test_view`, `test_runner.Prompt`, `test_web`, `test_serve`) |
+| 3a runs | README commands for PowerShell and bash, pinned `requirements.txt`, no-credential fixture run (§8) | done; fresh-clone check before the push |
+| 3b limits | `runner.py` step, call, HTTP-timeout, wall-clock and invalid limits with explicit reasons (§5) | done (`test_runner.Limits`) |
+| 3c CI | five check kinds in the folder workflow (§7) | all five present, 102 tests; CI runs at the push |
+| 3d agent team | folder `CLAUDE.md`, skills, reviewer, `reviews/`, `sessions/` (§10) | done; six reviews, three session exports |
+| 4a choices | §11 decision table with the alternative each beat | done |
+| 4b experiment | heuristic baseline, paired deals, 30 held-out seeds per situation (§4.1, §6) | done |
+| 5a comparison | `EVALUATION.md`; suites frozen by dated commits before each held-out run (§6) | done; current suite seeds 400-429 |
+| 5b authorship | `AGENT-TEAM.md`, limitations, review decisions, playtest notes | done |
+| 5c recording | 3 to 5 min (§12) | done: https://youtu.be/zRIMSmfkGlA |
 
 ---
 
@@ -62,8 +62,8 @@ pass and lead-return (R11); landlord/peasant win (R12); bomb and spring multipli
 | Graphics / sound | Optional per brief; a text table is enough to play and to record. |
 
 **Scope change history:** the Week 3 header said Guandan. Changed to Dou Dizhu because a Guandan match
-(two decks, wild cards, levels, tribute) does not fit one bounded episode. **TODO: post the change in
-the Week 3 thread and rewrite the README scope statement in my voice.**
+(two decks, wild cards, levels, tribute) does not fit one bounded episode. Posted in the Week 3 thread;
+the README scope statement is in my voice.
 
 ---
 
@@ -431,8 +431,8 @@ compresses well), or a summary plus link if they exceed a few MB. No credentials
 
 - **Pagat**, John McLeod, "Dou Dizhu", https://www.pagat.com/climbing/doudizhu.html. The site is
   copyrighted; I link to it and use only rule facts (rules of a game are not copied text); no prose
-  copied. **TODO: verify each README locator against the page headings, quoting a short phrase where a
-  section has no anchor.**
+  copied. README locators checked against the page headings on 2026-11-07 (Players, Cards and Deal;
+  Auction; Play; Scoring; Four-Player Game).
 - **RLCard** (Zha et al.) and **DouZero** (Zha et al., 2021): cited only if EVALUATION.md mentions
   them as background on Dou Dizhu AI; no code used. If cited, link their licence files
   (github.com/datamllab/rlcard, github.com/kwai/DouZero) after opening them; otherwise drop them.
