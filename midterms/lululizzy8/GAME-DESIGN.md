@@ -519,7 +519,7 @@ recommended, what I decided and why. No agent approves a gate or merges the PR.
 - **Recording (3–5 min):** 0:00 scope + rules in 30 s → 0:30 human-mode table → 1:15 runner with the
   model as landlord on a held-out seed, trace scrolling, a refused action and retry if one occurs →
   3:00 comparison table → 3:45 limits (small sample, one provider, heuristic opponents, teammate
-  asymmetry). Linked from the README and the PR.
+  asymmetry). Linked from the README and the PR: https://youtu.be/zRIMSmfkGlA
 
 ---
 

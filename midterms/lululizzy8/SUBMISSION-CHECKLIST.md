@@ -17,11 +17,11 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it
 
 | File | Contents required | Status |
 |---|---|---|
-| `README.md` | commands from a fresh clone, scope statement, rule/source map with labels, sources and reuse terms, recording link | 🔨 recording link ⬜ 👤 |
+| `README.md` | commands from a fresh clone, scope statement, rule/source map with labels, sources and reuse terms, recording link | ✅ recording linked |
 | `EVALUATION.md` | declared suite, comparison table, traces, CI evidence, limitations | ✅ revolution suite written up; CI link ⬜ after the push |
 | `AGENT-TEAM.md` | each agent, what it could see and do, what it recommended, what I decided, evidence | 🔨 "why" column and "What I would change" 👤 |
 | Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | 🔨 received ✅; notes to my partner 👤 |
-| Recording, 3 to 5 min, agent playing without manual moves, limits stated | link in README and PR | ⬜ 👤 |
+| Recording, 3 to 5 min, agent playing without manual moves, limits stated | link in README and PR | ✅ https://youtu.be/zRIMSmfkGlA (add to the PR) |
 | Game, model player, baseline, tests, agent config, reports, traces | this folder | ✅ |
 
 ## Agent-team evidence (check 3d)
@@ -52,7 +52,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it
 | 4b experiment | heuristic baseline, paired deals, 30 held-out seeds, three memory variants | ✅ |
 | 5a comparison | EVALUATION table with all fields, dated suite, held-out | ✅ revolution held-out 2026-11-07 (`results/heldout-revolution-2026-11-07.md`); older suites kept as superseded |
 | 5b authorship | AGENT-TEAM and limitations in my voice, playtest notes used | 🔨 limitations ✅; AGENT-TEAM "why" column 👤 |
-| 5c recording | 3 to 5 min | ⬜ 👤 |
+| 5c recording | 3 to 5 min | ✅ https://youtu.be/zRIMSmfkGlA |
 
 ## Other dated obligations
 

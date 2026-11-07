@@ -24,7 +24,7 @@ Earlier versions and their results stay in EVALUATION.md as history.
 Run everything from `midterms/lululizzy8/` with Python 3.12. The engine, players and tests use only the
 standard library; the live model also needs `google-genai` (pinned in `requirements.txt`).
 
-Recording: TODO link.
+Recording (3 to 5 min, the AI playing the game): https://youtu.be/zRIMSmfkGlA
 
 Tests (no credentials or network; CI runs the same command):
 ```
