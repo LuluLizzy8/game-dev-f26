@@ -20,7 +20,7 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it
 | `README.md` | commands from a fresh clone, scope statement, rule/source map with labels, sources and reuse terms, recording link | ✅ recording linked |
 | `EVALUATION.md` | declared suite, comparison table, traces, CI evidence, limitations | ✅ revolution suite written up; CI link ⬜ after the push |
 | `AGENT-TEAM.md` | each agent, what it could see and do, what it recommended, what I decided, evidence | 🔨 "why" column and "What I would change" 👤 |
-| Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | 🔨 received ✅; notes to my partner 👤 |
+| Peer playtest notes, received and given | [`playtest.txt`](playtest.txt) | ✅ received (in this folder); my notes for my partner sent to them directly |
 | Recording, 3 to 5 min, agent playing without manual moves, limits stated | link in README and PR | ✅ https://youtu.be/zRIMSmfkGlA (add to the PR) |
 | Game, model player, baseline, tests, agent config, reports, traces | this folder | ✅ |
 
@@ -58,5 +58,5 @@ Status: ✅ done · 🔨 in progress · ⬜ not started · 👤 only I can do it
 
 - ✅ Week 3 post with the scope change from Guandan.
 - ⬜ 👤 Week 3 posts for two decks (Nov 6) and Revolution (Nov 7).
-- 🔨 Peer playtest done; notes received in [`playtest.txt`](playtest.txt). Send my notes to my partner 👤.
+- ✅ Peer playtest done; notes received in [`playtest.txt`](playtest.txt); my notes sent to my partner.
 - ⬜ 👤 Before Nov 16: silent-playtester notes on three assigned recordings (assigned Nov 9).
