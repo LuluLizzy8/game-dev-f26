@@ -376,5 +376,9 @@ The rules are simplified. There's no bidding: the deal number picks the landlord
 
 Revolution is my own addition. The heuristic needed a new habit to use it, and with that habit a revolution happens in about 44% of heuristic-only deals. How often a revolution happens in the evaluation depends on that habit.
 
-
+One overall limitation that the playtester noted that is hard to address (besides the
+major glaring issue that once was the text-based game), is the fact that Doudizhu
+is a difficult game with many rules that are hard to comprehend simply from reading a
+manual. I have tried to address this with a handbook but players will still have a 
+significant learning curve when playing this game.
 
