@@ -724,7 +724,7 @@ fetch("/api/status").then((r) => (r.ok ? r.json() : Promise.reject())).then((s) 
   $("go-ai").textContent = s.live_ready ? "Watch the AI" : "Not configured";
   $("ai-note").className = `note ${s.live_ready ? "warn" : ""}`;
   $("ai-note").textContent = s.live_ready ? `Live calls to ${s.model} spend cloud credits: about $0.01–0.05 per peasant game, more as landlord (long move lists).`
-    : "Set COURSE_PROVIDER, COURSE_MODEL, GOOGLE_CLOUD_PROJECT and GOOGLE_CLOUD_LOCATION (see README), then restart python web/serve.py.";
+    : `The server was started without ${s.missing.join(", ")}. Set them in the same terminal (see README), then restart python web/serve.py.`;
 }).catch(() => {
   $("go-ai").textContent = "Needs the local server";
   $("ai-note").innerHTML = "Run <code>python web/serve.py</code> from <code>midterms/lululizzy8/</code> and open this page from it.";

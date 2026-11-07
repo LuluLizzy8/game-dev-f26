@@ -98,8 +98,9 @@ class Live:
     def status(self):
         import os
         names = ("COURSE_PROVIDER", "COURSE_MODEL", "GOOGLE_CLOUD_PROJECT", "GOOGLE_CLOUD_LOCATION")
-        ready = all(os.environ.get(n, "").strip() for n in names)
-        return {"live_ready": ready, "model": os.environ.get("COURSE_MODEL") if ready else None,
+        missing = [n for n in names if not os.environ.get(n, "").strip()]  # names only, never values
+        ready = not missing
+        return {"live_ready": ready, "missing": missing, "model": os.environ.get("COURSE_MODEL") if ready else None,
                 "players": MODEL_PLAYERS, "situations": sorted(SITUATIONS)}
 
     def start(self, body):
