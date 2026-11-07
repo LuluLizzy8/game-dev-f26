@@ -1,14 +1,48 @@
 # Evaluation
 
-Status: the game changed to **two decks** on 2026-11-06 (GAME-DESIGN.md §2.2). The two-deck suite below is the
-evaluation of the submitted game. The one-deck evaluation further down is kept as history: it is
-superseded, and its numbers do not describe the current game. Tables are filled with the `ddz-eval-run` skill.
+Status: the current game is **two decks with Revolution** (GAME-DESIGN.md §2.2, §2.3; README R10b, added
+2026-11-07). The suite directly below evaluates it. The two-deck suite without revolution and the one-deck
+suite further down are kept as history: they are superseded, and their numbers do not describe the current
+game. Tables are filled with the `ddz-eval-run` skill.
 
-**Revolution (R10b) was added on 2026-11-07, after the two-deck held-out run.** The two-deck results below were
-measured without it (game commit `e9fb2d8`). Revolution changes the heuristic baseline and adds one rules sentence
-to the model prompt, so they do not describe the game with revolution. Whether to re-run is my decision: TODO.
+## Two decks with Revolution (current version)
 
-## Two-deck game (current version)
+### Declared suite (2026-11-07, before any revolution evaluation episode)
+
+- Same structure as the two-deck suite: situations S1–S3; players `heuristic`, `random`,
+  `model-history`, `model-obs`, `model-notes`; opponents heuristic, plus a random-opponent condition
+  (S1, 10 seeds); `model-history` gets a second trial on the first 10 seeds. **310 live episodes.**
+- **Held-out seeds 400–429** (new; never run on any version before this suite). Development seeds 0–99 and
+  tuning seeds 100–104 as before; seeds 200–229 and 300–329 are used.
+- No prompt tuning for revolution. The prompt is the frozen two-deck prompt plus the revolution rules
+  sentence and the two corrections from the revolution review (teammate habit, strategy rule 1 exception).
+  No live model episode was run on the revolution game before this suite.
+
+### Measurements (2026-11-07, `python tools/measure.py`, seeds 0–104, all seats heuristic)
+
+- opening legal-list size: median 2,425, max 5,921 (unchanged: revolution changes order, not the opening list)
+- steps per deal: median 63, max 94 (step limit 400)
+- non-forced decisions per seat per deal: median 18, max 29 (call limit 120)
+- estimated input tokens per call: `model-history` median ~1,000, max ~54k; `model-obs` median ~720, max ~54k
+- revolution happens in 44% of heuristic self-play deals (development seeds 0–99; GAME-DESIGN.md §2.3)
+
+### Frozen versions
+
+Frozen 2026-11-07, before any revolution held-out seed was run.
+
+| Item | Commit / hash |
+|---|---|
+| `players/model.py` (prompt) | `d3564aa`: two-deck prompt + revolution rules sentence + review corrections; not re-tuned |
+| `players/heuristic.py` | `d3564aa`: smallest bomb first; plays a 6+ bomb to flip the order when most remaining 3–2 cards gain (R10b) |
+| `doudizhu/engine.py` | `d3564aa`: R10b |
+| `agent-config.json` | unchanged, config hash `9540bd7658e1` (call_limit 120, max_steps 400) |
+| Game commit | the commit recorded in each held-out trace header (`game_commit`) |
+
+### Results
+
+Pending: the run starts after this table is committed.
+
+## Two decks without revolution (superseded 2026-11-07, game commit `83c5dcf`)
 
 ### Declared suite (2026-11-06, before any two-deck evaluation episode)
 
